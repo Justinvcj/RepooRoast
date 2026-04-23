@@ -1,0 +1,24 @@
+# Editor
+.vscode/
+.idea/
+
+# Dependencies
+client/node_modules/
+server/node_modules/
+
+# Build output
+client/dist/
+
+# Secrets
+client/.env
+server/.env
+
+# Logs and generated reports
+*.log
+client/build.log
+client/eslint_report.json
+client/tsc_report.txt
+
+# OS files
+.DS_Store
+Thumbs.db
