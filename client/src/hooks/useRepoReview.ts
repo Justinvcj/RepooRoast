@@ -12,9 +12,9 @@ export const useRepoReview = () => {
     setError(null);
     
     try {
-      // The Vite proxy configuration in vite.config.ts will redirect this 
-      // requests starting with /api to our backend running on localhost:3001
-      const response = await axios.post<ApiResponse>('/api/review', { repoUrl });
+      // Use the environment variable for production, or fallback to relative for local Vite proxy
+      const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '');
+      const response = await axios.post<ApiResponse>(`${API_BASE}/api/review`, { repoUrl });
       
       if (response.data.success) {
         setData(response.data);
