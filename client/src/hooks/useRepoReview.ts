@@ -13,7 +13,7 @@ export const useRepoReview = () => {
     
     try {
       // Use the environment variable for production, or fallback to relative for local Vite proxy
-      const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\\/$/, '');
+      const API_BASE = import.meta.env.VITE_API_URL || '';
       const response = await axios.post<ApiResponse>(`${API_BASE}/api/review`, { repoUrl });
       
       if (response.data.success) {
