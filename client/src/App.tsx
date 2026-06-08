@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
@@ -6,6 +7,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { ResultPage } from './pages/ResultPage';
+import { SplashScreen } from './components/SplashScreen';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -20,6 +22,16 @@ const AnimatedRoutes = () => {
 };
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // Hide splash screen after 2.2 seconds
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 2200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <BrowserRouter>
       {/* 
@@ -51,6 +63,10 @@ function App() {
         }}
       />
       
+      <AnimatePresence>
+        {showSplash && <SplashScreen />}
+      </AnimatePresence>
+
       <div className="flex flex-col min-h-screen">
         <Navbar />
         {/* pt-24 ensures the content sits beneath the new floating pill Navbar */}

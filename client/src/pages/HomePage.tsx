@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Code2, GitMerge, FileText, Shield, TestTube, Zap } from 'lucide-react';
+import { Code2, GitMerge, FileText, Shield, TestTube, Zap, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { useRepoReview } from '../hooks/useRepoReview';
@@ -38,6 +38,11 @@ const features = [
     name: 'Performance',
     description: 'Finding slow loops, memory leaks, and inefficient algorithms.',
     icon: Zap,
+  },
+  {
+    name: 'Scalability',
+    description: 'Assessing if the codebase can handle 10x growth without collapsing.',
+    icon: TrendingUp,
   },
 ];
 
@@ -95,7 +100,7 @@ export const HomePage: React.FC = () => {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-surface/60 backdrop-blur-xl rounded-5xl p-10 border border-border/50 hover:border-primary/30 transition-all shadow-xl group"
+                className="bg-surface/90 rounded-3xl p-6 border border-border/50 hover:border-primary/30 transition-all shadow-xl group"
               >
                 <div>
                   <span className="inline-flex items-center justify-center p-4 bg-background border border-border rounded-full shadow-inner mb-8 group-hover:scale-110 transition-transform">

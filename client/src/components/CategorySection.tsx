@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { Category } from '../types';
 import { IssueCard } from './IssueCard';
 import { ChevronDown, CheckCircle2 } from 'lucide-react';
@@ -22,7 +22,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full bg-surface/60 backdrop-blur-xl rounded-4xl border border-border/50 overflow-hidden shadow-lg hover:border-border transition-colors"
+      className="w-full bg-surface/95 rounded-2xl border border-border/50 overflow-hidden shadow-lg hover:border-border transition-colors"
     >
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
@@ -45,15 +45,15 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
         </motion.div>
       </button>
 
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden"
-          >
+      <motion.div
+        initial={false}
+        animate={{ 
+          height: isExpanded ? 'auto' : 0, 
+          opacity: isExpanded ? 1 : 0 
+        }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="overflow-hidden"
+      >
             <div className="p-6 pt-0 border-t border-border/50">
               <p className="text-lg text-textSecondary italic mb-6 mt-4">
                 "{category.summary}"
@@ -84,9 +84,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
                 </div>
               )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </motion.div>
     </motion.div>
   );
 };

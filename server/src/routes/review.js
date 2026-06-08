@@ -1,6 +1,6 @@
 import express from 'express';
 import { fetchRepoData } from '../services/githubService.js';
-import { generateCodeReview } from '../services/geminiService.js';
+import { generateCodeReview } from '../services/aiService.js';
 
 const router = express.Router();
 

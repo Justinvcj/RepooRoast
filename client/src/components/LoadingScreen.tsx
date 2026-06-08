@@ -43,9 +43,9 @@ export const LoadingScreen: React.FC = () => {
           repeat: Infinity,
           ease: "easeInOut" 
         }}
-        className="mb-8 p-6 rounded-full bg-surface border border-border shadow-lg"
+        className="mb-16 p-4 rounded-full bg-surface border border-border shadow-lg"
       >
-        <Flame className="w-20 h-20 text-primary" />
+        <Flame className="w-14 h-14 text-primary" />
       </motion.div>
 
       {/* Progress Steps container */}

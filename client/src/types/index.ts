@@ -41,6 +41,7 @@ export interface ReviewResult {
   topPriorities: string[];
   whatYouDidWell: string[];
   hiringVerdict: string;
+  fixPrompt: string;
 }
 
 export interface ApiResponse {

@@ -19,35 +19,26 @@ const parseGeminiResponse = (responseText) => {
     // Initial parse failed, move to cleanup strategies
   }
 
-  // 2. Strip standard markdown JSON blocks
-  // e.g. ```json\n { ... } \n```
+  // 2. Strip standard markdown JSON blocks or extract raw JSON object
   let cleanedText = responseText;
   
-  // Remove starting ```json or ```
-  cleanedText = cleanedText.replace(/^```(json)?/i, '');
-  // Remove ending ```
-  cleanedText = cleanedText.replace(/```$/i, '');
-  
-  cleanedText = cleanedText.trim();
-
-  // Try parsing the cleaned markdown text
-  try {
-    return JSON.parse(cleanedText);
-  } catch (markdownError) {
-    // Markdown cleanup failed, move to regex extraction
-  }
-
-  // 3. Fallback: Extract everything between the first '{' and the last '}'
-  try {
-    const firstBraceIndex = responseText.indexOf('{');
-    const lastBraceIndex = responseText.lastIndexOf('}');
+  const match = cleanedText.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (match) {
+    cleanedText = match[1];
+  } else {
+    // 3. Fallback: Extract everything between the first '{' and the last '}'
+    const firstBraceIndex = cleanedText.indexOf('{');
+    const lastBraceIndex = cleanedText.lastIndexOf('}');
 
     if (firstBraceIndex !== -1 && lastBraceIndex !== -1 && lastBraceIndex > firstBraceIndex) {
-      const extractedJsonString = responseText.slice(firstBraceIndex, lastBraceIndex + 1);
-      return JSON.parse(extractedJsonString);
+      cleanedText = cleanedText.substring(firstBraceIndex, lastBraceIndex + 1);
     }
-  } catch (extractionError) {
-    // Fallback extraction failed
+  }
+
+  try {
+    return JSON.parse(cleanedText);
+  } catch (error) {
+    // Fallback parsing failed
   }
 
   // 4. If all parsing attempts fail, throw custom error

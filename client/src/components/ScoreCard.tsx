@@ -29,7 +29,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
         duration: 0.8, 
         ease: [0.16, 1, 0.3, 1] // Apple-like custom cubic-bezier
       }}
-      className="w-full relative overflow-hidden rounded-5xl bg-surface/60 backdrop-blur-2xl border border-border/50 p-10 md:p-16 shadow-2xl flex flex-col md:flex-row items-center gap-16"
+      className="w-full relative overflow-hidden rounded-3xl bg-surface/90 border border-border/50 p-5 md:p-6 shadow-2xl flex flex-col md:flex-row items-center gap-12"
     >
       {/* Decorative gradient blob behind the score */}
       <div 
@@ -69,7 +69,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="text-6xl font-serif font-extrabold tracking-tighter"
+            className="text-4xl font-serif font-extrabold tracking-tighter"
             style={{ color: ringColor }}
           >
             {score}
@@ -83,7 +83,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-4xl md:text-5xl font-serif font-extrabold text-textPrimary tracking-tight mb-6"
+          className="text-2xl md:text-3xl font-serif font-extrabold text-textPrimary tracking-tight mb-6"
         >
           {verdict}
         </motion.h2>
@@ -92,7 +92,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-xl md:text-2xl text-textSecondary italic font-serif leading-relaxed mb-6"
+          className="text-base md:text-lg text-textSecondary italic font-serif leading-relaxed mb-6"
         >
           "{quote}"
         </motion.p>

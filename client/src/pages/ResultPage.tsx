@@ -32,7 +32,7 @@ export const ResultPage: React.FC = () => {
     >
       {/* Floating Navbar */}
       <nav className="sticky top-0 z-50 w-full mb-8">
-        <div className="absolute inset-0 bg-surface/80 backdrop-blur-xl border-b border-border shadow-sm"></div>
+        <div className="absolute inset-0 bg-surface/95 border-b border-border shadow-sm"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/" className="text-xl font-extrabold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -41,17 +41,19 @@ export const ResultPage: React.FC = () => {
               </span>
             </Link>
           </div>
-          <Link 
-            to="/" 
-            className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface border border-border px-4 py-2 rounded-full hover:border-[#8b949e]"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Roast Another
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link 
+              to="/" 
+              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface border border-border px-4 py-2 rounded-full hover:border-[#8b949e]"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Roast Another
+            </Link>
+          </div>
         </div>
       </nav>
 
-      <main>
+      <main className="pt-6">
         {/* Repo Header Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <motion.div 
@@ -65,11 +67,11 @@ export const ResultPage: React.FC = () => {
                 <Github className="w-6 h-6" />
                 <span className="text-lg font-medium">{repo.owner}</span>
               </div>
-              <h1 className="text-4xl md:text-6xl font-serif font-extrabold text-textPrimary tracking-tight leading-tight">
+              <h1 className="text-2xl md:text-3xl font-serif font-extrabold text-textPrimary tracking-tight leading-tight">
                 {repo.name}
               </h1>
               {repo.description && (
-                <p className="text-lg text-textSecondary font-medium max-w-3xl mt-2 leading-relaxed">
+                <p className="text-base text-textSecondary font-medium max-w-3xl mt-2 leading-relaxed">
                   {repo.description}
                 </p>
               )}
