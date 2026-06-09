@@ -1,109 +1,68 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/flame.svg" alt="Flame Logo" width="120" height="120" />
-  
-  # 🔥 RepoRoast
+  <h1>🤖 RepoRoast: AI Code Review System</h1>
+  <p>A full-stack, AI-powered platform integrating the Gemini API to analyze repositories, evaluate code quality, and provide contextual architectural insights.</p>
 
-  **Intelligence meets brutality. The ultimate AI-powered code auditing tool.**
-
-  ### [🚀 Try the Live Demo: repo-roast-ai.vercel.app](https://repo-roast-ai.vercel.app/)
-
-  [![React](https://img.shields.io/badge/React-18.x-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-  [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.x-black?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
-  <br />
-  [![Node.js](https://img.shields.io/badge/Node.js-20.x-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
-  [![Express](https://img.shields.io/badge/Express-5.x-lightgrey?style=for-the-badge&logo=express)](https://expressjs.com/)
-  [![Groq](https://img.shields.io/badge/Groq-Llama_3-f55036?style=for-the-badge&logo=ai)](https://groq.com/)
-  [![Gemini](https://img.shields.io/badge/Google-Gemini_AI-4285F4?style=for-the-badge&logo=google)](https://aistudio.google.com/)
+  <!-- TECH STACK BADGES -->
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"></a>
+  <a href="https://ai.google.dev/"><img src="https://img.shields.io/badge/Gemini_API-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white" alt="Gemini API"></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"></a>
 </div>
 
-<br />
+<br/>
 
 ## 📖 Overview
-**RepoRoast** is a full-stack, AI-powered application built to thoroughly analyze, score, and brutally review GitHub repositories. Acting as a hyper-critical "Principal Engineer," it parses your repository's metadata and file structure, passes it through advanced LLMs, and returns an interactive, beautifully visualized code review.
+Standard static code analyzers often lack a contextual understanding of complex business logic, while manual peer code reviews are heavily time-consuming and prone to human error. **RepoRoast** solves this by bridging the gap between raw syntax validation and high-level architectural intent. 
 
-Designed with a heavy focus on **premium UI/UX**, performance, and robust backend engineering.
+By integrating Google's Gemini Large Language Model, RepoRoast dynamically parses repositories and provides intelligent, human-readable insights directly on the frontend.
 
-## ✨ Core Features
+## ✨ Key Features
+- **🧠 Automated AI Code Reviews:** Leverages the Gemini API to evaluate code quality, suggest structural best practices, and point out optimization areas.
+- **📂 Multi-File Parsing Engine:** A sophisticated backend parser capable of handling complex repository structures to extract critical configuration details efficiently.
+- **⚡ Token Optimization Logic:** Intelligently filters out unnecessary boilerplate code before sending it to the LLM, ensuring the system remains efficient and strictly within API token limits.
+- **💻 Responsive UI:** A fast, interactive frontend interface built with React that cleanly displays complex code structure insights.
 
-- **🧠 Multi-Model AI Engine**: Powered by a custom `aiService` architecture allowing instant toggling between **Groq (Llama-3 70B)** for blazing fast execution and **Google Gemini (1.5/2.0 Flash)**.
-- **📊 Dynamic Scorecard**: An animated, Apple-style interactive dashboard built with Framer Motion and custom SVG rendering.
-- **📄 Export to PDF**: Programmatically intercepts the browser's print engine, flattens 3D DOM transformations, and injects CSS page breaks (`print:break-before-page`) to export your roasting sessions into neat, professional PDF reports.
-- **💻 One-Click Auto-Fix Prompts**: The AI automatically synthesizes its review into a highly detailed **CRED Framework** prompt (Character, Role, Execute, Details) that developers can copy to their clipboard and paste into ChatGPT or Cursor to instantly fix their repository's flaws.
-- **🎨 State-of-the-Art UX**: Features a dramatic heartbeat splash screen, seamless page transitions, glassmorphic layout design, and staggered loading animations.
-- **🔒 Rate-Limited & Secure**: Backend integrates token reduction algorithms for Github's API, API request rate-limiting, and resilient fallback loops to handle 429/503 provider errors without crashing.
-
----
-
-## 🏗️ Architecture
-
-The application follows a modern decoupled client-server architecture:
-
-### Frontend (`/client`)
-- **Vite + React + TypeScript**: Lightning fast HMR and strict type-safety.
-- **Tailwind CSS**: Custom `tailwind.config.js` with semantic color variables (`surface`, `border`, `textPrimary`) for easy dark-mode handling.
-- **Framer Motion**: Handles complex orchestrated orchestrations (Splash Screen exit splashes, staggered list reveals, pulsing SVGs).
-
-### Backend (`/server`)
-- **Node.js + Express**: Handles RESTful API routing.
-- **Service Layer Pattern**: Decouples logic into `githubService`, `geminiService`, `groqService`, and `aiService`.
-- **Intelligent Prompt Builder**: A custom utility that takes raw Git Tree APIs, strips out non-essential binaries and `.git` folders to save LLM context windows, and formats the directory tree structurally.
-
----
+## 🏗️ Architecture Workflow
+```text
+[ React Frontend ] --> (Repo URL / Files) --> [ Node.js Backend ]
+                                                     |
+                                                     V
+[ Token Optimization Engine ] <--- (Multi-File Parser)
+         |
+         V
+[ Gemini API (LLM) ] ---> (Contextual Code Review) ---> [ React Frontend Display ]
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
-- A GitHub Classic PAT (Personal Access Token)
-- A Groq API Key OR Google Gemini API Key
+- Google Gemini API Key
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/Justinvcj/RepooRoast.git
-cd RepooRoast
-```
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Justinvcj/RepooRoast.git
+   ```
+2. Install dependencies (for both frontend and backend):
+   ```bash
+   cd backend && npm install
+   cd ../frontend && npm install
+   ```
+3. Set your environment variables in `.env`:
+   ```env
+   GEMINI_API_KEY=your_gemini_key
+   PORT=5000
+   ```
+4. Start the application:
+   ```bash
+   # Run the backend
+   cd backend && npm run start
 
-### 2. Setup the Backend
-```bash
-cd server
-npm install
+   # In a new terminal, run the frontend
+   cd frontend && npm run dev
+   ```
 
-# Rename the example env file
-cp .env.example .env
-```
-*Fill in your keys in the new `server/.env` file. You can toggle between Groq and Gemini by changing `AI_PROVIDER`.*
-
-```bash
-# Start the backend server (runs on port 3001)
-npm run dev
-```
-
-### 3. Setup the Frontend
-```bash
-# Open a new terminal
-cd client
-npm install
-
-# Rename the example env file
-cp .env.example .env
-
-# Start the Vite development server
-npm run dev
-```
-
-Your app will now be running on `http://localhost:5173`.
-
----
-
-## 💡 Why I Built This
-This project was engineered to demonstrate a complete, production-ready full-stack skill set. It highlights:
-1. **Frontend Polish**: Proving an eye for high-quality, modern, animated UI/UX.
-2. **Backend Architecture**: Implementing scalable service layers, dynamic module loading based on `.env` files, and integrating bleeding-edge AI SDKs.
-3. **Problem Solving**: Handling LLM hallucination constraints by enforcing strict JSON object schemas in the prompts and writing resilient error-fallback loops for unstable third-party APIs.
-
----
-<div align="center">
-  <i>Built with frustration and clean code.</i>
-</div>
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
