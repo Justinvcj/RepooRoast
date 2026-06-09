@@ -5,6 +5,8 @@
 
   **Intelligence meets brutality. The ultimate AI-powered code auditing tool.**
 
+  ### [🚀 Try the Live Demo: repo-roast-ai.vercel.app](https://repo-roast-ai.vercel.app/)
+
   [![React](https://img.shields.io/badge/React-18.x-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
   [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
