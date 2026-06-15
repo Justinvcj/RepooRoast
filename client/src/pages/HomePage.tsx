@@ -70,14 +70,8 @@ export const HomePage: React.FC = () => {
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-      exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.5 } }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 overflow-hidden flex flex-col relative"
-    >
-      <div className="fixed inset-0 z-0 opacity-80 pointer-events-none" style={{ height: '100vh', mixBlendMode: 'screen' }}>
+    <>
+      <div className="fixed inset-0 z-0 opacity-80 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
          <Lightfall 
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"
@@ -98,7 +92,14 @@ export const HomePage: React.FC = () => {
          />
       </div>
 
-      <main className="relative z-10">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
+        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+        exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.5 } }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="min-h-full bg-transparent text-textPrimary selection:bg-primary/30 pb-32 flex flex-col relative z-10"
+      >
+        <main className="relative z-10">
         {/* Pass the analyze function to the Hero component */}
         <Hero onAnalyzeRepo={analyzeRepo} isLoading={false} />
 
@@ -141,6 +142,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </main>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
