@@ -40,9 +40,9 @@ export const ResultPage: React.FC = () => {
             streakWidth={1}
             streakLength={1.5}
             glow={0.5}
-            density={0.3}
+            density={0.5}
             twinkle={0.5}
-            zoom={1.5}
+            zoom={2.5}
             backgroundGlow={0.1}
             mouseInteraction={false}
             dpr={1}

@@ -80,9 +80,9 @@ export const HomePage: React.FC = () => {
             streakWidth={1.2}
             streakLength={1.5}
             glow={0.7}
-            density={0.4}
+            density={0.8}
             twinkle={0.8}
-            zoom={1.5}
+            zoom={2.5}
             backgroundGlow={0.2}
             mouseInteraction={true}
             mouseStrength={1}
