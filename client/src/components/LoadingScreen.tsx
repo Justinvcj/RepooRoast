@@ -38,7 +38,7 @@ export const LoadingScreen: React.FC = () => {
          <Lightfall 
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"
-            speed={0.15}
+            speed={0.5}
             streakCount={3}
             streakWidth={1}
             streakLength={1.5}
