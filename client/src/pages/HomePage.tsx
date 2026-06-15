@@ -84,10 +84,7 @@ export const HomePage: React.FC = () => {
             twinkle={0.8}
             zoom={2.5}
             backgroundGlow={0.2}
-            mouseInteraction={true}
-            mouseStrength={1}
-            mouseRadius={0.8}
-            mouseDampening={0.15}
+            mouseInteraction={false}
             dpr={1}
          />
       </div>
