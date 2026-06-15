@@ -68,10 +68,12 @@ function App() {
       </AnimatePresence>
 
       <div className="flex flex-col min-h-screen">
-        {/* pt-6 ensures a small gap at top if needed, but Hero handles its own padding now */}
-        <div className="flex-grow">
+        <Navbar />
+        {/* pt-24 ensures the content sits beneath the new floating pill Navbar */}
+        <div className="flex-grow pt-24">
           <AnimatedRoutes />
         </div>
+        <Footer />
       </div>
     </BrowserRouter>
   );
