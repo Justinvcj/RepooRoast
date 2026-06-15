@@ -40,6 +40,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading }) => {
             <Github className="h-7 w-7 text-textSecondary" />
           </div>
           <input
+            id="repo-url-input"
             type="text"
             className="flex-grow bg-transparent border-none text-textPrimary placeholder-textSecondary focus:outline-none focus:ring-0 text-lg font-medium"
             placeholder="github.com/username/repository"
