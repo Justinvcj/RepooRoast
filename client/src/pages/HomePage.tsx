@@ -5,6 +5,7 @@ import { Code2, GitMerge, FileText, Shield, TestTube, Zap, TrendingUp } from 'lu
 import { motion } from 'framer-motion';
 
 import { useRepoReview } from '../hooks/useRepoReview';
+import { useLayout } from '../contexts/LayoutContext';
 import { Hero } from '../components/Hero';
 import { LoadingScreen } from '../components/LoadingScreen';
 import Lightfall from '../components/Lightfall';
@@ -64,6 +65,23 @@ export const HomePage: React.FC = () => {
       toast.error(error);
     }
   }, [error]);
+
+  const { setIsNavbarVisible, setIsFooterVisible } = useLayout();
+
+  useEffect(() => {
+    if (status === 'loading') {
+      setIsNavbarVisible(false);
+      setIsFooterVisible(false);
+    } else {
+      setIsNavbarVisible(true);
+      setIsFooterVisible(true);
+    }
+    // Cleanup function to ensure they are visible if component unmounts
+    return () => {
+      setIsNavbarVisible(true);
+      setIsFooterVisible(true);
+    };
+  }, [status, setIsNavbarVisible, setIsFooterVisible]);
 
   // Force scroll to top on mount (e.g. page refresh)
   useEffect(() => {

@@ -9,6 +9,8 @@ import { HomePage } from './pages/HomePage';
 import { ResultPage } from './pages/ResultPage';
 import { SplashScreen } from './components/SplashScreen';
 
+import { LayoutProvider, useLayout } from './contexts/LayoutContext';
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
@@ -21,8 +23,9 @@ const AnimatedRoutes = () => {
   );
 };
 
-function App() {
+function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
+  const { isNavbarVisible, isFooterVisible } = useLayout();
 
   useEffect(() => {
     // Hide splash screen after 2.2 seconds
@@ -33,11 +36,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      {/* 
-        The Toaster component provides global toast notifications 
-        accessible via react-hot-toast across all pages.
-      */}
+    <>
       <Toaster 
         position="bottom-right" 
         toastOptions={{
@@ -68,13 +67,23 @@ function App() {
       </AnimatePresence>
 
       <div className="flex flex-col min-h-screen">
-        <Navbar />
+        {isNavbarVisible && <Navbar />}
         {/* pt-24 ensures the content sits beneath the new floating pill Navbar */}
-        <div className="flex-grow pt-24">
+        <div className={`flex-grow ${isNavbarVisible ? 'pt-24' : ''}`}>
           <AnimatedRoutes />
         </div>
-        <Footer />
+        {isFooterVisible && <Footer />}
       </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <LayoutProvider>
+        <AppContent />
+      </LayoutProvider>
     </BrowserRouter>
   );
 }
