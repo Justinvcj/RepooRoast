@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
 import type { ApiResponse } from '../types';
+import Lightfall from '../components/Lightfall';
 import { Github, ExternalLink, ArrowLeft, Star, GitFork, Code } from 'lucide-react';
 
 export const ResultPage: React.FC = () => {
@@ -24,14 +25,34 @@ export const ResultPage: React.FC = () => {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-      exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="min-h-screen bg-background text-textPrimary selection:bg-primary/30 pb-20 relative"
     >
+      {/* Subtle Continuous Lightfall Background */}
+      <div className="fixed inset-0 z-0 opacity-30 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
+         <Lightfall 
+            colors={['#f97316', '#f85149', '#d29922']}
+            backgroundColor="#0d1117"
+            speed={0.1}
+            streakCount={4}
+            streakWidth={1}
+            streakLength={1.5}
+            glow={0.5}
+            density={0.5}
+            twinkle={0.5}
+            zoom={2.5}
+            backgroundGlow={0.1}
+            mouseInteraction={true}
+            mouseStrength={0.5}
+            mouseRadius={0.5}
+            mouseDampening={0.2}
+         />
+      </div>
+
       {/* Floating Navbar */}
-      <nav className="sticky top-0 z-50 w-full mb-8">
+      <nav className="sticky top-0 z-50 w-full mb-8 relative">
         <div className="absolute inset-0 bg-surface/95 border-b border-border shadow-sm"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
@@ -53,7 +74,7 @@ export const ResultPage: React.FC = () => {
         </div>
       </nav>
 
-      <main className="pt-6">
+      <main className="relative z-10 pt-6">
         {/* Repo Header Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <motion.div 

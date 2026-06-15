@@ -9,7 +9,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onAnalyzeRepo, isLoading }) => {
   return (
-    <div className="pt-12 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto">
+    <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto relative z-10 min-h-[80vh] flex flex-col justify-center">
       <motion.div
         initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}

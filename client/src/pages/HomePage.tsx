@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useRepoReview } from '../hooks/useRepoReview';
 import { Hero } from '../components/Hero';
 import { LoadingScreen } from '../components/LoadingScreen';
+import Lightfall from '../components/Lightfall';
 
 const features = [
   {
@@ -74,9 +75,29 @@ export const HomePage: React.FC = () => {
       animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
       exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.5 } }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 overflow-hidden flex flex-col"
+      className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 overflow-hidden flex flex-col relative"
     >
-      <main>
+      <div className="absolute inset-0 z-0 opacity-80" style={{ height: '100vh', mixBlendMode: 'screen' }}>
+         <Lightfall 
+            colors={['#f97316', '#f85149', '#d29922']}
+            backgroundColor="#0d1117"
+            speed={0.2}
+            streakCount={8}
+            streakWidth={1.2}
+            streakLength={1.5}
+            glow={0.7}
+            density={0.8}
+            twinkle={0.8}
+            zoom={2.5}
+            backgroundGlow={0.2}
+            mouseInteraction={true}
+            mouseStrength={1}
+            mouseRadius={0.8}
+            mouseDampening={0.15}
+         />
+      </div>
+
+      <main className="relative z-10">
         {/* Pass the analyze function to the Hero component */}
         <Hero onAnalyzeRepo={analyzeRepo} isLoading={false} />
 
