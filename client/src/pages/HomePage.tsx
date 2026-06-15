@@ -8,6 +8,8 @@ import { useRepoReview } from '../hooks/useRepoReview';
 import { Hero } from '../components/Hero';
 import { LoadingScreen } from '../components/LoadingScreen';
 import Lightfall from '../components/Lightfall';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 
 const features = [
   {
@@ -99,9 +101,10 @@ export const HomePage: React.FC = () => {
         animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
         exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.5 } }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="min-h-full bg-transparent text-textPrimary selection:bg-primary/30 pb-32 flex flex-col relative z-10"
+        className="min-h-full bg-transparent text-textPrimary selection:bg-primary/30 flex flex-col relative z-10"
       >
-        <main className="relative z-10">
+        <Navbar />
+        <main className="relative z-10 flex-grow pt-8">
         {/* Pass the analyze function to the Hero component */}
         <Hero onAnalyzeRepo={analyzeRepo} isLoading={false} />
 
@@ -144,6 +147,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
       </main>
+      <Footer />
       </motion.div>
     </>
   );
