@@ -77,7 +77,7 @@ export const HomePage: React.FC = () => {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 overflow-hidden flex flex-col relative"
     >
-      <div className="absolute inset-0 z-0 opacity-80" style={{ height: '100vh', mixBlendMode: 'screen' }}>
+      <div className="fixed inset-0 z-0 opacity-80 pointer-events-none" style={{ height: '100vh', mixBlendMode: 'screen' }}>
          <Lightfall 
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"
@@ -122,9 +122,10 @@ export const HomePage: React.FC = () => {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-surface/90 rounded-3xl p-6 border border-border/50 hover:border-primary/30 transition-all shadow-xl group"
+                className="bg-[#0d1117]/50 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-8 group relative overflow-hidden"
               >
-                <div>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <div className="relative z-10">
                   <span className="inline-flex items-center justify-center p-4 bg-background border border-border rounded-full shadow-inner mb-8 group-hover:scale-110 transition-transform">
                     <feature.icon className="h-8 w-8 text-primary" aria-hidden="true" />
                   </span>
