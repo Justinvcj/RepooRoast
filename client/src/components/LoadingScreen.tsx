@@ -32,7 +32,7 @@ export const LoadingScreen: React.FC = () => {
   ];
 
   return (
-    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4">
+    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background">
       {/* Background stays completely fixed */}
       <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
          <Lightfall 
