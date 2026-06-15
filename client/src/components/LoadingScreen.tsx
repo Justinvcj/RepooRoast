@@ -54,9 +54,6 @@ export const LoadingScreen: React.FC = () => {
 
       {/* Pulsing Flame Icon */}
       <motion.div
-        className="relative z-10 flex flex-col items-center justify-center w-full"
-      >
-      <motion.div
         animate={{ 
           scale: [1, 1.2, 1],
           opacity: [0.8, 1, 0.8]
@@ -66,8 +63,7 @@ export const LoadingScreen: React.FC = () => {
           repeat: Infinity,
           ease: "easeInOut" 
         }}
-        }}
-        className="mb-16 p-6 rounded-full bg-[#0d1117]/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
+        className="relative z-10 mb-16 p-6 rounded-full bg-[#0d1117]/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
       >
         <Flame className="w-14 h-14 text-primary" />
       </motion.div>
