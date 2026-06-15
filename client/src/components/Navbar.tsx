@@ -6,14 +6,14 @@ export const Navbar: React.FC = () => {
   const handleScrollToTop = (e: React.MouseEvent) => {
     if (window.location.pathname === '/') {
       e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Give smooth scroll a moment before focusing to prevent jumping
+      setTimeout(() => {
+        const input = document.getElementById('repo-url-input') as HTMLInputElement;
+        if (input) input.focus({ preventScroll: true });
+      }, 500);
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Give smooth scroll a moment before focusing to prevent jumping
-    setTimeout(() => {
-      const input = document.getElementById('repo-url-input') as HTMLInputElement;
-      if (input) input.focus();
-    }, 400);
   };
 
   return (

@@ -65,6 +65,11 @@ export const HomePage: React.FC = () => {
     }
   }, [error]);
 
+  // Force scroll to top on mount (e.g. page refresh)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (status === 'loading') {
     return <LoadingScreen />;
   }
