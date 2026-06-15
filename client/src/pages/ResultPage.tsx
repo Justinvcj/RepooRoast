@@ -36,18 +36,16 @@ export const ResultPage: React.FC = () => {
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"
             speed={0.1}
-            streakCount={4}
+            streakCount={2}
             streakWidth={1}
             streakLength={1.5}
             glow={0.5}
-            density={0.5}
+            density={0.3}
             twinkle={0.5}
-            zoom={2.5}
+            zoom={1.5}
             backgroundGlow={0.1}
-            mouseInteraction={true}
-            mouseStrength={0.5}
-            mouseRadius={0.5}
-            mouseDampening={0.2}
+            mouseInteraction={false}
+            dpr={1}
          />
       </div>
 

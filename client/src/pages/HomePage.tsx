@@ -82,18 +82,19 @@ export const HomePage: React.FC = () => {
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"
             speed={0.2}
-            streakCount={8}
+            streakCount={3}
             streakWidth={1.2}
             streakLength={1.5}
             glow={0.7}
-            density={0.8}
+            density={0.4}
             twinkle={0.8}
-            zoom={2.5}
+            zoom={1.5}
             backgroundGlow={0.2}
             mouseInteraction={true}
             mouseStrength={1}
             mouseRadius={0.8}
             mouseDampening={0.15}
+            dpr={1}
          />
       </div>
 
