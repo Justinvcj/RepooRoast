@@ -50,9 +50,8 @@ export const ResultPage: React.FC = () => {
       </div>
 
       {/* Floating Navbar */}
-      <nav className="sticky top-0 z-50 w-full mb-8 relative">
-        <div className="absolute inset-0 bg-surface/95 border-b border-border shadow-sm"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav className="pointer-events-auto bg-[#0d1117]/60 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-all duration-300 w-full max-w-7xl">
           <div className="flex items-center gap-6">
             <Link to="/" className="text-xl font-extrabold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
               <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-yellow-400">
@@ -63,16 +62,16 @@ export const ResultPage: React.FC = () => {
           <div className="flex items-center gap-4">
             <Link 
               to="/" 
-              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface border border-border px-4 py-2 rounded-full hover:border-[#8b949e]"
+              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface/50 border border-border/50 px-4 py-2 rounded-full hover:border-[#8b949e]"
             >
               <ArrowLeft className="w-4 h-4" />
               Roast Another
             </Link>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
-      <main className="relative z-10 pt-6">
+      <main className="relative z-10 pt-28">
         {/* Repo Header Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <motion.div 

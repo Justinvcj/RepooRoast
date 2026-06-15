@@ -14,7 +14,9 @@ export const Hero: React.FC<HeroProps> = ({ onAnalyzeRepo, isLoading }) => {
         initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ duration: 1, ease: 'easeOut' }}
+        className="bg-[#0d1117]/50 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)] rounded-[3rem] p-8 md:p-16 w-full relative overflow-hidden"
       >
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none rounded-[3rem]"></div>
         <h1 className="text-5xl md:text-7xl font-serif font-extrabold tracking-tight mb-6 leading-tight">
           <span className="text-textPrimary tracking-tighter">Roast your </span>
           <br className="hidden md:block" />
