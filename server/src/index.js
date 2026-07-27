@@ -40,7 +40,7 @@ app.use(morgan('dev'));
 // Create a limiter specifically for the AI review endpoint to prevent abuse
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 3, // Limit each IP to 3 requests per `window` (here, per 15 minutes)
+  max: 100, // Temporarily increased for development and testing
   message: {
     success: false,
     error: 'Too many requests from this IP, please try again after 15 minutes'
