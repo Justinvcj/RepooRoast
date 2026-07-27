@@ -6,15 +6,8 @@ import { generateCodeReview as groqGenerate } from './groqService.js';
  * based on the AI_PROVIDER environment variable.
  */
 const generateCodeReview = async (repoData) => {
-  const provider = process.env.AI_PROVIDER?.toLowerCase() || 'gemini';
-  
-  if (provider === 'groq') {
-    console.log('[AI Wrapper] Routing request to Groq...');
-    return await groqGenerate(repoData);
-  } else {
-    console.log('[AI Wrapper] Routing request to Gemini...');
-    return await geminiGenerate(repoData);
-  }
+  console.log('[AI Wrapper] Routing request to Gemini...');
+  return await geminiGenerate(repoData);
 };
 
 export { generateCodeReview };
