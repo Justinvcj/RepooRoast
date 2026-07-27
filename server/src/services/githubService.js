@@ -132,16 +132,25 @@ const fetchRepoData = async (repoUrl) => {
     // Filter out directories and explicitly ignored paths/extensions
     const ignorePatterns = [
       /^node_modules\//, /^\.git\//, /^dist\//, /^build\//, 
-      /\.lock$/, /\.(png|jpe?g|gif|svg|ico|ttf|woff2?|eot|mp4|webp)$/i
+      /\.lock$/, /package-lock\.json$/, /yarn\.lock$/, /pnpm-lock\.yaml$/,
+      /\.(png|jpe?g|gif|svg|ico|ttf|woff2?|eot|mp4|webp|csv|jsonl|pdf|zip|tar|gz)$/i
     ];
     
-    // Only looking at blobs (files)
+    // ZERO-BUDGET OOM PROTECTION: 
+    // Only look at blobs (files) and strictly enforce a 50KB size limit 
+    // using the 'size' property returned by the GitHub Tree API.
+    // This costs $0 and prevents the server from ever downloading massive files.
+    const MAX_FILE_SIZE = 50000; // 50KB
+    
     const allFilePaths = tree
       .filter(item => item.type === 'blob')
       .map(item => item.path);
 
-    const isIgnored = (path) => ignorePatterns.some(pattern => pattern.test(path));
-    const validFiles = allFilePaths.filter(path => !isIgnored(path));
+    const validFiles = tree
+      .filter(item => item.type === 'blob')
+      .filter(item => item.size <= MAX_FILE_SIZE) // Filter by size BEFORE fetching!
+      .map(item => item.path)
+      .filter(path => !ignorePatterns.some(pattern => pattern.test(path)));
 
     const selectedFilePaths = new Set();
 
