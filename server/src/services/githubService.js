@@ -28,7 +28,7 @@ const getGitHubAxiosInstance = () => {
   };
   
   if (process.env.GITHUB_TOKEN) {
-    headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+    headers['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
 
   return axios.create({

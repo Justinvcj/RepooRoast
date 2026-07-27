@@ -95,6 +95,16 @@ export const LoadingScreen: React.FC = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Loading Bar */}
+        <div className="w-full h-2 bg-white/10 rounded-full mt-8 overflow-hidden">
+          <motion.div 
+            className="h-full bg-primary"
+            initial={{ width: "0%" }}
+            animate={{ width: "95%" }}
+            transition={{ duration: 12, ease: "easeOut" }}
+          />
+        </div>
       </div>
 
       {/* Dynamic Roasting Quotes */}
