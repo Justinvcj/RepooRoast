@@ -23,6 +23,28 @@ export const LoadingScreen: React.FC = () => {
     return () => clearInterval(quoteInterval);
   }, []);
 
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // Animate from 0 to 95% over 12 seconds to match the CSS animation
+    const duration = 12000;
+    const intervalTime = 50;
+    const totalSteps = duration / intervalTime;
+    let currentStep = 0;
+
+    const progressInterval = setInterval(() => {
+      currentStep++;
+      const currentProgress = Math.min(Math.round((currentStep / totalSteps) * 95), 95);
+      setProgress(currentProgress);
+      
+      if (currentStep >= totalSteps) {
+        clearInterval(progressInterval);
+      }
+    }, intervalTime);
+
+    return () => clearInterval(progressInterval);
+  }, []);
+
   const steps = [
     { text: "Fetching repository metadata...", icon: <Database className="w-5 h-5 text-textSecondary" /> },
     { text: "Reading file structure...", icon: <Terminal className="w-5 h-5 text-textSecondary" /> },
@@ -96,14 +118,20 @@ export const LoadingScreen: React.FC = () => {
           ))}
         </div>
 
-        {/* Loading Bar */}
-        <div className="w-full h-2 bg-white/10 rounded-full mt-8 overflow-hidden">
-          <motion.div 
-            className="h-full bg-primary"
-            initial={{ width: "0%" }}
-            animate={{ width: "95%" }}
-            transition={{ duration: 12, ease: "easeOut" }}
-          />
+        {/* Loading Bar Container */}
+        <div className="mt-8">
+          <div className="flex justify-between items-center mb-2 text-sm font-medium text-textSecondary">
+            <span>Progress</span>
+            <span className="text-primary font-bold">{progress}%</span>
+          </div>
+          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-primary"
+              initial={{ width: "0%" }}
+              animate={{ width: "95%" }}
+              transition={{ duration: 12, ease: "easeOut" }}
+            />
+          </div>
         </div>
       </div>
 
