@@ -1,6 +1,8 @@
 import { getLanguageForFile, getParser } from './parserLoader.js';
 import { analyzeJSTS } from './jstsAnalyzer.js';
+import { analyzePython } from './pythonAnalyzer.js';
 import { analyzeGeneric } from './genericAnalyzer.js';
+import { buildDependencyGraph } from './graphResolver.js';
 
 export const analyzeFile = async (sourceCode, filePath) => {
   const language = getLanguageForFile(filePath);
@@ -13,7 +15,13 @@ export const analyzeFile = async (sourceCode, filePath) => {
     }
   }
 
-  // Add python analyzer here later when implemented
+  if (language === 'python') {
+    const parser = await getParser('python');
+    if (parser) {
+      const tree = parser.parse(sourceCode);
+      return analyzePython(tree, sourceCode, filePath);
+    }
+  }
   
   // Fallback
   return analyzeGeneric(sourceCode, filePath);
@@ -32,11 +40,6 @@ export const runStaticAnalysis = async (filesContentMap) => {
     filesWithZeroComments: [],
     todoCount: 0,
     fixmeCount: 0,
-  };
-
-  const dependencyGraph = {
-    nodes: [],
-    edges: [],
   };
 
   for (const [filePath, content] of Object.entries(filesContentMap)) {
@@ -58,16 +61,14 @@ export const runStaticAnalysis = async (filesContentMap) => {
 
     repoMetrics.languageBreakdown[analysis.language] = (repoMetrics.languageBreakdown[analysis.language] || 0) + 1;
 
-    // Aggregate Dependency Graph
-    dependencyGraph.nodes.push(filePath);
-    for (const imp of analysis.imports) {
-      dependencyGraph.edges.push({ from: filePath, to: imp });
-    }
   }
 
   repoMetrics.commentToCodeRatio = repoMetrics.totalLOC > 0 
     ? (repoMetrics.commentLOC / repoMetrics.totalLOC).toFixed(3)
     : 0;
+
+  // Build the intelligent dependency graph
+  const dependencyGraph = buildDependencyGraph(fileAnalyses);
 
   return {
     repoMetrics,

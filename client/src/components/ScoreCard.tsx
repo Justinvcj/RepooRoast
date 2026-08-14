@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { getScoreColor } from '../utils/scoreHelpers';
 
 interface ScoreCardProps {
   score: number;
@@ -10,10 +11,7 @@ interface ScoreCardProps {
 
 export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hiringVerdict }) => {
   // Determine color based on score
-  let ringColor = '#f85149'; // danger
-  if (score >= 80) ringColor = '#3fb950'; // success
-  else if (score >= 60) ringColor = '#d29922'; // warning
-  else if (score >= 40) ringColor = '#f97316'; // primary
+  const ringColor = getScoreColor(score);
 
   // Circle properties
   const radius = 90;

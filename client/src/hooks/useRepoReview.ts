@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import type { ApiResponse, ReviewStatus } from '../types';
+import { extractRepoInfo } from '../utils/githubParser';
 
 export const useRepoReview = () => {
   const [status, setStatus] = useState<ReviewStatus>('idle');
@@ -11,10 +12,26 @@ export const useRepoReview = () => {
     setStatus('loading');
     setError(null);
     
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+    
     try {
-      // Use the environment variable for production, or fallback to relative for local Vite proxy
+      const parsed = extractRepoInfo(repoUrl);
       const API_BASE = import.meta.env.VITE_API_URL || '';
-      const response = await axios.post<ApiResponse>(`${API_BASE}/api/review`, { repoUrl });
+      
+      let endpoint = `${API_BASE}/api/review`;
+      let payload: any = { repoUrl };
+
+      if (parsed && (parsed.type === 'pull' || parsed.type === 'compare')) {
+        endpoint = `${API_BASE}/api/review/diff`;
+        payload = parsed;
+      }
+
+      const response = await axios.post<ApiResponse>(endpoint, payload, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       
       if (response.data.success) {
         localStorage.setItem('reporoast_last_review', JSON.stringify({
@@ -24,17 +41,16 @@ export const useRepoReview = () => {
         setData(response.data);
         setStatus('success');
       } else {
-        // Handle cases where the server returned a 2xx status but success was false
-        // (Even though our backend currently throws 4xx/5xx for these)
         throw new Error('Analysis failed unexpectedly.');
       }
 
     } catch (err) {
-      // Standardize the error message
+      clearTimeout(timeoutId);
       let errorMessage = 'An unexpected error occurred during review generation.';
       
-      if (axios.isAxiosError(err) && err.response?.data?.error) {
-         // This extracts the human-readable error sent by our backend error handler
+      if (axios.isCancel(err)) {
+        errorMessage = 'The review request timed out. Please try a smaller repository.';
+      } else if (axios.isAxiosError(err) && err.response?.data?.error) {
          errorMessage = err.response.data.error;
       } else if (err instanceof Error) {
          errorMessage = err.message;

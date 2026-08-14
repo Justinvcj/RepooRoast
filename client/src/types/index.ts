@@ -1,17 +1,35 @@
 export interface RepoMetadata {
-  name: string;
   owner: string;
+  repo: string;
+  fullName: string;
   description: string | null;
+  defaultBranch: string;
   stars: number;
   forks: number;
-  language: string | null;
-  createdAt: string;
   updatedAt: string;
-  size: number;
-  openIssues: number;
-  license: string | null;
-  topics: string[];
-  defaultBranch: string;
+}
+
+export interface StaticAnalysis {
+  repoMetrics: {
+    totalFiles: number;
+    totalLOC: number;
+    commentLOC: number;
+    blankLOC: number;
+    languageBreakdown: Record<string, number>;
+    totalFunctions: number;
+    filesWithZeroComments: string[];
+    todoCount: number;
+    fixmeCount: number;
+    commentToCodeRatio: number;
+  };
+  dependencyGraph: {
+    metrics: {
+      hubs: string[];
+      orphans: string[];
+      circularPaths: string[];
+    };
+  };
+  fileAnalyses: any[];
 }
 
 export type Severity = 'critical' | 'high' | 'medium' | 'low';
@@ -47,6 +65,7 @@ export interface ReviewResult {
 export interface ApiResponse {
   success: boolean;
   repo: RepoMetadata;
+  analysis?: StaticAnalysis;
   review: ReviewResult;
 }
 

@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { buildReviewPrompt } from '../utils/promptBuilder.js';
+import { buildReviewPrompt, buildDiffReviewPrompt } from '../utils/promptBuilder.js';
 import { parseGeminiResponse } from '../utils/responseParser.js';
 import { runStaticAnalysis } from '../analyzers/staticAnalyzer.js';
 
@@ -27,13 +27,19 @@ const generateCodeReview = async (repoData) => {
   try {
     const genAI = initGemini();
     
-    // 1. Run local deterministic static analysis to save LLM tokens
-    console.log('[Analyzer] Running local AST static analysis...');
-    const staticAnalysisResult = await runStaticAnalysis(repoData.selectedFiles);
-    repoData.staticAnalysis = staticAnalysisResult;
+    let prompt;
+    if (repoData.isDiff) {
+      console.log('[Gemini] Processing incremental Diff/PR review...');
+      prompt = buildDiffReviewPrompt(repoData);
+    } else {
+      // 1. Run local deterministic static analysis to save LLM tokens
+      console.log('[Analyzer] Running local AST static analysis...');
+      const staticAnalysisResult = await runStaticAnalysis(repoData.selectedFiles);
+      repoData.staticAnalysis = staticAnalysisResult;
 
-    // 2. Build the prompt using the GitHub data + Static Analysis findings
-    const prompt = buildReviewPrompt(repoData);
+      // 2. Build the full repo prompt
+      prompt = buildReviewPrompt(repoData);
+    }
 
     // 2. Call the Gemini API with Automatic Model Fallback
     const fallbackModels = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"];

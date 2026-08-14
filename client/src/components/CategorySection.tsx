@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import type { Category } from '../types';
 import { IssueCard } from './IssueCard';
 import { ChevronDown, CheckCircle2 } from 'lucide-react';
+import { getScoreColor } from '../utils/scoreHelpers';
 
 interface CategorySectionProps {
   category: Category;
@@ -10,11 +11,6 @@ interface CategorySectionProps {
 
 export const CategorySection: React.FC<CategorySectionProps> = ({ category }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
-  let scoreColor = 'text-[#f85149]'; // danger
-  if (category.score >= 80) scoreColor = 'text-[#3fb950]'; // success
-  else if (category.score >= 60) scoreColor = 'text-[#d29922]'; // warning
-  else if (category.score >= 40) scoreColor = 'text-[#f97316]'; // primary
 
   return (
     <motion.div 
@@ -32,7 +28,10 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
           <span className="text-3xl">{category.emoji}</span>
           <div className="flex flex-col items-start">
             <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">{category.name}</h3>
-            <span className={`font-mono font-extrabold mt-1 tracking-wider ${scoreColor}`}>
+            <span 
+              className="font-mono font-extrabold mt-1 tracking-wider"
+              style={{ color: getScoreColor(category.score) }}
+            >
               {category.score} / 100
             </span>
           </div>

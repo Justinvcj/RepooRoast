@@ -159,12 +159,12 @@ const fetchRepoData = async (repoUrl) => {
       }
     });
 
-    // Strategy 2: Fetch up to 8 additional source files based on priority
-    const priorityKeywords = ['index.js', 'main.py', 'src/routes/', 'src/services/', 'auth', 'api', 'user'];
+    // Strategy 2: Fetch up to 25 additional source files based on priority
+    const priorityKeywords = ['index.js', 'index.ts', 'main.py', 'app.js', 'app.ts', 'src/routes/', 'src/services/', 'auth', 'api', 'user', 'controller', 'utils', 'src/'];
     let additionalFilesCount = 0;
 
     for (const path of validFiles) {
-      if (additionalFilesCount >= 8) break;
+      if (additionalFilesCount >= 25) break;
       
       if (!selectedFilePaths.has(path)) {
         const isPriority = priorityKeywords.some(keyword => path.includes(keyword));
@@ -210,6 +210,74 @@ const fetchRepoData = async (repoUrl) => {
   }
 };
 
+/**
+ * Fetches the diff data for a pull request or a compare string.
+ * @param {string} owner - Repository owner.
+ * @param {string} repo - Repository name.
+ * @param {string} pullNumber - Optional PR number.
+ * @param {string} compareString - Optional compare string (e.g. base...head).
+ */
+const fetchDiffData = async (owner, repo, pullNumber = null, compareString = null) => {
+  const api = getGitHubAxiosInstance();
+
+  try {
+    // 1. Fetch Repository Metadata
+    const metadataRes = await api.get(`/repos/${owner}/${repo}`);
+    const metadata = metadataRes.data;
+
+    let diffUrl = '';
+    let prTitle = '';
+    let prDescription = '';
+
+    if (pullNumber) {
+      const prRes = await api.get(`/repos/${owner}/${repo}/pulls/${pullNumber}`);
+      prTitle = prRes.data.title;
+      prDescription = prRes.data.body;
+      diffUrl = prRes.data.diff_url; 
+    } else if (compareString) {
+      // For compare endpoint, we can request the diff format directly via headers
+      diffUrl = `https://api.github.com/repos/${owner}/${repo}/compare/${compareString}`;
+    } else {
+      throw new Error('Must provide pullNumber or compareString');
+    }
+
+    // Fetch the raw diff text
+    let diffContent = '';
+    try {
+      const headers = { 'Accept': 'application/vnd.github.v3.diff' };
+      if (process.env.GITHUB_TOKEN) {
+        headers['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
+      }
+      
+      const diffRes = await axios.get(diffUrl, { headers });
+      diffContent = diffRes.data;
+    } catch (e) {
+      throw new Error('Failed to fetch diff content. The diff might be too large or invalid.');
+    }
+
+    return {
+      metadata: {
+        owner,
+        repo,
+        fullName: metadata.full_name,
+        description: metadata.description,
+        defaultBranch: metadata.default_branch,
+        stars: metadata.stargazers_count,
+        forks: metadata.forks_count,
+        updatedAt: metadata.updated_at
+      },
+      isDiff: true,
+      diffTitle: prTitle || `Comparison: ${compareString}`,
+      diffDescription: prDescription || '',
+      diffContent: diffContent
+    };
+
+  } catch (error) {
+    handleGitHubError(error);
+  }
+};
+
 export {
-  fetchRepoData
+  fetchRepoData,
+  fetchDiffData
 };

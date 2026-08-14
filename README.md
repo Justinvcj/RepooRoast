@@ -9,10 +9,11 @@ It doesn't just skim your README; it parses your dependency graphs, calculates y
 
 ## ⚡ Key Features
 
-- **Blazing Fast Static Analysis**: Uses `web-tree-sitter` to parse JavaScript/TypeScript locally. It calculates Cyclomatic Complexity, nesting depths, and code-to-comment ratios *before* ever hitting the LLM.
-- **Smart File Selection & OOM Protection**: Only fetches high-value files (routes, services, configurations) and strictly ignores binaries, massive files, and `node_modules` to guarantee 0 budget overrun.
+- **Blazing Fast Static Analysis**: Uses `web-tree-sitter` (JS/TS, Python) to parse AST locally. Calculates cyclomatic complexity, deep callbacks, magic numbers, and code-to-comment ratios *before* hitting the LLM.
+- **Deep Dependency Graphing**: Analyzes local import structures to identify architectural Hubs, disconnected Orphans, and dangerous Circular Dependencies.
+- **Intelligent Token Budget System**: Uses PageRank-style file scoring (centrality, length efficiency, recency, file type) and `gpt-tokenizer` to proactively distribute an exact 30k token budget, guaranteeing zero context truncation or OOMs.
+- **Incremental Diff-Aware Roasts**: Paste a GitHub Pull Request or `/compare` URL, and RepoRoast will dynamically fetch the raw patch diff, isolating its critique strictly to the changed lines.
 - **Jailbreak Immunity**: Built for the real world. Repo data is strictly fenced in XML boundaries, and the prompt engine actively ignores malicious prompt-injection attempts hidden in untrusted codebase READMEs.
-- **Brutally Honest AI**: Powered by Gemini (`gemini-2.5-flash` with fallback mechanisms), instructed to adopt the persona of a cynical Principal Engineer. No sugar-coating.
 - **Automated Fix Prompts**: Generates a custom, highly-detailed prompt following the CRED framework that you can paste directly into Copilot or Cursor to automatically fix all the issues it found.
 
 ---
