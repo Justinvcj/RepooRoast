@@ -1,7 +1,7 @@
 import express from 'express';
 import { fetchRepoData, fetchDiffData } from '../services/githubService.js';
 import { generateCodeReview } from '../services/geminiService.js';
-import { validateRepoUrl } from '../middleware/inputValidator.js';
+import { validateRepoUrl, validateDiffComponents } from '../middleware/inputValidator.js';
 
 const router = express.Router();
 
@@ -52,13 +52,9 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
  *   "compareString": "string?"
  * }
  */
-router.post('/diff', async (req, res, next) => {
+router.post('/diff', validateDiffComponents, async (req, res, next) => {
   try {
     const { owner, repo, pullNumber, compareString } = req.body;
-
-    if (!owner || !repo || (!pullNumber && !compareString)) {
-      return res.status(400).json({ success: false, error: 'Missing required parameters for diff review.' });
-    }
 
     const diffData = await fetchDiffData(owner, repo, pullNumber, compareString);
     

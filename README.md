@@ -1,111 +1,126 @@
-# 🔥 RepoRoast V2
-> From a "pretty GPT wrapper" to "the only AI code reviewer with a brain of its own."
+# RepoRoast 🔥
 
-RepoRoast is a brutal, objective, and delightfully sarcastic AI code reviewer. Point it at any public GitHub repository, and it will rip through the source code using deterministic AST parsing (Tree-Sitter) combined with Google's Gemini models to deliver a pinpoint accurate, senior-level code review.
+**RepoRoast** is a brutal, lightning-fast, AI-powered codebase auditor and pull request reviewer. It combines deterministic static code analysis with state-of-the-art LLM capabilities (Google Gemini) to instantly identify architectural flaws, security risks, anti-patterns, and code quality issues. 
 
-It doesn't just skim your README; it parses your dependency graphs, calculates your cyclomatic complexity, flags your "God Functions," and roasts you for them.
+Unlike standard "AI wrappers", RepoRoast uses an intelligent **Token Optimization Engine** and **Abstract Syntax Tree (AST) Parsing** to analyze entire repositories—up to hundreds of files—without exhausting AI context limits or breaking the bank.
+
+![RepoRoast Demo UI](client/public/favicon.svg)
 
 ---
 
-## ⚡ Key Features
+## 🌟 Key Features
 
-- **Blazing Fast Static Analysis**: Uses `web-tree-sitter` (JS/TS, Python) to parse AST locally. Calculates cyclomatic complexity, deep callbacks, magic numbers, and code-to-comment ratios *before* hitting the LLM.
-- **Deep Dependency Graphing**: Analyzes local import structures to identify architectural Hubs, disconnected Orphans, and dangerous Circular Dependencies.
-- **Intelligent Token Budget System**: Uses PageRank-style file scoring (centrality, length efficiency, recency, file type) and `gpt-tokenizer` to proactively distribute an exact 30k token budget, guaranteeing zero context truncation or OOMs.
-- **Incremental Diff-Aware Roasts**: Paste a GitHub Pull Request or `/compare` URL, and RepoRoast will dynamically fetch the raw patch diff, isolating its critique strictly to the changed lines.
-- **Jailbreak Immunity**: Built for the real world. Repo data is strictly fenced in XML boundaries, and the prompt engine actively ignores malicious prompt-injection attempts hidden in untrusted codebase READMEs.
-- **Automated Fix Prompts**: Generates a custom, highly-detailed prompt following the CRED framework that you can paste directly into Copilot or Cursor to automatically fix all the issues it found.
+1. **Zero-Budget OOM Protection & Smart Selection**: Intelligently skips binary files, massive blobs (>50KB), and lock files, preventing Out-of-Memory crashes and wasted bandwidth.
+2. **Deterministic AST Static Analysis**: Locally parses JavaScript/TypeScript and Python to compute Lines of Code (LOC), Comment/Code ratios, Magic Numbers, and Architectural Hubs & Orphans before sending data to the AI.
+3. **Advanced Token Allocation**: Uses `gpt-tokenizer` to accurately measure file sizes in tokens, automatically prioritizing core files (like `package.json` and `Dockerfile`) and dynamically allocating the remaining context budget.
+4. **Incremental Pull Request (Diff) Review**: Supports pasting PR, compare, or commit URLs (e.g., `https://github.com/owner/repo/pull/1`) to run targeted, deep analysis on *just* the changed files.
+5. **Interactive Architecture Dashboard**: A sleek, fluid web interface that visualizes code scores, dependency hubs, and critical security issues, complete with a generated "Auto-Fix Prompt" you can paste directly into an IDE.
 
 ---
 
 ## 🏗️ Architecture
 
-RepoRoast uses a React frontend and an Express/Node.js backend.
+RepoRoast is a full-stack web application consisting of a React-based frontend and an Express-based Node.js backend.
 
-1. **Frontend**: React + Vite (hosted on Vercel). Captures the GitHub URL and streams the UI states.
-2. **Backend**: Express API.
-   - **GitHub Service**: Fetches repo metadata, directory trees, and raw file contents concurrently.
-   - **Static Analyzer**: Runs Tree-Sitter WASM binaries to build an AST and extract hard metrics (LOC, functions, magic numbers).
-   - **Prompt Builder**: Fuses the AST metrics with the raw code, capping tokens to prevent explosion.
-   - **Gemini Service**: Sends the locked-down prompt to Google Gemini and parses the structured JSON response.
+### Tech Stack
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Framer Motion, Lucide Icons, Vite.
+- **Backend**: Node.js, Express, Axios, Zod, Google Generative AI (`@google/generative-ai`).
+- **Static Analysis**: Babel Parser (for JS/TS), Pyright-inspired regex fallback (for Python).
+- **Testing**: Vitest with `@vitest/ui` HTML reporting.
 
 ---
 
-## 🚀 Getting Started (Local Development)
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18+ recommended)
-- A Google Gemini API Key
-- A GitHub Personal Access Token (optional, but highly recommended to avoid rate limits)
+- **Node.js**: v18 or newer
+- **GitHub Token**: (Optional but highly recommended) A personal access token to avoid GitHub API rate limits.
+- **Google Gemini API Key**: Required for the LLM analysis. Get one from Google AI Studio.
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Justinvcj/RepooRoast.git
-cd RepooRoast
-```
+### Installation
 
-### 2. Backend Setup
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Justinvcj/RepooRoast.git
+   cd RepooRoast
+   ```
+
+2. **Setup the Backend Server:**
+   ```bash
+   cd server
+   npm install
+   ```
+   Create a `.env` file in the `server` directory:
+   ```env
+   PORT=5000
+   GEMINI_API_KEY=your_gemini_api_key_here
+   GITHUB_TOKEN=your_optional_github_token_here
+   ```
+
+3. **Setup the Frontend Client:**
+   ```bash
+   cd ../client
+   npm install
+   ```
+   Create a `.env` file in the `client` directory:
+   ```env
+   VITE_API_URL=http://localhost:5000
+   ```
+
+### Running the Application Locally
+
+You need to run both the frontend and backend concurrently. 
+
+**Start the Backend:**
 ```bash
 cd server
-npm install
+npm start
+# Server will start on http://localhost:5000
 ```
 
-Create a `.env` file in the `server` directory:
-```env
-PORT=3001
-GEMINI_API_KEY=your_gemini_api_key_here
-GITHUB_TOKEN=your_github_token_here
-ALLOWED_ORIGINS=http://localhost:5173
-NODE_ENV=development
-```
-
-Start the backend server:
-```bash
-npm run dev
-```
-
-### 3. Running Tests & Viewing HTML Reports
-To verify the system works (including live integration tests, AST static analysis validation, and security fence checks):
-```bash
-# Still inside the /server directory
-npm run test:report
-```
-This will run the test suite and generate a beautiful interactive HTML report. You can view it by opening `server/test-reports/index.html` in your browser.
-
-### 4. Frontend Setup
-Open a new terminal window.
+**Start the Frontend:**
 ```bash
 cd client
-npm install
-```
-
-Create a `.env` file in the `client` directory:
-```env
-VITE_API_URL=http://localhost:3001
-```
-
-Start the frontend server:
-```bash
 npm run dev
+# Frontend will start on http://localhost:5173
 ```
 
 ---
 
-## 🔒 Security Posture
+## 🧪 Testing (Production-Grade)
 
-RepoRoast is hardened for production:
-- **XML Fencing**: All untrusted GitHub data is wrapped in `<repository_data>` tags to prevent LLM Prompt Injection.
-- **Payload Limits**: Express JSON parsers are strictly capped at 10kb to prevent DoS attacks.
-- **CORS Lockdown**: Non-origin requests (like automated cURL scripts) are blocked in production.
-- **Zero-Leak Error Handling**: Internal server errors and API keys are scrubbed from all HTTP responses.
+RepoRoast employs a robust, real-world testing strategy using **Vitest**. We don't just mock data; we execute live integration tests against the actual GitHub API to ensure the full analysis pipeline works end-to-end.
+
+### Running Tests
+
+Navigate to the `server` directory and run:
+
+```bash
+cd server
+npm run test
+```
+
+### Viewing the HTML Test Report
+
+We generate a beautiful, interactive HTML test report for all passed and failed suites. After running the tests, you can view the report via:
+
+```bash
+npx vite preview --outDir test-reports
+```
+
+*The report details AST parsing accuracy, Token Allocation algorithms, prompt injection security validation, and schema enforcement.*
 
 ---
 
-## 🗺️ Roadmap (Phase 3)
-- [ ] **Supabase Integration**: Global "Roast Scores" leaderboard and historical review storage.
-- [ ] **GitHub OAuth**: User dashboards to track past roasts.
-- [ ] **GitHub App Webhook**: Automated PR review bot that comments directly on pull requests.
+## 🛡️ Security
+
+RepoRoast is designed with strict boundaries to mitigate Prompt Injection. 
+1. **Fencing**: Untrusted repository content and diff payloads are isolated using XML fences (e.g., `<repository_data>`).
+2. **Instruction Precedence**: Critical system instructions and the `CRITICAL SECURITY RULE` are appended *after* the untrusted payload to reinforce AI containment.
+3. **Validation**: All API endpoints use strict input sanitization via custom middleware and `zod` schema parsing for LLM outputs.
 
 ---
 
-**Disclaimer**: RepoRoast will hurt your feelings. Please do not submit repositories if you are emotionally attached to your `console.log` statements.
+## 📜 License
+
+This project is licensed under the MIT License.

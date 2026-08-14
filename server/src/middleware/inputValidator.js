@@ -28,30 +28,39 @@ export const validateRepoUrl = (req, res, next) => {
   next();
 };
 
-export const validateDiffUrl = (req, res, next) => {
-  const { diffUrl } = req.body;
+export const validateDiffComponents = (req, res, next) => {
+  const { owner, repo, pullNumber, compareString } = req.body;
 
-  if (!diffUrl || typeof diffUrl !== 'string') {
+  if (!owner || typeof owner !== 'string' || !repo || typeof repo !== 'string') {
     return res.status(400).json({
       success: false,
-      error: 'A GitHub PR, compare, or commit URL is required.',
+      error: 'Repository owner and name are required.',
       code: 'INPUT_MISSING'
     });
   }
 
-  const trimmed = diffUrl.trim();
-  const isValid = GITHUB_PR_REGEX.test(trimmed)
-    || GITHUB_COMPARE_REGEX.test(trimmed)
-    || GITHUB_COMMIT_REGEX.test(trimmed);
-
-  if (!isValid) {
+  if (!pullNumber && !compareString) {
     return res.status(400).json({
       success: false,
-      error: 'Invalid URL. Expected a GitHub PR, compare, or commit URL.',
+      error: 'Either a pullNumber or compareString is required for a diff review.',
+      code: 'INPUT_MISSING'
+    });
+  }
+
+  // Ensure they are strings if present
+  if ((pullNumber && typeof pullNumber !== 'string') || (compareString && typeof compareString !== 'string')) {
+    return res.status(400).json({
+      success: false,
+      error: 'pullNumber and compareString must be strings.',
       code: 'INPUT_INVALID'
     });
   }
 
-  req.body.diffUrl = trimmed;
+  // Sanitize
+  req.body.owner = owner.trim();
+  req.body.repo = repo.trim();
+  if (pullNumber) req.body.pullNumber = pullNumber.trim();
+  if (compareString) req.body.compareString = compareString.trim();
+
   next();
 };

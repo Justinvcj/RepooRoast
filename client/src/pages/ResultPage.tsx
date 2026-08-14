@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
+import { StaticAnalysisPanel } from '../components/StaticAnalysisPanel';
 import type { ApiResponse } from '../types';
 import Lightfall from '../components/Lightfall';
 import { useLayout } from '../contexts/LayoutContext';
@@ -47,7 +48,7 @@ export const ResultPage: React.FC = () => {
 
   if (!responseData) return null;
 
-  const { repo, review } = responseData;
+  const { repo, review, analysis } = responseData;
 
   return (
     <motion.div 
@@ -149,6 +150,11 @@ export const ResultPage: React.FC = () => {
             </a>
           </motion.div>
         </section>
+
+        {/* Static Analysis Dashboard */}
+        {analysis && (
+          <StaticAnalysisPanel analysis={analysis} />
+        )}
 
         {/* Dashboard Content */}
         <ReviewDashboard review={review} />

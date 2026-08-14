@@ -66,9 +66,10 @@ const handleGitHubError = (error) => {
  * @param {string} path - File path within the repository.
  * @returns {Promise<string|null>} The decoded file content or null if failed.
  */
-const fetchFileContent = async (api, owner, repo, path) => {
+const fetchFileContent = async (api, owner, repo, path, ref = null) => {
   try {
-    const response = await api.get(`/repos/${owner}/${repo}/contents/${path}`);
+    const url = ref ? `/repos/${owner}/${repo}/contents/${path}?ref=${ref}` : `/repos/${owner}/${repo}/contents/${path}`;
+    const response = await api.get(url);
     if (response.data && response.data.content) {
       return Buffer.from(response.data.content, 'base64').toString('utf-8');
     }
@@ -228,15 +229,23 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
     let diffUrl = '';
     let prTitle = '';
     let prDescription = '';
+    let changedFiles = [];
+    let headRef = null;
 
     if (pullNumber) {
       const prRes = await api.get(`/repos/${owner}/${repo}/pulls/${pullNumber}`);
       prTitle = prRes.data.title;
       prDescription = prRes.data.body;
       diffUrl = prRes.data.diff_url; 
+      headRef = prRes.data.head.sha;
+
+      const filesRes = await api.get(`/repos/${owner}/${repo}/pulls/${pullNumber}/files`);
+      changedFiles = filesRes.data.filter(f => f.status !== 'removed').map(f => f.filename);
     } else if (compareString) {
-      // For compare endpoint, we can request the diff format directly via headers
+      const compareRes = await api.get(`/repos/${owner}/${repo}/compare/${compareString}`);
       diffUrl = `https://api.github.com/repos/${owner}/${repo}/compare/${compareString}`;
+      headRef = compareString.split('...')[1] || compareString;
+      changedFiles = compareRes.data.files.filter(f => f.status !== 'removed').map(f => f.filename);
     } else {
       throw new Error('Must provide pullNumber or compareString');
     }
@@ -255,6 +264,17 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
       throw new Error('Failed to fetch diff content. The diff might be too large or invalid.');
     }
 
+    // Fetch the contents of all changed files to enable static analysis
+    const fileContents = {};
+    const fetchPromises = changedFiles.map(async (path) => {
+      const content = await fetchFileContent(api, owner, repo, path, headRef);
+      if (content !== null) {
+        fileContents[path] = content;
+      }
+    });
+
+    await Promise.all(fetchPromises);
+
     return {
       metadata: {
         owner,
@@ -269,7 +289,9 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
       isDiff: true,
       diffTitle: prTitle || `Comparison: ${compareString}`,
       diffDescription: prDescription || '',
-      diffContent: diffContent
+      diffContent: diffContent,
+      selectedFiles: fileContents,
+      tree: changedFiles
     };
 
   } catch (error) {

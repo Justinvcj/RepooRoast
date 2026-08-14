@@ -28,16 +28,18 @@ const generateCodeReview = async (repoData) => {
     const genAI = initGemini();
     
     let prompt;
+    
+    // 1. Run local deterministic static analysis for BOTH diff and full repo
+    if (repoData.selectedFiles && Object.keys(repoData.selectedFiles).length > 0) {
+      console.log('[Analyzer] Running local AST static analysis on fetched files...');
+      repoData.staticAnalysis = await runStaticAnalysis(repoData.selectedFiles);
+    }
+
     if (repoData.isDiff) {
       console.log('[Gemini] Processing incremental Diff/PR review...');
       prompt = buildDiffReviewPrompt(repoData);
     } else {
-      // 1. Run local deterministic static analysis to save LLM tokens
-      console.log('[Analyzer] Running local AST static analysis...');
-      const staticAnalysisResult = await runStaticAnalysis(repoData.selectedFiles);
-      repoData.staticAnalysis = staticAnalysisResult;
-
-      // 2. Build the full repo prompt
+      console.log('[Gemini] Processing full repository review...');
       prompt = buildReviewPrompt(repoData);
     }
 
