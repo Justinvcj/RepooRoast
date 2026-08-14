@@ -64,7 +64,15 @@ Start the backend server:
 npm run dev
 ```
 
-### 3. Frontend Setup
+### 3. Running Tests & Viewing HTML Reports
+To verify the system works (including live integration tests, AST static analysis validation, and security fence checks):
+```bash
+# Still inside the /server directory
+npm run test:report
+```
+This will run the test suite and generate a beautiful interactive HTML report. You can view it by opening `server/test-reports/index.html` in your browser.
+
+### 4. Frontend Setup
 Open a new terminal window.
 ```bash
 cd client

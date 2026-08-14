@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:report": "vitest run --reporter=html"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@vitest/ui": "^4.1.10",
     "nodemon": "^3.1.14",
     "vitest": "^4.1.10"
   }

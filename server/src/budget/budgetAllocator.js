@@ -4,7 +4,7 @@ import { scoreFile } from './fileScorer.js';
 const TOTAL_BUDGET = 30000;
 const MIN_BUDGET_PER_FILE = 200; // Guarantee at least imports/signatures
 
-export const allocateBudget = (filesContentMap, dependencyGraph) => {
+export const allocateBudget = (filesContentMap, dependencyGraph, maxBudget = 30000) => {
   const files = Object.keys(filesContentMap);
   if (files.length === 0) return {};
 
@@ -20,7 +20,7 @@ export const allocateBudget = (filesContentMap, dependencyGraph) => {
   const totalRawTokens = fileStats.reduce((sum, f) => sum + f.tokens, 0);
 
   // If we fit in budget, no need to truncate anything
-  if (totalRawTokens <= TOTAL_BUDGET) {
+  if (totalRawTokens <= maxBudget) {
     const result = {};
     for (const f of fileStats) {
       result[f.path] = f.content;
@@ -29,7 +29,7 @@ export const allocateBudget = (filesContentMap, dependencyGraph) => {
   }
 
   // Pass 1: Give everyone the minimum budget
-  let remainingBudget = TOTAL_BUDGET;
+  let remainingBudget = maxBudget;
   for (const f of fileStats) {
     const alloc = Math.min(f.tokens, MIN_BUDGET_PER_FILE);
     f.allocated = alloc;
