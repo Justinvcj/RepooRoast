@@ -11,7 +11,20 @@ export const ResultPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const responseData = location.state?.reviewData as ApiResponse | undefined;
+  let responseData = location.state?.reviewData as ApiResponse | undefined;
+
+  if (!responseData) {
+    try {
+      const cached = localStorage.getItem('reporoast_last_review');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        // TTL: 24 hours
+        if (Date.now() - parsed.timestamp < 86400000) {
+          responseData = parsed.data;
+        }
+      }
+    } catch { /* ignore parse errors */ }
+  }
 
   const { setIsNavbarVisible, setIsFooterVisible } = useLayout();
 

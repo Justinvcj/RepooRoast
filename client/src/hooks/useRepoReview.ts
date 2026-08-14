@@ -17,6 +17,10 @@ export const useRepoReview = () => {
       const response = await axios.post<ApiResponse>(`${API_BASE}/api/review`, { repoUrl });
       
       if (response.data.success) {
+        localStorage.setItem('reporoast_last_review', JSON.stringify({
+          data: response.data,
+          timestamp: Date.now()
+        }));
         setData(response.data);
         setStatus('success');
       } else {

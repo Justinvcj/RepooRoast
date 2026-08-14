@@ -11,15 +11,19 @@ import { SplashScreen } from './components/SplashScreen';
 
 import { LayoutProvider, useLayout } from './contexts/LayoutContext';
 
+import { ErrorBoundary } from './components/ErrorBoundary';
+
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/result" element={<ResultPage />} />
-      </Routes>
-    </AnimatePresence>
+    <ErrorBoundary>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/result" element={<ResultPage />} />
+        </Routes>
+      </AnimatePresence>
+    </ErrorBoundary>
   );
 };
 

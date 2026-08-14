@@ -20,15 +20,30 @@ const app = express();
 app.use(helmet());
 
 // 2. CORS Handling
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
+  .split(',')
+  .map(s => s.trim());
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // In production, block requests with no origin (like Postman or curl) to prevent unauthorized API use
+    if (!origin && process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsOptions));
 
-// 3. Body Parsing
-app.use(express.json());
+// 3. Body Parsing - Strictly limit payload size to prevent DoS (repoUrl payload is tiny)
+app.use(express.json({ limit: '10kb' }));
 
 // 4. Request Logging
 app.use(morgan('dev'));
@@ -40,10 +55,11 @@ app.use(morgan('dev'));
 // Create a limiter specifically for the AI review endpoint to prevent abuse
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Temporarily increased for development and testing
+  max: 10,
   message: {
     success: false,
-    error: 'Too many requests from this IP, please try again after 15 minutes'
+    error: 'Too many requests from this IP, please try again after 15 minutes',
+    code: 'RATE_LIMIT'
   },
   standardHeaders: true, 
   legacyHeaders: false, 

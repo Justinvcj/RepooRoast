@@ -1,6 +1,7 @@
 import express from 'express';
 import { fetchRepoData } from '../services/githubService.js';
-import { generateCodeReview } from '../services/aiService.js';
+import { generateCodeReview } from '../services/geminiService.js';
+import { validateRepoUrl } from '../middleware/inputValidator.js';
 
 const router = express.Router();
 
@@ -13,17 +14,9 @@ const router = express.Router();
  *   "repoUrl": "https://github.com/owner/repo"
  * }
  */
-router.post('/', async (req, res, next) => {
+router.post('/', validateRepoUrl, async (req, res, next) => {
   try {
     const { repoUrl } = req.body;
-
-    // Validate the input
-    if (!repoUrl) {
-      return res.status(400).json({
-        success: false,
-        error: 'GitHub repository URL is required.'
-      });
-    }
 
     // 1. Fetch Repository Data
     // console.log(`[Review Route] Fetching repository data for: ${repoUrl}`);

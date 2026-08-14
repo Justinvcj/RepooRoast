@@ -95,37 +95,32 @@ const fetchRepoData = async (repoUrl) => {
     const metadata = metadataRes.data;
     const defaultBranch = metadata.default_branch;
 
-    // 2. Fetch Directory Tree
-    const treeRes = await api.get(`/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`);
-    const tree = treeRes.data.tree;
+    // 2. Parallelize subsequent requests to speed up the process
+    const [treeRes, languagesRes, commitsRes, readmeRes] = await Promise.allSettled([
+      api.get(`/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`),
+      api.get(`/repos/${owner}/${repo}/languages`),
+      api.get(`/repos/${owner}/${repo}/commits?per_page=5`),
+      api.get(`/repos/${owner}/${repo}/readme`)
+    ]);
 
-    // 3. Fetch Languages
-    const languagesRes = await api.get(`/repos/${owner}/${repo}/languages`);
-    const languages = languagesRes.data;
-
-    // 4. Fetch Recent Commits (Last 5)
+    const tree = treeRes.status === 'fulfilled' ? treeRes.value.data.tree : [];
+    const languages = languagesRes.status === 'fulfilled' ? languagesRes.value.data : {};
+    
     let commits = [];
-    try {
-      const commitsRes = await api.get(`/repos/${owner}/${repo}/commits?per_page=5`);
-      commits = commitsRes.data.map(commitData => ({
+    if (commitsRes.status === 'fulfilled') {
+      commits = commitsRes.value.data.map(commitData => ({
         sha: commitData.sha,
         message: commitData.commit.message,
         author: commitData.commit.author ? commitData.commit.author.name : 'Unknown',
         date: commitData.commit.author ? commitData.commit.author.date : new Date().toISOString()
       }));
-    } catch(e) {
-      console.warn("Failed to fetch commits", e.message);
+    } else {
+      console.warn("Failed to fetch commits");
     }
 
-    // 5. Fetch README
     let readme = null;
-    try {
-      const readmeRes = await api.get(`/repos/${owner}/${repo}/readme`);
-      if (readmeRes.data && readmeRes.data.content) {
-        readme = Buffer.from(readmeRes.data.content, 'base64').toString('utf-8');
-      }
-    } catch (readmeError) {
-      // README might not exist, that's okay.
+    if (readmeRes.status === 'fulfilled' && readmeRes.value.data && readmeRes.value.data.content) {
+      readme = Buffer.from(readmeRes.value.data.content, 'base64').toString('utf-8');
     }
 
     // 6. SMART FILE SELECTION

@@ -18,16 +18,12 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.1",
-    "groq": "^5.30.0",
-    "groq-sdk": "^1.2.1",
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
-    "sdk": "^0.1.1"
+    "tree-sitter-wasms": "^0.1.13",
+    "web-tree-sitter": "^0.22.2"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.27",
-    "nodemon": "^3.1.14",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.1"
+    "nodemon": "^3.1.14"
   }
 }
