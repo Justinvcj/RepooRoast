@@ -13,7 +13,8 @@ export const useRepoReview = () => {
     setError(null);
     
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+    // 120 second timeout to account for Render free tier cold starts
+    const timeoutId = setTimeout(() => controller.abort(), 120000);
     
     try {
       const parsed = extractRepoInfo(repoUrl);
