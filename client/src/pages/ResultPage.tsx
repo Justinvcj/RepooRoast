@@ -113,7 +113,7 @@ export const ResultPage: React.FC = () => {
                 <span className="text-lg font-medium">{repo.owner}</span>
               </div>
               <h1 className="text-2xl md:text-3xl font-serif font-extrabold text-textPrimary tracking-tight leading-tight">
-                {repo.name}
+                {repo.repo}
               </h1>
               {repo.description && (
                 <p className="text-base text-textSecondary font-medium max-w-3xl mt-2 leading-relaxed">
@@ -140,7 +140,7 @@ export const ResultPage: React.FC = () => {
             </div>
 
             <a 
-              href={`https://github.com/${repo.owner}/${repo.name}`}
+              href={`https://github.com/${repo.owner}/${repo.repo}`}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-2 text-sm font-bold text-primary hover:text-orange-400 transition-colors bg-primary/10 px-5 py-3 rounded-xl border border-primary/20 hover:bg-primary/15 whitespace-nowrap"

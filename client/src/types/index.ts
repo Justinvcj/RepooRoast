@@ -1,12 +1,14 @@
 export interface RepoMetadata {
   owner: string;
   repo: string;
+  name?: string;
   fullName: string;
   description: string | null;
   defaultBranch: string;
   stars: number;
   forks: number;
   updatedAt: string;
+  language?: string;
 }
 
 export interface StaticAnalysis {
