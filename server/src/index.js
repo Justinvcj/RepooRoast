@@ -26,14 +26,19 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
 
 const corsOptions = {
   origin: (origin, callback) => {
+    console.log(`[CORS DEBUG] Incoming Origin: '${origin}'`);
+    console.log(`[CORS DEBUG] Allowed Origins:`, allowedOrigins);
+    
     // In production, block requests with no origin (like Postman or curl) to prevent unauthorized API use
     if (!origin && process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
     
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || (origin && (origin.endsWith('.vercel.app') || origin.includes('localhost')))) {
       callback(null, true);
     } else {
+      // Temporary: If the origin is missing or mismatching but we want to debug, log it loudly
+      console.error(`[CORS REJECTED] Origin '${origin}' is not in the allowed list!`);
       callback(new Error('Not allowed by CORS'));
     }
   },
