@@ -22,9 +22,11 @@ const errorHandler = (err, req, res, next) => {
     safeMessage = 'A configuration error occurred on the server.';
   }
 
-  // In production, mask generic 500 errors entirely
+  // In production, mask generic 500 errors entirely, UNLESS they are specific API errors we want the user to see
   if (process.env.NODE_ENV === 'production' && statusCode === 500) {
-    safeMessage = 'Internal Server Error';
+    if (!safeMessage.startsWith('GitHub API') && !safeMessage.startsWith('Gemini AI') && !safeMessage.includes('Repository')) {
+       safeMessage = 'Internal Server Error';
+    }
   }
 
   // Format the standard JSON response

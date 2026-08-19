@@ -47,12 +47,15 @@ const handleGitHubError = (error) => {
     if (status === 404) {
       throw new Error('Repository not found or is private.');
     }
+    if (status === 401) {
+      throw new Error('GitHub API error: Unauthorized (401). The GITHUB_TOKEN on the server is invalid or expired.');
+    }
     if (status === 403 || status === 429) {
       throw new Error('GitHub API rate limit exceeded. Please try again later or add a GITHUB_TOKEN.');
     }
   }
   // Generic fallback if it's not a handled response error
-  if (error.message.includes('Repository not found') || error.message.includes('rate limit exceeded')) {
+  if (error.message.includes('Repository not found') || error.message.includes('rate limit exceeded') || error.message.includes('Unauthorized')) {
       throw error;
   }
   throw new Error(`GitHub API error: ${error.message}`);
