@@ -182,9 +182,15 @@ const fetchRepoData = async (repoUrl) => {
     // Fetch the contents of all selected files
     const fileContents = {};
     const fetchPromises = Array.from(selectedFilePaths).map(async (path) => {
-      const content = await fetchFileContent(api, owner, repo, path);
-      if (content !== null) {
-        fileContents[path] = content;
+      try {
+        const content = await fetchFileContent(api, owner, repo, path);
+        if (content !== null) {
+          fileContents[path] = content;
+        }
+      } catch (err) {
+        console.warn(`[GitHub] Failed to fetch ${path}: ${err.message}`);
+        // Swallow the error to prevent Unhandled Promise Rejections and just skip this file.
+        return null;
       }
     });
 
