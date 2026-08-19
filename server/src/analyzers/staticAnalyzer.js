@@ -11,7 +11,10 @@ export const analyzeFile = async (sourceCode, filePath) => {
     const parser = await getParser(language);
     if (parser) {
       const tree = parser.parse(sourceCode);
-      return analyzeJSTS(tree, sourceCode, filePath);
+      const result = analyzeJSTS(tree, sourceCode, filePath);
+      tree.delete();
+      parser.delete();
+      return result;
     }
   }
 
@@ -19,7 +22,10 @@ export const analyzeFile = async (sourceCode, filePath) => {
     const parser = await getParser('python');
     if (parser) {
       const tree = parser.parse(sourceCode);
-      return analyzePython(tree, sourceCode, filePath);
+      const result = analyzePython(tree, sourceCode, filePath);
+      tree.delete();
+      parser.delete();
+      return result;
     }
   }
   
