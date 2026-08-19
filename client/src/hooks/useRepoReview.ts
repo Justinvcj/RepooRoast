@@ -54,7 +54,11 @@ export const useRepoReview = () => {
       } else if (axios.isAxiosError(err) && err.response?.data?.error) {
          errorMessage = err.response.data.error;
       } else if (err instanceof Error) {
-         errorMessage = err.message;
+         if (err.message === 'Network Error') {
+           errorMessage = 'Network Error: Your browser blocked the connection, or the Render server timed out. Try turning off your ad-blocker/Brave Shields for this site, or do a Hard Refresh (Ctrl+Shift+R).';
+         } else {
+           errorMessage = err.message;
+         }
       }
 
       setError(errorMessage);
