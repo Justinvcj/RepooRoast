@@ -17,9 +17,11 @@ const errorHandler = (err, req, res, next) => {
   // Sanitize the error message
   let safeMessage = err.message || 'Server Error';
   
-  // Never leak API keys or tokens in error messages
-  if (safeMessage.toLowerCase().includes('api_key') || safeMessage.toLowerCase().includes('token')) {
-    safeMessage = 'A configuration error occurred on the server.';
+  // Let's actually show the configuration errors to the user so they can fix their environment variables!
+  if (safeMessage.includes('GEMINI_API_KEY is not configured')) {
+    safeMessage = 'The GEMINI_API_KEY environment variable is missing on the server. Please add it to your Render dashboard.';
+  } else if (safeMessage.includes('GITHUB_TOKEN on the server is invalid')) {
+    safeMessage = 'The GITHUB_TOKEN on the server is invalid or expired. Please generate a new one and update your Render dashboard.';
   }
 
   // In production, mask generic 500 errors entirely, UNLESS they are specific API errors we want the user to see
