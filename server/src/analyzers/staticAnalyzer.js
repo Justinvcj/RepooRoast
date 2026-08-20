@@ -5,29 +5,8 @@ import { analyzeGeneric } from './genericAnalyzer.js';
 import { buildDependencyGraph } from './graphResolver.js';
 
 export const analyzeFile = async (sourceCode, filePath) => {
-  const language = getLanguageForFile(filePath);
-  
-  if (language === 'javascript' || language === 'typescript' || language === 'tsx') {
-    const parser = await getParser(language);
-    if (parser) {
-      const tree = parser.parse(sourceCode);
-      const result = analyzeJSTS(tree, sourceCode, filePath);
-      tree.delete();
-      return result;
-    }
-  }
-
-  if (language === 'python') {
-    const parser = await getParser('python');
-    if (parser) {
-      const tree = parser.parse(sourceCode);
-      const result = analyzePython(tree, sourceCode, filePath);
-      tree.delete();
-      return result;
-    }
-  }
-  
-  // Fallback
+  // Bypass web-tree-sitter completely to avoid WASM Out-Of-Memory crashes on Render Free Tier.
+  // We use a robust regex fallback instead.
   return analyzeGeneric(sourceCode, filePath);
 };
 

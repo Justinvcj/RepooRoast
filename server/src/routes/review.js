@@ -28,13 +28,11 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
       res.flushHeaders();
     }, 5000); // 5 seconds instead of 10
 
-    res.write('{"trace": "Starting fetchRepoData"}\n');
+    // 1. Fetch Repository Data
     const repoData = await fetchRepoData(repoUrl);
-    res.write('{"trace": "Finished fetchRepoData"}\n');
 
-    res.write('{"trace": "Starting generateCodeReview"}\n');
+    // 2. Generate Code Review using Gemini AI
     const aiReview = await generateCodeReview(repoData);
-    res.write('{"trace": "Finished generateCodeReview"}\n');
 
     clearInterval(heartbeat);
 
