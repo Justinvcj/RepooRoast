@@ -62,7 +62,7 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
               <ul className="space-y-3 text-sm text-textSecondary">
                 <li className="flex justify-between"><span>Total LOC:</span> <span className="font-mono text-textPrimary">{repoMetrics.totalLOC}</span></li>
                 <li className="flex justify-between"><span>Comment LOC:</span> <span className="font-mono text-textPrimary">{repoMetrics.commentLOC}</span></li>
-                <li className="flex justify-between"><span>Comment/Code Ratio:</span> <span className="font-mono text-textPrimary">{repoMetrics.commentToCodeRatio.toFixed(2)}</span></li>
+                <li className="flex justify-between"><span>Comment/Code Ratio:</span> <span className="font-mono text-textPrimary">{Number(repoMetrics.commentToCodeRatio).toFixed(2)}</span></li>
                 <li className="flex justify-between"><span>Functions/Methods:</span> <span className="font-mono text-textPrimary">{repoMetrics.totalFunctions}</span></li>
                 <li className="flex justify-between"><span>TODOs Found:</span> <span className="font-mono text-textPrimary">{repoMetrics.todoCount}</span></li>
               </ul>
