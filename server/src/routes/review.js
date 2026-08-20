@@ -15,27 +15,39 @@ const router = express.Router();
  * }
  */
 router.post('/', validateRepoUrl, async (req, res, next) => {
+  let heartbeat;
   try {
     const { repoUrl } = req.body;
 
+    // Send headers immediately and keep connection alive
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200);
+    res.flushHeaders();
+
+    heartbeat = setInterval(() => {
+      res.write(' ');
+      res.flushHeaders();
+    }, 10000);
+
     // 1. Fetch Repository Data
-    // console.log(`[Review Route] Fetching repository data for: ${repoUrl}`);
     const repoData = await fetchRepoData(repoUrl);
 
     // 2. Generate Code Review using Gemini AI
-    // console.log(`[Review Route] Generating AI review for: ${repoData.metadata.fullName}`);
     const aiReview = await generateCodeReview(repoData);
 
+    clearInterval(heartbeat);
+
     // 3. Return the successful response
-    return res.status(200).json({
+    res.write(JSON.stringify({
       success: true,
       repo: repoData.metadata,
       analysis: repoData.staticAnalysis,
       review: aiReview
-    });
+    }));
+    return res.end();
 
   } catch (error) {
-    // Pass any caught errors to the global error handler
+    if (heartbeat) clearInterval(heartbeat);
     next(error);
   }
 });
@@ -53,21 +65,33 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
  * }
  */
 router.post('/diff', validateDiffComponents, async (req, res, next) => {
+  let heartbeat;
   try {
     const { owner, repo, pullNumber, compareString } = req.body;
 
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200);
+    res.flushHeaders();
+
+    heartbeat = setInterval(() => {
+      res.write(' ');
+      res.flushHeaders();
+    }, 10000);
+
     const diffData = await fetchDiffData(owner, repo, pullNumber, compareString);
-    
-    // We pass diffData to generateCodeReview, which we will need to update to handle diffData format.
     const aiReview = await generateCodeReview(diffData);
 
-    return res.status(200).json({
+    clearInterval(heartbeat);
+
+    res.write(JSON.stringify({
       success: true,
       repo: diffData.metadata,
       review: aiReview
-    });
+    }));
+    return res.end();
 
   } catch (error) {
+    if (heartbeat) clearInterval(heartbeat);
     next(error);
   }
 });

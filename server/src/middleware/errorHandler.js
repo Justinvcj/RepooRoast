@@ -32,10 +32,17 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Format the standard JSON response
-  res.status(statusCode).json({
+  const errorResponse = {
     success: false,
     error: safeMessage
-  });
+  };
+
+  if (res.headersSent) {
+    res.write(JSON.stringify(errorResponse));
+    return res.end();
+  } else {
+    return res.status(statusCode).json(errorResponse);
+  }
 };
 
 export default errorHandler;
