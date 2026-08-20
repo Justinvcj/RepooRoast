@@ -19,7 +19,6 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
   try {
     const { repoUrl } = req.body;
 
-    // Send headers immediately and keep connection alive
     res.setHeader('Content-Type', 'application/json');
     res.status(200);
     res.flushHeaders();
@@ -27,17 +26,18 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
     heartbeat = setInterval(() => {
       res.write(' ');
       res.flushHeaders();
-    }, 10000);
+    }, 5000); // 5 seconds instead of 10
 
-    // 1. Fetch Repository Data
+    res.write('{"trace": "Starting fetchRepoData"}\n');
     const repoData = await fetchRepoData(repoUrl);
+    res.write('{"trace": "Finished fetchRepoData"}\n');
 
-    // 2. Generate Code Review using Gemini AI
+    res.write('{"trace": "Starting generateCodeReview"}\n');
     const aiReview = await generateCodeReview(repoData);
+    res.write('{"trace": "Finished generateCodeReview"}\n');
 
     clearInterval(heartbeat);
 
-    // 3. Return the successful response
     res.write(JSON.stringify({
       success: true,
       repo: repoData.metadata,
@@ -48,6 +48,7 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
 
   } catch (error) {
     if (heartbeat) clearInterval(heartbeat);
+    res.write('{"trace": "Error Caught: ' + error.message + '"}\n');
     next(error);
   }
 });
