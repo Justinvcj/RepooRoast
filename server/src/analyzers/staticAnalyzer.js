@@ -13,7 +13,6 @@ export const analyzeFile = async (sourceCode, filePath) => {
       const tree = parser.parse(sourceCode);
       const result = analyzeJSTS(tree, sourceCode, filePath);
       tree.delete();
-      parser.delete();
       return result;
     }
   }
@@ -24,7 +23,6 @@ export const analyzeFile = async (sourceCode, filePath) => {
       const tree = parser.parse(sourceCode);
       const result = analyzePython(tree, sourceCode, filePath);
       tree.delete();
-      parser.delete();
       return result;
     }
   }

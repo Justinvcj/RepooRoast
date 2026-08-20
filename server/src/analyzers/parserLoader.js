@@ -33,6 +33,8 @@ export const getLanguageForFile = (filePath) => {
   return EXTENSION_TO_LANG[ext] || null;
 };
 
+let sharedParser = null;
+
 export const getParser = async (languageName) => {
   await initParser();
 
@@ -48,7 +50,10 @@ export const getParser = async (languageName) => {
     }
   }
 
-  const parser = new TreeSitter();
-  parser.setLanguage(languageMap[languageName]);
-  return parser;
+  if (!sharedParser) {
+    sharedParser = new TreeSitter();
+  }
+  
+  sharedParser.setLanguage(languageMap[languageName]);
+  return sharedParser;
 };
