@@ -29,7 +29,7 @@ const SYSTEM_INSTRUCTION = "You are a highly objective, brutally honest Technica
  * Executes a single prompt using fallback models.
  */
 const executePromptWithFallbacks = async (genAI, prompt, partName) => {
-  const fallbackModels = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemini-pro-latest"];
+  const fallbackModels = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
   let result = null;
   
   for (const modelName of fallbackModels) {
