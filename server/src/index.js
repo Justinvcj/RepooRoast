@@ -24,12 +24,9 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
   .split(',')
   .map(s => s.trim());
 
-// --- TEMPORARILY DISABLED CORS LOGIC FOR TESTING ---
-/*
 const corsOptions = {
   origin: (origin, callback) => {
-    console.log(`[CORS DEBUG] Incoming Origin: '${origin}'`);
-    console.log(`[CORS DEBUG] Allowed Origins:`, allowedOrigins);
+    // console.log(`[CORS DEBUG] Incoming Origin: '${origin}'`);
     
     // Allow requests with no origin (like direct browser visits, curl, or Render health checks)
     if (!origin) {
@@ -39,7 +36,6 @@ const corsOptions = {
     if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || origin.includes('localhost')) {
       callback(null, true);
     } else {
-      // Temporary: If the origin is mismatching but we want to debug, log it loudly
       console.error(`[CORS REJECTED] Origin '${origin}' is not in the allowed list!`);
       callback(new Error('Not allowed by CORS'));
     }
@@ -47,14 +43,8 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
-*/
 
-// Use completely open CORS for testing
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors(corsOptions));
 
 // 3. Body Parsing - Strictly limit payload size to prevent DoS (repoUrl payload is tiny)
 app.use(express.json({ limit: '10kb' }));
