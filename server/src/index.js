@@ -16,10 +16,19 @@ app.set('trust proxy', 1);
 // 1. Security Headers
 app.use(helmet());
 
-// 2. CORS Handling (Disabled temporarily as requested)
-app.use(cors({ origin: '*' }));
-
-// 3. Body Parsing
+// 2. CORS Handling
+const allowedOrigins = ['https://repooroast.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['POST', 'GET'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json({ limit: '10kb' }));
 
 // 4. Request Logging
