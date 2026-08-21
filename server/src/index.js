@@ -11,6 +11,7 @@ import errorHandler from './middleware/errorHandler.js';
 
 // Initialize the Express application
 const app = express();
+app.set('trust proxy', 1); // Required for express-rate-limit when sitting behind a reverse proxy (Render/Cloudflare)
 
 // ==========================================
 // Middleware Configuration
