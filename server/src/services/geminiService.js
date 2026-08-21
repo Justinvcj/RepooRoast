@@ -1,7 +1,21 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { buildReviewPromptParts, buildDiffReviewPromptParts } from '../utils/promptBuilder.js';
 import { parseGeminiResponse } from '../utils/responseParser.js';
 import { runStaticAnalysis } from '../analyzers/staticAnalyzer.js';
+import { classifyRepoContext } from './classifierService.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rubricWeightsPath = path.join(__dirname, '../config/rubric-weights.json');
+let rubricWeights = {};
+try {
+  rubricWeights = JSON.parse(fs.readFileSync(rubricWeightsPath, 'utf8'));
+} catch (e) {
+  console.error("Failed to load rubric-weights.json");
+}
 
 /**
  * Initializes the Gemini API clients using available keys.
@@ -80,6 +94,9 @@ const generateCodeReview = async (repoData) => {
   try {
     const clients = initGeminiClients();
     
+    // 0. Classify Repo Context
+    repoData.classification = await classifyRepoContext(repoData);
+    
     let promptParts;
     
     // 1. Run local deterministic static analysis for BOTH diff and full repo
@@ -109,20 +126,42 @@ const generateCodeReview = async (repoData) => {
     console.log(`[Gemini] Parallel Generation Complete! Took ${((Date.now() - startTime) / 1000).toFixed(1)}s`);
 
     // 3. Deep merge the 3 JSON objects into the final expected schema
+    const categories = [
+      ...(part2.categories?.filter(c => c.name === "Code Quality") || []),
+      ...(part1.categories?.filter(c => c.name === "Project Structure") || []),
+      ...(part1.categories?.filter(c => c.name === "Documentation") || []),
+      ...(part3.categories?.filter(c => c.name === "Security") || []),
+      ...(part2.categories?.filter(c => c.name === "Test Coverage") || []),
+      ...(part2.categories?.filter(c => c.name === "Performance") || []),
+      ...(part2.categories?.filter(c => c.name === "Scalability") || [])
+    ];
+
+    // 4. Calculate Weighted Overall Score based on Repo Type
+    let overallScore = part1.overallScore || 50;
+    const repoType = repoData.classification.type || 'unknown';
+    const weights = rubricWeights[repoType] || rubricWeights['unknown'];
+    
+    if (weights && categories.length > 0) {
+      let weightedSum = 0;
+      let totalWeight = 0;
+      
+      for (const cat of categories) {
+        const weight = weights[cat.name] || 0;
+        weightedSum += (cat.score || 0) * weight;
+        totalWeight += weight;
+      }
+      
+      if (totalWeight > 0) {
+        overallScore = Math.round(weightedSum / totalWeight);
+      }
+    }
+
     const finalReview = {
-      overallScore: part1.overallScore || 50,
+      overallScore,
       overallVerdict: part1.overallVerdict || "No verdict provided.",
       seniorDevQuote: part1.seniorDevQuote || "It works on my machine.",
       hiringVerdict: part1.hiringVerdict || "Undecided.",
-      categories: [
-        ...(part2.categories?.filter(c => c.name === "Code Quality") || []),
-        ...(part1.categories?.filter(c => c.name === "Project Structure") || []),
-        ...(part1.categories?.filter(c => c.name === "Documentation") || []),
-        ...(part3.categories?.filter(c => c.name === "Security") || []),
-        ...(part2.categories?.filter(c => c.name === "Test Coverage") || []),
-        ...(part2.categories?.filter(c => c.name === "Performance") || []),
-        ...(part2.categories?.filter(c => c.name === "Scalability") || [])
-      ],
+      categories,
       topPriorities: part3.topPriorities || [],
       whatYouDidWell: part3.whatYouDidWell || [],
       fixPrompt: part3.fixPrompt || ""

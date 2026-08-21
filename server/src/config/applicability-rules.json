@@ -1,0 +1,62 @@
+{
+  "missing_security_md": {
+    "description": "The repository is missing a SECURITY.md file detailing vulnerability reporting policies.",
+    "applicability": {
+      "personal_portfolio": "suppress",
+      "prototype": "suppress",
+      "learning_project": "suppress",
+      "library": "low",
+      "production_service": "medium"
+    }
+  },
+  "zero_test_coverage": {
+    "description": "The repository has zero or extremely low automated test coverage.",
+    "applicability": {
+      "personal_portfolio": "low",
+      "prototype": "low",
+      "learning_project": "medium",
+      "library": "critical",
+      "production_service": "critical"
+    }
+  },
+  "no_modular_architecture_blueprint": {
+    "description": "The codebase lacks a scalable, modular architecture blueprint (e.g. monolith without clear boundaries).",
+    "applicability": {
+      "personal_portfolio": "suppress",
+      "prototype": "suppress",
+      "learning_project": "suppress",
+      "library": "medium",
+      "production_service": "high"
+    }
+  },
+  "automated_commit_workflow_present": {
+    "description": "A script or GitHub Action is automatically generating empty or meaningless commits to pad the activity graph.",
+    "applicability": {
+      "personal_portfolio": "medium",
+      "library": "high",
+      "production_service": "high"
+    },
+    "note": "Do NOT suppress for portfolios — this is a credibility signal (fake activity padding) even when it isn't a security risk. Reframe the finding text per type; see Phase 3."
+  },
+  "missing_ci_cd_pipeline": {
+    "description": "No CI/CD pipelines (e.g. GitHub Actions) exist for automated testing, linting, or deployment.",
+    "applicability": {
+      "personal_portfolio": "low",
+      "prototype": "low",
+      "learning_project": "suppress",
+      "library": "high",
+      "production_service": "critical"
+    }
+  },
+  "hardcoded_secrets": {
+    "description": "Passwords, API keys, or secrets are hardcoded in plaintext.",
+    "applicability": {
+      "personal_portfolio": "high",
+      "prototype": "high",
+      "learning_project": "high",
+      "library": "critical",
+      "production_service": "critical"
+    },
+    "note": "Always flag hardcoded secrets, but it's a critical showstopper for production/library."
+  }
+}

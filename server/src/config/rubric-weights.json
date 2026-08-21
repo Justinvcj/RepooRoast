@@ -1,0 +1,65 @@
+{
+  "personal_portfolio": {
+    "Code Quality": 0.20,
+    "Project Structure": 0.15,
+    "Documentation": 0.30,
+    "Security": 0.10,
+    "Test Coverage": 0.05,
+    "Performance": 0.15,
+    "Scalability": 0.05
+  },
+  "library": {
+    "Code Quality": 0.20,
+    "Project Structure": 0.15,
+    "Documentation": 0.20,
+    "Security": 0.10,
+    "Test Coverage": 0.20,
+    "Performance": 0.05,
+    "Scalability": 0.10
+  },
+  "production_service": {
+    "Code Quality": 0.15,
+    "Project Structure": 0.10,
+    "Documentation": 0.10,
+    "Security": 0.20,
+    "Test Coverage": 0.20,
+    "Performance": 0.10,
+    "Scalability": 0.15
+  },
+  "cli_tool": {
+    "Code Quality": 0.20,
+    "Project Structure": 0.15,
+    "Documentation": 0.20,
+    "Security": 0.10,
+    "Test Coverage": 0.20,
+    "Performance": 0.10,
+    "Scalability": 0.05
+  },
+  "prototype": {
+    "Code Quality": 0.25,
+    "Project Structure": 0.15,
+    "Documentation": 0.15,
+    "Security": 0.05,
+    "Test Coverage": 0.05,
+    "Performance": 0.15,
+    "Scalability": 0.20
+  },
+  "learning_project": {
+    "Code Quality": 0.30,
+    "Project Structure": 0.15,
+    "Documentation": 0.20,
+    "Security": 0.05,
+    "Test Coverage": 0.10,
+    "Performance": 0.10,
+    "Scalability": 0.10
+  },
+  "unknown": {
+    "Code Quality": 0.20,
+    "Project Structure": 0.15,
+    "Documentation": 0.20,
+    "Security": 0.15,
+    "Test Coverage": 0.10,
+    "Performance": 0.10,
+    "Scalability": 0.10
+  }
+}
