@@ -39,7 +39,7 @@ ${Object.entries(languages || {}).map(([lang, bytes]) => `- ${lang}: ${bytes} by
 
   const commitsDesc = `
 # Recent Commits (Last 5)
-${commits && commits.length > 0 ? commits.map(c => `- [${c.sha.substring(0, 7)}] ${c.commit.message.split('\n')[0]} (by ${c.commit.author.name})`).join('\n') : 'No commits found.'}
+${commits && commits.length > 0 ? commits.map(c => `- [${new Date(c.date).toISOString().split('T')[0]}] ${c.author}: ${c.message.split('\n')[0]}`).join('\n') : 'No commits found.'}
 `;
 
   const treeDesc = `

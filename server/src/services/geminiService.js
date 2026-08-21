@@ -29,7 +29,7 @@ const SYSTEM_INSTRUCTION = "You are a highly objective, brutally honest Technica
  * Executes a single prompt using fallback models.
  */
 const executePromptWithFallbacks = async (genAI, prompt, partName) => {
-  const fallbackModels = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash", "gemini-1.5-pro"];
+  const fallbackModels = ["gemini-flash-latest", "gemini-1.5-flash-latest", "gemini-pro-latest"];
   let result = null;
   
   for (const modelName of fallbackModels) {
@@ -131,10 +131,12 @@ const generateCodeReview = async (repoData) => {
     return finalReview;
 
   } catch (error) {
-    if (error.message.includes('GEMINI_API_KEY')) {
+    console.error("Full Gemini Error:", error);
+    const msg = error && error.message ? error.message : String(error);
+    if (msg.includes('GEMINI_API_KEY')) {
       throw error;
     }
-    throw new Error(`Gemini AI analysis failed: ${error.message}`);
+    throw new Error(`Gemini AI analysis failed: ${msg}`);
   }
 };
 

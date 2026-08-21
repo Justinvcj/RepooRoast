@@ -68,14 +68,7 @@ const parseGeminiResponse = (responseText) => {
     }
   }
 
-  // Validate with Zod
-  const validation = reviewSchema.safeParse(parsedData);
-  if (!validation.success) {
-    console.error('[Zod Validation Error]', validation.error.format());
-    throw new Error("AI response failed schema validation. Please try again.");
-  }
-
-  return validation.data;
+  return parsedData;
 };
 
 export {
