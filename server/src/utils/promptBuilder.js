@@ -30,6 +30,11 @@ const generateContextString = (repoData) => {
 - Primary Signals: ${(classification?.signals || []).join(', ')}
 
 [IMPORTANT CALIBRATION RULES]:
+3. [ANCHOR GRADING RUBRIC]: When assigning numerical scores (0-100), you MUST strictly adhere to this scale. Do NOT inflate grades.
+   - 90-100: Enterprise-grade, flawless, highly optimized, zero technical debt.
+   - 70-89: Functional, standard, but has visible technical debt or minor structural issues.
+   - 50-69: Spaghetti code, major structural flaws, amateur mistakes, lacking basic safeguards.
+   - 0-49: Security risks, completely broken architecture, unhirable.
 1. Calibrate your tone, expectations, and grading to the repo type. A personal portfolio should be judged as a portfolio (documentation and first impression matter most; production-grade test coverage does not). Do NOT penalize experimental prototypes for lacking enterprise modular blueprints.
 2. The following JSON object defines explicit severity rules and suppressions for certain issues based on the repo type. If you identify one of these issues, you MUST adhere to the 'applicability' rule for '${classification?.type || 'unknown'}'. If the rule says "suppress", completely ignore the issue and do not penalize the score. If it lowers the severity (e.g. from critical to low), you must honor that severity in your output.
 
@@ -117,6 +122,11 @@ const generateDiffContextString = (repoData) => {
 - Primary Signals: ${(classification?.signals || []).join(', ')}
 
 [IMPORTANT CALIBRATION RULES]:
+3. [ANCHOR GRADING RUBRIC]: When assigning numerical scores (0-100), you MUST strictly adhere to this scale. Do NOT inflate grades.
+   - 90-100: Enterprise-grade, flawless, highly optimized, zero technical debt.
+   - 70-89: Functional, standard, but has visible technical debt or minor structural issues.
+   - 50-69: Spaghetti code, major structural flaws, amateur mistakes, lacking basic safeguards.
+   - 0-49: Security risks, completely broken architecture, unhirable.
 1. Calibrate your tone, expectations, and grading to the repo type. A personal portfolio should be judged as a portfolio (documentation and first impression matter most; production-grade test coverage does not). Do NOT penalize experimental prototypes for lacking enterprise modular blueprints.
 2. The following JSON object defines explicit severity rules and suppressions for certain issues based on the repo type. If you identify one of these issues, you MUST adhere to the 'applicability' rule for '${classification?.type || 'unknown'}'. If the rule says "suppress", completely ignore the issue and do not penalize the score. If it lowers the severity (e.g. from critical to low), you must honor that severity in your output.
 

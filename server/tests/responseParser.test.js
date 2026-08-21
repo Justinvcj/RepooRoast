@@ -27,18 +27,19 @@ describe('Response Parser & Zod Validation', () => {
     expect(result.categories.length).toBe(7);
   });
 
-  it('should throw if the AI hallucinates missing categories (Zod validation catches it)', () => {
+  it('should not throw for partial JSON responses (due to parallel chunks)', () => {
     // Missing some categories and top priorities
-    const invalidJson = {
+    const partialJson = {
       overallScore: 50,
       overallVerdict: "Missing stuff.",
       seniorDevQuote: "Oof.",
       categories: [
-        { name: "Code Quality", score: 50, emoji: "🧹", summary: "Bad", issues: [], positives: [] }
+        { name: "Code Quality", score: 50, emoji: "dY 1", summary: "Bad", issues: [], positives: [] }
       ]
     };
 
-    expect(() => parseGeminiResponse(JSON.stringify(invalidJson))).toThrow(/AI response failed schema validation/);
+    const result = parseGeminiResponse(JSON.stringify(partialJson));
+    expect(result.overallScore).toBe(50);
   });
 
   it('should throw if JSON is entirely unparseable', () => {

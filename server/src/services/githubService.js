@@ -143,7 +143,9 @@ const fetchRepoData = async (repoUrl) => {
     
     const allFilePaths = tree
       .filter(item => item.type === 'blob')
-      .map(item => item.path);
+      .map(item => item.path)
+      .filter(path => !ignorePatterns.some(pattern => pattern.test(path)))
+      .slice(0, 500);
 
     const validFiles = tree
       .filter(item => item.type === 'blob')
