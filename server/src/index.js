@@ -11,87 +11,41 @@ import errorHandler from './middleware/errorHandler.js';
 
 // Initialize the Express application
 const app = express();
-app.set('trust proxy', 1); // Required for express-rate-limit when sitting behind a reverse proxy (Render/Cloudflare)
-
-// ==========================================
-// Middleware Configuration
-// ==========================================
+app.set('trust proxy', 1);
 
 // 1. Security Headers
 app.use(helmet());
 
-// 2. CORS Handling
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
-  .split(',')
-  .map(s => s.trim());
+// 2. CORS Handling (Disabled temporarily as requested)
+app.use(cors({ origin: '*' }));
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    // console.log(`[CORS DEBUG] Incoming Origin: '${origin}'`);
-    
-    // Allow requests with no origin (like direct browser visits, curl, or Render health checks)
-    if (!origin) {
-      return callback(null, true);
-    }
-    
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || origin.includes('localhost')) {
-      callback(null, true);
-    } else {
-      console.error(`[CORS REJECTED] Origin '${origin}' is not in the allowed list!`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
-
-// 3. Body Parsing - Strictly limit payload size to prevent DoS (repoUrl payload is tiny)
+// 3. Body Parsing
 app.use(express.json({ limit: '10kb' }));
 
 // 4. Request Logging
 app.use(morgan('dev'));
 
-// ==========================================
-// Rate Limiting Configuration
-// ==========================================
-
-// Create a limiter specifically for the AI review endpoint to prevent abuse
+// Rate Limiter
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 10,
   message: {
     success: false,
-    error: 'Too many requests from this IP, please try again after 15 minutes',
+    error: 'Too many requests from this IP',
     code: 'RATE_LIMIT'
   },
   standardHeaders: true, 
   legacyHeaders: false, 
 });
 
-// ==========================================
 // Route Registration
-// ==========================================
-
-// Apply the rate limiter ONLY to the /api/review route
 app.use('/api/review', apiLimiter, reviewRoutes);
 
-// Detailed health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'RepoRoast API is running.' });
 });
 
-// ==========================================
-// Error Handling
-// ==========================================
-
-// Register Error Handler (must be the VERY LAST middleware)
 app.use(errorHandler);
-
-// ==========================================
-// Server Startup
-// ==========================================
 
 const PORT = process.env.PORT || 3001;
 
