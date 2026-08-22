@@ -34,16 +34,16 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
     
     // 2. Check Cache
     const latestCommitSha = repoData.commits && repoData.commits.length > 0 ? repoData.commits[0].sha : 'unknown';
-    const cacheKey = \`repo:\${repoData.metadata.owner}/\${repoData.metadata.repo}:\${latestCommitSha}\`;
+    const cacheKey = `repo:${repoData.metadata.owner}/${repoData.metadata.repo}:${latestCommitSha}`;
     
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
       clearInterval(heartbeat);
-      console.log(\`[Cache] HIT for \${cacheKey}\`);
+      console.log(`[Cache] HIT for ${cacheKey}`);
       res.write(JSON.stringify(cachedReview));
       return res.end();
     }
-    console.log(\`[Cache] MISS for \${cacheKey}\`);
+    console.log(`[Cache] MISS for ${cacheKey}`);
 
     // 3. Generate Code Review using Gemini AI
     const aiReview = await generateCodeReview(repoData);
@@ -98,16 +98,16 @@ router.post('/diff', validateDiffComponents, async (req, res, next) => {
     
     // Check Cache
     const headRef = diffData.diffTitle.includes('Comparison') ? compareString : (pullNumber || 'unknown');
-    const cacheKey = \`diff:\${owner}/\${repo}:\${headRef}\`;
+    const cacheKey = `diff:${owner}/${repo}:${headRef}`;
     
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
       clearInterval(heartbeat);
-      console.log(\`[Cache] HIT for \${cacheKey}\`);
+      console.log(`[Cache] HIT for ${cacheKey}`);
       res.write(JSON.stringify(cachedReview));
       return res.end();
     }
-    console.log(\`[Cache] MISS for \${cacheKey}\`);
+    console.log(`[Cache] MISS for ${cacheKey}`);
 
     const aiReview = await generateCodeReview(diffData);
 
