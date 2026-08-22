@@ -17,7 +17,7 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 // 2. CORS Handling
-const allowedOrigins = ['https://repooroast.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
+const allowedOrigins = ['https://repo-roast-ai.vercel.app', 'http://localhost:3000', 'http://localhost:5173'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
