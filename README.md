@@ -11,12 +11,12 @@
 
 **RepooRoast** is a next-generation static analysis and AI-driven code review platform. Unlike standard linters that complain about missing semicolons, RepooRoast acts as a cynical, highly-experienced Principal Engineer that tears down your architecture, analyzes your technical debt, and grades your project—all while roasting you in the process.
 
-## 🚀 Live Demo
+## Live Demo
 Experience the roast live at: **[https://repo-roast-ai.vercel.app](https://repo-roast-ai.vercel.app/)**
 
 ---
 
-## 📖 Complete Explanation of the Project
+## Complete Explanation of the Project
 
 RepooRoast takes any public GitHub repository or Pull Request link and performs a highly aggressive, deeply technical code review. 
 The core philosophy is: **Honesty over Politeness.**
@@ -31,9 +31,31 @@ When a user submits a repository, the system fetches the file tree, filters out 
 
 ---
 
-## 🧠 The Architecture (What We Do Differently)
+## The Architecture (What We Do Differently)
 
 We didn't just wrap a single OpenAI API call in a basic prompt. RepooRoast is built on a **Parallel, Context-Aware AI Pipeline** designed for speed, precision, and surgical accuracy.
+
+```mermaid
+graph TD
+    A[User Submits Repo URL] -->|API Request| B(Cache Service)
+    B -- Cache Hit "~100ms" --> C[Return Cached JSON Roast]
+    B -- Cache Miss --> D{Zero-Shot Classifier}
+    
+    D -->|Classifies Repo Type| E[Determine Rubric Weights & Rules]
+    E --> F[AST Static Analyzer & Noise Pruner]
+    
+    F -->|Parallel Execution| G(Gemini: Architecture & Docs)
+    F -->|Parallel Execution| H(Gemini: Code Quality & Perf)
+    F -->|Parallel Execution| I(Gemini: Security & Action Plan)
+    
+    G --> J[Deep Merge JSON Responses]
+    H --> J
+    I --> J
+    
+    J --> K[Mathematical Score Aggregation]
+    K --> L[Return Final Roast "~8s"]
+    L --> M[(Save to Redis/Memory Cache)]
+```
 
 ### 1. Zero-Shot Context Classification (Step 0)
 Standard AI reviewers judge every codebase the same. We don't. Before roasting begins, our `classifierService` performs a lightning-fast scan of the repo's file tree, `package.json`, and `README` to classify the project type (e.g., *Personal Portfolio*, *CLI Tool*, *Production SaaS*). 
@@ -60,7 +82,7 @@ We actively prune the GitHub file tree prior to sending it to the LLM. Massive a
 
 ---
 
-## 🛡️ Fortified Security
+## Fortified Security
 
 We take API security and data integrity seriously. RepooRoast is heavily locked down against modern backend and LLM attack vectors:
 
@@ -71,7 +93,7 @@ We take API security and data integrity seriously. RepooRoast is heavily locked 
 
 ---
 
-## 🛠️ How Others Can Use It (Local Development)
+## How Others Can Use It (Local Development)
 
 Want to run RepooRoast locally or deploy your own instance? Follow these instructions:
 
@@ -82,41 +104,41 @@ Want to run RepooRoast locally or deploy your own instance? Follow these instruc
 ### Installation
 
 1. **Clone the repository:**
-   \`\`\`bash
-   git clone https://github.com/Justinvcj/RepooRoast.git
-   cd RepooRoast
-   \`\`\`
+```bash
+git clone https://github.com/Justinvcj/RepooRoast.git
+cd RepooRoast
+```
 
 2. **Setup the Backend:**
-   \`\`\`bash
-   cd server
-   npm install
-   cp .env.example .env
-   
-   # Add your GEMINI_API_KEY to the .env file. 
-   # (You can also add GEMINI_API_KEY_2 and GEMINI_API_KEY_3 for multi-key parallel processing).
-   
-   npm start
-   \`\`\`
-   *The server will start on http://localhost:3001*
+```bash
+cd server
+npm install
+cp .env.example .env
+
+# Add your GEMINI_API_KEY to the .env file. 
+# (You can also add GEMINI_API_KEY_2 and GEMINI_API_KEY_3 for multi-key parallel processing).
+
+npm start
+```
+*The server will start on http://localhost:3001*
 
 3. **Setup the Frontend:**
-   Open a new terminal window:
-   \`\`\`bash
-   cd client
-   npm install
-   npm run dev
-   \`\`\`
-   *The client will start on http://localhost:5173*
+Open a new terminal window:
+```bash
+cd client
+npm install
+npm run dev
+```
+*The client will start on http://localhost:5173*
 
 ### Running the Test Suite
 We use `vitest` for our backend unit tests, covering caching, regex pruning, JSON schema validation, and security fences.
-\`\`\`bash
+```bash
 cd server
 npm test
-\`\`\`
+```
 
 ---
 
-## 📝 License
+## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
