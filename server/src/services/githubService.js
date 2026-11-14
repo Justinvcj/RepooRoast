@@ -165,12 +165,15 @@ const fetchRepoData = async (repoUrl) => {
       }
     });
 
-    // Strategy 2: Fetch up to 25 additional source files based on priority
+    // Strategy 2: Fetch additional source files based on priority.
+    // Cap scales with repo size so large repos get a wider sample instead of
+    // the same fixed 25 files that a tiny repo would get.
     const priorityKeywords = ['index.js', 'index.ts', 'main.py', 'app.js', 'app.ts', 'src/routes/', 'src/services/', 'auth', 'api', 'user', 'controller', 'utils', 'src/'];
+    const MAX_ADDITIONAL_FILES = Math.min(60, Math.max(25, Math.ceil(validFiles.length * 0.1)));
     let additionalFilesCount = 0;
 
     for (const path of validFiles) {
-      if (additionalFilesCount >= 25) break;
+      if (additionalFilesCount >= MAX_ADDITIONAL_FILES) break;
       
       if (!selectedFilePaths.has(path)) {
         const isPriority = priorityKeywords.some(keyword => path.includes(keyword));
@@ -214,7 +217,10 @@ const fetchRepoData = async (repoUrl) => {
       commits,
       readme,
       tree: allFilePaths, // Returning full tree of blobs for context
-      selectedFiles: fileContents
+      selectedFiles: fileContents,
+      // Honest accounting so the AI/prompt knows it's looking at a sample, not the whole repo.
+      totalRepoFiles: tree.filter(item => item.type === 'blob').length,
+      sampledFileCount: selectedFilePaths.size
     };
 
   } catch (error) {

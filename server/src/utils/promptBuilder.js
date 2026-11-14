@@ -13,7 +13,7 @@ try {
 }
 
 const generateContextString = (repoData) => {
-  const { metadata, staticAnalysis, languages, commits, tree, readme, filesContent, classification } = repoData;
+  const { metadata, staticAnalysis, languages, commits, tree, readme, filesContent, classification, totalRepoFiles, sampledFileCount } = repoData;
 
   const metadataDesc = `
 # Repository Information
@@ -45,8 +45,11 @@ ${applicabilityRules}
   let staticAnalysisDesc = '';
   if (staticAnalysis) {
     const { repoMetrics, fileAnalyses } = staticAnalysis;
+    const sampleNote = (totalRepoFiles && sampledFileCount && sampledFileCount < totalRepoFiles)
+      ? ` (SAMPLE: ${sampledFileCount} of ${totalRepoFiles} total files in the repo were fetched for deep analysis — do not assume these metrics represent the entire codebase, and calibrate confidence in broad claims like overall test coverage or scalability accordingly)`
+      : '';
     staticAnalysisDesc = `
-# Static Analysis
+# Static Analysis${sampleNote}
 - Total Files Analyzed: ${repoMetrics.totalFiles}
 - Total Lines of Code: ${repoMetrics.totalLOC}
 - Comment/Code Ratio: ${repoMetrics.commentToCodeRatio}

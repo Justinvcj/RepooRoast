@@ -6,6 +6,7 @@ import { buildReviewPromptParts, buildDiffReviewPromptParts } from '../utils/pro
 import { parseGeminiResponse } from '../utils/responseParser.js';
 import { runStaticAnalysis } from '../analyzers/staticAnalyzer.js';
 import { classifyRepoContext } from './classifierService.js';
+import { allocateBudget } from '../budget/budgetAllocator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,15 +95,30 @@ const generateCodeReview = async (repoData) => {
   try {
     const clients = initGeminiClients();
     
-    // 0. Classify Repo Context
-    repoData.classification = await classifyRepoContext(repoData);
-    
     let promptParts;
-    
-    // 1. Run local deterministic static analysis for BOTH diff and full repo
-    if (repoData.selectedFiles && Object.keys(repoData.selectedFiles).length > 0) {
-      console.log('[Analyzer] Running local AST static analysis on fetched files...');
-      repoData.staticAnalysis = await runStaticAnalysis(repoData.selectedFiles);
+
+    // 0 & 1. Classification and local static analysis are independent of each
+    // other (classification only needs tree/README/package.json, static
+    // analysis only needs selectedFiles) — run them concurrently instead of
+    // serializing an extra network round-trip in front of the 3 review calls.
+    const hasSelectedFiles = repoData.selectedFiles && Object.keys(repoData.selectedFiles).length > 0;
+
+    const [classification, staticAnalysis] = await Promise.all([
+      classifyRepoContext(repoData),
+      hasSelectedFiles ? runStaticAnalysis(repoData.selectedFiles) : Promise.resolve(null)
+    ]);
+
+    repoData.classification = classification;
+    if (staticAnalysis) {
+      console.log('[Analyzer] Local AST static analysis complete.');
+      repoData.staticAnalysis = staticAnalysis;
+
+      // Budget-allocate the actual file contents that get embedded in the
+      // prompt, so the AI reviews real code (weighted toward the most
+      // important/central files) instead of only metadata + a metrics
+      // summary. Previously this was never wired up, so `filesContent` was
+      // always undefined and no source code reached the model at all.
+      repoData.filesContent = allocateBudget(repoData.selectedFiles, staticAnalysis.dependencyGraph);
     }
 
     if (repoData.isDiff) {
@@ -125,26 +141,39 @@ const generateCodeReview = async (repoData) => {
     
     console.log(`[Gemini] Parallel Generation Complete! Took ${((Date.now() - startTime) / 1000).toFixed(1)}s`);
 
-    // 3. Deep merge the 3 JSON objects into the final expected schema
+    // 3. Deep merge the 3 JSON objects into the final expected schema.
+    // Match category names case/whitespace-insensitively — the model
+    // occasionally returns e.g. "code quality" instead of "Code Quality",
+    // and a strict === filter would silently drop that entire category
+    // (both from the UI and from the weighted score below).
+    const normalize = (s) => (s || '').trim().toLowerCase();
+    const pickCategory = (categoriesArr, expectedName) => {
+      const match = (categoriesArr || []).find(c => normalize(c.name) === normalize(expectedName));
+      if (match) return { ...match, name: expectedName };
+      // Fallback stub keeps the schema's 7-category contract intact even if
+      // a part's model response omitted/mislabeled this category.
+      return { name: expectedName, score: 50, emoji: '❓', summary: 'The AI did not return a parsable result for this category.', issues: [], positives: [] };
+    };
+
     const categories = [
-      ...(part2.categories?.filter(c => c.name === "Code Quality") || []),
-      ...(part1.categories?.filter(c => c.name === "Project Structure") || []),
-      ...(part1.categories?.filter(c => c.name === "Documentation") || []),
-      ...(part3.categories?.filter(c => c.name === "Security") || []),
-      ...(part2.categories?.filter(c => c.name === "Test Coverage") || []),
-      ...(part2.categories?.filter(c => c.name === "Performance") || []),
-      ...(part2.categories?.filter(c => c.name === "Scalability") || [])
+      pickCategory(part2.categories, "Code Quality"),
+      pickCategory(part1.categories, "Project Structure"),
+      pickCategory(part1.categories, "Documentation"),
+      pickCategory(part3.categories, "Security"),
+      pickCategory(part2.categories, "Test Coverage"),
+      pickCategory(part2.categories, "Performance"),
+      pickCategory(part2.categories, "Scalability")
     ];
 
     // 4. Calculate Weighted Overall Score based on Repo Type
     let overallScore = part1.overallScore || 50;
     const repoType = repoData.classification.type || 'unknown';
     const weights = rubricWeights[repoType] || rubricWeights['unknown'];
-    
+
     if (weights && categories.length > 0) {
       let weightedSum = 0;
       let totalWeight = 0;
-      
+
       for (const cat of categories) {
         const weight = weights[cat.name] || 0;
         weightedSum += (cat.score || 0) * weight;
