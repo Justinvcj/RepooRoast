@@ -17,6 +17,17 @@ test.describe('RepoRoast End-to-End User Flow', () => {
     await expect(page.getByText('Privacy Policy')).toBeVisible();
   });
 
+  test('should show a 404 page for an unmatched route, with a way back home', async ({ page }) => {
+    await page.goto('/this-route-does-not-exist');
+
+    await expect(page.getByText('404')).toBeVisible();
+    const backLink = page.getByRole('link', { name: /back to safety/i });
+    await expect(backLink).toBeVisible();
+
+    await backLink.click();
+    await expect(page.getByText('Roast your codebase.')).toBeVisible();
+  });
+
   test('should execute a roast, verify Loading Screen masks Navbar/Footer, and navigate to Result Page', async ({ page }) => {
     // Intercept the API call to mock the response, avoiding real backend processing overhead
     await page.route('**/api/review', async route => {
