@@ -29,19 +29,15 @@ test.describe('RepoRoast End-to-End User Flow', () => {
         body: JSON.stringify({
           success: true,
           repo: {
-            name: 'testrepo',
             owner: 'testowner',
+            repo: 'testrepo',
+            fullName: 'testowner/testrepo',
             description: 'A test repository',
+            defaultBranch: 'main',
             stars: 100,
             forks: 50,
-            language: 'TypeScript',
-            createdAt: '2023-01-01T00:00:00Z',
             updatedAt: '2023-01-01T00:00:00Z',
-            size: 1000,
-            openIssues: 5,
-            license: 'MIT',
-            topics: ['react', 'test'],
-            defaultBranch: 'main'
+            language: 'TypeScript'
           },
           review: {
             overallScore: 45,
@@ -97,5 +93,48 @@ test.describe('RepoRoast End-to-End User Flow', () => {
     // The Result Page should display the repository name from the mock
     await expect(page.getByText('testrepo')).toBeVisible();
     await expect(page.getByText('This is a brutally honest test summary.')).toBeVisible();
+  });
+
+  test('should reject an invalid URL without hitting the backend', async ({ page }) => {
+    let requestFired = false;
+    await page.route('**/api/review', async route => {
+      requestFired = true;
+      await route.abort();
+    });
+
+    await page.goto('/');
+
+    const input = page.locator('input[type="text"]');
+    await input.fill('not-a-github-url');
+
+    const submitButton = page.locator('button[type="submit"]');
+    await submitButton.click();
+
+    // Client-side validation should reject this before any network call.
+    await expect(page.getByText(/invalid github url/i)).toBeVisible();
+    expect(requestFired).toBe(false);
+  });
+
+  test('should surface a server error via toast and return to the idle landing page', async ({ page }) => {
+    await page.route('**/api/review', async route => {
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, error: 'Repository not found or is private.' }) + '\n'
+      });
+    });
+
+    await page.goto('/');
+
+    const input = page.locator('input[type="text"]');
+    await input.fill('https://github.com/testowner/doesnotexist');
+
+    const submitButton = page.locator('button[type="submit"]');
+    await submitButton.click();
+
+    await expect(page.getByText('Repository not found or is private.')).toBeVisible();
+
+    // Should land back on the idle landing page, not get stuck on the loading screen.
+    await expect(page.getByText('Roast your codebase.')).toBeVisible();
   });
 });

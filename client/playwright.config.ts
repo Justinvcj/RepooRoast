@@ -21,6 +21,15 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
+  /* Every spec in this file mocks /api/review, so this never needs the
+     backend server running -- just the Vite dev server. */
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
+    timeout: 30000,
+  },
+
   projects: [
     {
       name: 'chromium',
