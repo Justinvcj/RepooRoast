@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { buildReviewPromptParts, buildDiffReviewPromptParts } from '../utils/promptBuilder.js';
+import { buildReviewPromptParts, buildDiffReviewPromptParts, buildActionPlanPrompt } from '../utils/promptBuilder.js';
 import { parseGeminiResponse } from '../utils/responseParser.js';
 import { runStaticAnalysis } from '../analyzers/staticAnalyzer.js';
 import { classifyRepoContext } from './classifierService.js';
@@ -198,15 +198,29 @@ const generateCodeReview = async (repoData, onProgress) => {
       }
     }
 
+    // 5. Synthesize the action plan from the FULL merged findings, not just
+    // Security (see buildActionPlanPrompt). This is a small/cheap call --
+    // it only needs the condensed issue list, not the raw repo context --
+    // so it adds modest latency in exchange for a fixPrompt/topPriorities
+    // that are actually grounded in everything the review found.
+    onProgress?.('synthesizing');
+    let actionPlan = { topPriorities: [], whatYouDidWell: [], fixPrompt: '' };
+    try {
+      const actionPlanPrompt = buildActionPlanPrompt(categories, repoData);
+      actionPlan = await executePromptWithFallbacks(clients[0], actionPlanPrompt, "Action Plan Synthesis");
+    } catch (actionPlanError) {
+      console.warn(`[Gemini] Action plan synthesis failed: ${actionPlanError.message}`);
+    }
+
     const finalReview = {
       overallScore,
       overallVerdict: part1.overallVerdict || "No verdict provided.",
       seniorDevQuote: part1.seniorDevQuote || "It works on my machine.",
       hiringVerdict: part1.hiringVerdict || "Undecided.",
       categories,
-      topPriorities: part3.topPriorities || [],
-      whatYouDidWell: part3.whatYouDidWell || [],
-      fixPrompt: part3.fixPrompt || ""
+      topPriorities: actionPlan.topPriorities || [],
+      whatYouDidWell: actionPlan.whatYouDidWell || [],
+      fixPrompt: actionPlan.fixPrompt || ""
     };
 
     return finalReview;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Database, FileCode, BrainCircuit } from 'lucide-react';
+import { Flame, Database, FileCode, BrainCircuit, ListChecks } from 'lucide-react';
 import Lightfall from './Lightfall';
 import type { ReviewStage } from '../hooks/useRepoReview';
 
@@ -15,13 +15,14 @@ const roastingQuotes = [
 
 // The real pipeline stages the server reports, in the order they occur.
 // `cache_hit` always jumps straight to the end since no AI call is needed.
-const STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating'];
+const STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating', 'synthesizing'];
 
 const STEP_CONFIG: Record<string, { text: string; icon: React.ReactNode }> = {
   fetching: { text: "Fetching repository metadata & structure...", icon: <Database className="w-5 h-5" /> },
   analyzing: { text: "Running local static analysis...", icon: <FileCode className="w-5 h-5" /> },
   classifying: { text: "Classifying project & consulting the AI Senior Dev...", icon: <BrainCircuit className="w-5 h-5" /> },
   generating: { text: "Generating your brutal review...", icon: <Flame className="w-5 h-5" /> },
+  synthesizing: { text: "Synthesizing your action plan...", icon: <ListChecks className="w-5 h-5" /> },
 };
 
 interface LoadingScreenProps {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ApiResponse, ReviewStatus } from '../types';
 import { extractRepoInfo } from '../utils/githubParser';
 
-export type ReviewStage = 'idle' | 'fetching' | 'analyzing' | 'classifying' | 'generating' | 'cache_hit' | 'starting';
+export type ReviewStage = 'idle' | 'fetching' | 'analyzing' | 'classifying' | 'generating' | 'synthesizing' | 'cache_hit' | 'starting';
 
 export const useRepoReview = () => {
   const [status, setStatus] = useState<ReviewStatus>('idle');

@@ -261,35 +261,28 @@ You MUST return ONLY valid JSON matching this exact structure. Do not include an
 CRITICAL RULE: The categories array MUST have exactly these 4 objects with these exact names: "Code Quality", "Test Coverage", "Performance", "Scalability". Ensure the JSON is well-formed.
 `;
 
-// Part 3: Security, Action Plan
+// Part 3: Security only. topPriorities/whatYouDidWell/fixPrompt used to live
+// here too, but this part runs in parallel with Parts 1 & 2 and never sees
+// their findings -- a "fix all the critical issues" prompt generated from
+// Security issues alone is a false promise. That synthesis now happens in a
+// separate pass (see buildActionPlanPrompt) after all 3 parts are merged.
 const getPart3Schema = () => `
 # CRITICAL JSON OUPUT REQUIREMENT
 You MUST return ONLY valid JSON matching this exact structure. Do not include any markdown formatting (like \`\`\`json).
 
 {
   "categories": [
-    { 
-      "name": "Security", 
-      "score": 0-100, 
-      "emoji": "🔒", 
-      "summary": "...", 
+    {
+      "name": "Security",
+      "score": 0-100,
+      "emoji": "🔒",
+      "summary": "...",
       "issues": [
         { "severity": "critical|high|medium|low", "title": "...", "description": "...", "file": "...", "suggestion": "..." }
-      ], 
-      "positives": ["..."] 
+      ],
+      "positives": ["..."]
     }
-  ],
-  "topPriorities": [
-    "Most urgent thing to fix 1",
-    "Most urgent thing to fix 2",
-    "Most urgent thing to fix 3"
-  ],
-  "whatYouDidWell": [
-    "Best aspect 1",
-    "Best aspect 2",
-    "Best aspect 3"
-  ],
-  "fixPrompt": "A single, highly detailed prompt that the developer can copy and paste into an AI coding assistant to automatically fix all the critical issues you identified in this repo. You MUST write this prompt strictly following the CRED framework: [C - Context]: Explain the current situation and the overarching goal. [R - Role]: Assign a specific persona to the AI (e.g., 'Act as a Principal Engineer'). [E - Execute]: Clearly state exactly what the AI needs to do to fix the repo using actionable verbs. [D - Details]: Provide rules for the output, formatting, and constraints."
+  ]
 }
 CRITICAL RULE: The categories array MUST have exactly 1 object with the exact name: "Security". Ensure the JSON is well-formed.
 `;
@@ -299,7 +292,7 @@ const buildReviewPromptParts = (repoData) => {
   return [
     `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for the Overview, Project Structure, and Documentation.\n${getPart1Schema()}`,
     `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for Code Quality, Test Coverage, Performance, and Scalability.\n${getPart2Schema()}`,
-    `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for Security, and generate the action plan (priorities and fix prompt).\n${getPart3Schema()}`
+    `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for Security.\n${getPart3Schema()}`
   ];
 };
 
@@ -308,11 +301,53 @@ const buildDiffReviewPromptParts = (repoData) => {
   return [
     `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for the Overview, Project Structure, and Documentation.\n${getPart1Schema()}`,
     `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for Code Quality, Test Coverage, Performance, and Scalability.\n${getPart2Schema()}`,
-    `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for Security, and generate the action plan (priorities and fix prompt).\n${getPart3Schema()}`
+    `${context}\nBased on the raw data above, evaluate the codebase and provide your brutally honest senior-level feedback for Security.\n${getPart3Schema()}`
   ];
+};
+
+/**
+ * Builds the holistic action-plan prompt, run AFTER all 3 parts are merged.
+ * Unlike Parts 1-3 (which run blind to each other), this is grounded in the
+ * FULL set of findings across all 7 categories, so topPriorities and
+ * fixPrompt can genuinely span the whole review instead of just Security.
+ * Deliberately small/cheap: it only needs the condensed issue list, not the
+ * raw repository context again.
+ */
+const buildActionPlanPrompt = (categories, repoData) => {
+  const repoLabel = repoData?.isDiff ? (repoData.diffTitle || 'this diff') : (repoData?.metadata?.fullName || 'this repository');
+
+  const findingsSummary = categories.map(cat => {
+    const issuesList = (cat.issues || [])
+      .filter(i => i.severity === 'critical' || i.severity === 'high')
+      .map(i => `  - [${i.severity.toUpperCase()}] ${i.title} (${i.file || 'general'}): ${i.description}`)
+      .join('\n');
+    return `### ${cat.name} (score: ${cat.score}/100)\n${cat.summary || ''}\n${issuesList || '  (no critical/high issues flagged)'}`;
+  }).join('\n\n');
+
+  return `
+You are synthesizing the final action plan for a code review of ${repoLabel}. Below are the REAL findings already identified across all 7 review categories (Code Quality, Project Structure, Documentation, Security, Test Coverage, Performance, Scalability). Do not invent new issues -- only work from what's listed.
+
+<review_findings>
+${findingsSummary}
+</review_findings>
+
+Based strictly on the findings above, produce:
+1. "topPriorities": the 3-5 MOST urgent items across ALL categories (not just one), ordered by actual impact -- pull from critical/high severity issues wherever they occurred.
+2. "whatYouDidWell": the 3 best aspects of the project across ALL categories.
+3. "fixPrompt": a single, highly detailed prompt a developer can paste into an AI coding assistant (Claude, Cursor, ChatGPT) to fix the critical/high issues listed above -- across every category they appeared in, not just one. Follow the CRED framework strictly: [C - Context]: the current situation and overarching goal. [R - Role]: a specific persona (e.g. "Act as a Principal Engineer"). [E - Execute]: exactly what to do, using actionable verbs, covering issues from every category that had any. [D - Details]: rules for output, formatting, and constraints (e.g. don't break existing behavior).
+
+# CRITICAL JSON OUTPUT REQUIREMENT
+Return ONLY valid JSON, no markdown fences:
+{
+  "topPriorities": ["...", "...", "..."],
+  "whatYouDidWell": ["...", "...", "..."],
+  "fixPrompt": "..."
+}
+`;
 };
 
 export {
   buildReviewPromptParts,
-  buildDiffReviewPromptParts
+  buildDiffReviewPromptParts,
+  buildActionPlanPrompt
 };
