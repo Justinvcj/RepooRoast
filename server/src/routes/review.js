@@ -63,7 +63,6 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
 
   } catch (error) {
     if (heartbeat) clearInterval(heartbeat);
-    res.write('{"trace": "Error Caught: ' + error.message + '"}\n');
     next(error);
   }
 });
