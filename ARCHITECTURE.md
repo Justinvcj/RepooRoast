@@ -24,16 +24,18 @@ graph TD
     
     I --> J1[Part 1: Overview & Structure]
     I --> J2[Part 2: Code Quality & Performance]
-    I --> J3[Part 3: Security & Action Plan]
+    I --> J3[Part 3: Security]
     
     J1 -->|Parallel Request 1| K1(Gemini Client 1)
     J2 -->|Parallel Request 2| K2(Gemini Client 2)
     J3 -->|Parallel Request 3| K3(Gemini Client 3)
     
-    K1 & K2 & K3 --> L[Deep JSON Merge & Schema Validator]
+    K1 & K2 & K3 --> L[Deep JSON Merge]
     L --> M[Mathematical Weighted Score Aggregation]
-    M --> N[Save Result to Cache]
-    N --> O[Send Final Structured Review ~8s]
+    L --> P[Action Plan Synthesis: ALL categories' findings]
+    P --> Q[topPriorities / whatYouDidWell / fixPrompt]
+    M & Q --> N[Save Result to Cache]
+    N --> O[Send Final Structured Review]
 ```
 
 ---
@@ -43,26 +45,30 @@ graph TD
 ### 2.1. Zero-Shot Repository Classification (`classifierService.js`)
 Unlike standard code review tools that apply a monolithic rubric, RepooRoast classifies the repository type *before* static analysis and grading:
 - **Input:** File tree (depth <= 3), `package.json` dependencies, `README.md`, and CI/CD indicator metrics.
-- **Output:** Exact category type (`personal_portfolio`, `library`, `cli_tool`, `production_service`, `experimental_prototype`, `student_assignment`, `unknown`).
+- **Output:** Exact category type (`personal_portfolio`, `library`, `cli_tool`, `production_service`, `prototype`, `learning_project`, `unknown`), each with its own weights in `rubric-weights.json`.
 - **Purpose:** Injects a dynamic **Applicability Matrix** to suppress structurally irrelevant penalties (e.g., missing `SECURITY.md` or missing unit test coverage on a single-page personal portfolio).
+- **Resilience:** Capped at a 12-second timeout; on timeout or any API error, falls back to `unknown` (the default rubric weights) rather than blocking the rest of the pipeline, which otherwise runs concurrently with it.
 
 ### 2.2. Deterministic AST Static Analysis (`staticAnalyzer.js`)
-- Uses **Tree-sitter WASM grammars** (`web-tree-sitter`) to parse JavaScript, TypeScript, TSX, and Python into concrete syntax trees.
-- Extracts mathematical metrics:
+- Uses **Tree-sitter WASM grammars** (`web-tree-sitter`) to parse JavaScript, TypeScript, TSX, and Python into concrete syntax trees, for files up to 40KB. Larger files, or files in a language without a loaded grammar, fall back to a lightweight regex-based analyzer (`genericAnalyzer.js`) instead of being skipped entirely.
+- Each `tree-sitter` parse is explicitly freed with `tree.delete()` after use. The parser itself is a shared singleton (`parserLoader.js`) reused across every request for the lifetime of the process — without freeing each tree, WASM linear memory accumulates indefinitely and eventually OOMs the process regardless of repo size. (This is believed to be the actual cause of an earlier OOM issue that led to tree-sitter being bypassed entirely for a period; the fix was the `delete()` call plus the size cap, not avoiding tree-sitter.)
+- Extracts mathematical metrics (tree-sitter path only; the regex fallback computes LOC/comment/import/function-name data only, no complexity metrics):
   - Cyclomatic Complexity per function / branch
   - Maximum nesting depth
   - Function parameter counts
   - Magic number occurrences
-  - Dependency graph (in-degree hub files, orphan files, and circular paths)
   - Comment-to-code ratios and TODO/FIXME markers
+- Dependency graph (in-degree hub files, orphan files, and circular paths) works off either analysis path, since it only needs each file's extracted import list.
 
 ### 2.3. Parallel LLM Chaining (`geminiService.js`)
 To overcome standard 25-30 second latency bottlenecks, prompts are decomposed into three independent payload parts:
 1. **Overview & Structure:** Architecture, folder structure, documentation, high-level verdict.
 2. **Code Quality & Performance:** AST metric interpretation, complexity flags, memory efficiency, scalability.
-3. **Security & Fix Prompt:** Vulnerability detection, critical priorities, and CRED-structured AI auto-fix prompts.
+3. **Security:** Vulnerability detection and Security category scoring only.
 
-All 3 requests execute concurrently across separate API clients (`Promise.all`), reducing generation time to **~8 seconds**.
+All 3 requests execute concurrently across separate API clients (`Promise.all`). Each one independently falls back across a 4-model tier list on a `503`/`429`/timeout, and every individual model attempt is capped at 45 seconds so one stuck call can't stall the whole chain.
+
+Because Parts 1-3 run in parallel, none of them can see what the others found — so `topPriorities`, `whatYouDidWell`, and the CRED-structured Auto-Fix prompt are **not** produced by any of the three. After the three are merged into the final 7-category result, a 4th sequential pass (`buildActionPlanPrompt`) is fed the condensed critical/high-severity findings across *all* 7 categories and synthesizes those three fields from the complete picture. This pass is deliberately small (condensed findings only, not the raw repo context again) to keep its added latency modest.
 
 ### 2.4. Mathematical Score Aggregation
 The overall score is not a subjective hallucination; it is computed mathematically via weighted linear combination:
