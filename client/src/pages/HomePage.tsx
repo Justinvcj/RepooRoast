@@ -49,7 +49,7 @@ const features = [
 ];
 
 export const HomePage: React.FC = () => {
-  const { analyzeRepo, status, data, error } = useRepoReview();
+  const { analyzeRepo, status, data, error, stage } = useRepoReview();
   const navigate = useNavigate();
 
   // Handle successful review generation
@@ -89,7 +89,7 @@ export const HomePage: React.FC = () => {
   }, []);
 
   if (status === 'loading') {
-    return <LoadingScreen />;
+    return <LoadingScreen stage={stage} />;
   }
 
   return (
@@ -143,7 +143,7 @@ export const HomePage: React.FC = () => {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-[#0d1117]/50 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-8 group relative overflow-hidden"
+                className="glass-panel hover:border-white/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-8 group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                 <div className="relative z-10">

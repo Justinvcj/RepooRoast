@@ -38,7 +38,7 @@ const errorHandler = (err, req, res, next) => {
   };
 
   if (res.headersSent) {
-    res.write(JSON.stringify(errorResponse));
+    res.write(JSON.stringify(errorResponse) + '\n');
     return res.end();
   } else {
     return res.status(statusCode).json(errorResponse);

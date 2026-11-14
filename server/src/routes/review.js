@@ -7,16 +7,41 @@ import { getCachedReview, setCachedReview } from '../services/cacheService.js';
 const router = express.Router();
 
 /**
+ * Sets up a real-progress reporter for a streamed response.
+ * Emits newline-delimited JSON progress events the client can parse, and
+ * re-emits the last known stage periodically so the same write also serves
+ * as a keepalive heartbeat (avoids sending meaningless blank bytes that
+ * would otherwise have to be filtered out of the NDJSON stream).
+ */
+const createProgressReporter = (res, heartbeatMs) => {
+  let currentStage = 'starting';
+
+  const sendProgress = (stage) => {
+    currentStage = stage;
+    try {
+      res.write(JSON.stringify({ type: 'progress', stage }) + '\n');
+      res.flushHeaders();
+    } catch (e) {
+      // Response may already be closing; nothing to do.
+    }
+  };
+
+  const heartbeat = setInterval(() => sendProgress(currentStage), heartbeatMs);
+
+  return { sendProgress, stop: () => clearInterval(heartbeat) };
+};
+
+/**
  * POST /api/review
  * Initiates a code review for a given GitHub repository URL.
- * 
+ *
  * Request Body:
  * {
  *   "repoUrl": "https://github.com/owner/repo"
  * }
  */
 router.post('/', validateRepoUrl, async (req, res, next) => {
-  let heartbeat;
+  let progress;
   try {
     const { repoUrl } = req.body;
 
@@ -24,29 +49,30 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
     res.status(200);
     res.flushHeaders();
 
-    heartbeat = setInterval(() => {
-      res.write(' ');
-      res.flushHeaders();
-    }, 5000); // 5 seconds instead of 10
+    progress = createProgressReporter(res, 8000);
+    progress.sendProgress('fetching');
 
     // 1. Fetch Repository Data (this gets the commit hash)
     const repoData = await fetchRepoData(repoUrl);
-    
+
     // 2. Check Cache
     const latestCommitSha = repoData.commits && repoData.commits.length > 0 ? repoData.commits[0].sha : 'unknown';
     const cacheKey = `repo:${repoData.metadata.owner}/${repoData.metadata.repo}:${latestCommitSha}`;
-    
+
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
-      clearInterval(heartbeat);
+      progress.sendProgress('cache_hit');
+      progress.stop();
       console.log(`[Cache] HIT for ${cacheKey}`);
       res.write(JSON.stringify(cachedReview));
       return res.end();
     }
     console.log(`[Cache] MISS for ${cacheKey}`);
 
+    progress.sendProgress('analyzing');
+
     // 3. Generate Code Review using Gemini AI
-    const aiReview = await generateCodeReview(repoData);
+    const aiReview = await generateCodeReview(repoData, progress.sendProgress);
 
     const finalResponse = {
       success: true,
@@ -54,15 +80,15 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
       analysis: repoData.staticAnalysis,
       review: aiReview
     };
-    
+
     setCachedReview(cacheKey, finalResponse);
 
-    clearInterval(heartbeat);
+    progress.stop();
     res.write(JSON.stringify(finalResponse));
     return res.end();
 
   } catch (error) {
-    if (heartbeat) clearInterval(heartbeat);
+    if (progress) progress.stop();
     next(error);
   }
 });
@@ -70,7 +96,7 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
 /**
  * POST /api/review/diff
  * Initiates a code review for a specific PR or diff comparison.
- * 
+ *
  * Request Body:
  * {
  *   "owner": "string",
@@ -80,7 +106,7 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
  * }
  */
 router.post('/diff', validateDiffComponents, async (req, res, next) => {
-  let heartbeat;
+  let progress;
   try {
     const { owner, repo, pullNumber, compareString } = req.body;
 
@@ -88,42 +114,43 @@ router.post('/diff', validateDiffComponents, async (req, res, next) => {
     res.status(200);
     res.flushHeaders();
 
-    heartbeat = setInterval(() => {
-      res.write(' ');
-      res.flushHeaders();
-    }, 10000);
+    progress = createProgressReporter(res, 10000);
+    progress.sendProgress('fetching');
 
     const diffData = await fetchDiffData(owner, repo, pullNumber, compareString);
-    
+
     // Check Cache
     const headRef = diffData.diffTitle.includes('Comparison') ? compareString : (pullNumber || 'unknown');
     const cacheKey = `diff:${owner}/${repo}:${headRef}`;
-    
+
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
-      clearInterval(heartbeat);
+      progress.sendProgress('cache_hit');
+      progress.stop();
       console.log(`[Cache] HIT for ${cacheKey}`);
       res.write(JSON.stringify(cachedReview));
       return res.end();
     }
     console.log(`[Cache] MISS for ${cacheKey}`);
 
-    const aiReview = await generateCodeReview(diffData);
+    progress.sendProgress('analyzing');
+
+    const aiReview = await generateCodeReview(diffData, progress.sendProgress);
 
     const finalResponse = {
       success: true,
       repo: diffData.metadata,
       review: aiReview
     };
-    
+
     setCachedReview(cacheKey, finalResponse);
 
-    clearInterval(heartbeat);
+    progress.stop();
     res.write(JSON.stringify(finalResponse));
     return res.end();
 
   } catch (error) {
-    if (heartbeat) clearInterval(heartbeat);
+    if (progress) progress.stop();
     next(error);
   }
 });

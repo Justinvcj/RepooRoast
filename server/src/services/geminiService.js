@@ -89,12 +89,13 @@ const executePromptWithFallbacks = async (genAI, prompt, partName) => {
 /**
  * Generates a comprehensive code review using parallel Gemini AI models.
  * @param {Object} repoData - the structured repository data fetched from GitHub.
+ * @param {(stage: string) => void} [onProgress] - optional callback for real progress events.
  * @returns {Promise<Object>} The parsed JSON review object.
  */
-const generateCodeReview = async (repoData) => {
+const generateCodeReview = async (repoData, onProgress) => {
   try {
     const clients = initGeminiClients();
-    
+
     let promptParts;
 
     // 0 & 1. Classification and local static analysis are independent of each
@@ -102,6 +103,8 @@ const generateCodeReview = async (repoData) => {
     // analysis only needs selectedFiles) — run them concurrently instead of
     // serializing an extra network round-trip in front of the 3 review calls.
     const hasSelectedFiles = repoData.selectedFiles && Object.keys(repoData.selectedFiles).length > 0;
+
+    onProgress?.('classifying');
 
     const [classification, staticAnalysis] = await Promise.all([
       classifyRepoContext(repoData),
@@ -130,6 +133,7 @@ const generateCodeReview = async (repoData) => {
     }
 
     // 2. Fire the 3 requests in parallel using 3 separate clients
+    onProgress?.('generating');
     console.log('[Gemini] Firing 3 parallel requests...');
     const startTime = Date.now();
     

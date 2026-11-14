@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Database, FileCode, BrainCircuit, Terminal } from 'lucide-react';
+import { Flame, Database, FileCode, BrainCircuit } from 'lucide-react';
 import Lightfall from './Lightfall';
+import type { ReviewStage } from '../hooks/useRepoReview';
 
 const roastingQuotes = [
   "Warming up the review oven...",
@@ -12,7 +13,22 @@ const roastingQuotes = [
   "Questioning your architectural choices..."
 ];
 
-export const LoadingScreen: React.FC = () => {
+// The real pipeline stages the server reports, in the order they occur.
+// `cache_hit` always jumps straight to the end since no AI call is needed.
+const STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating'];
+
+const STEP_CONFIG: Record<string, { text: string; icon: React.ReactNode }> = {
+  fetching: { text: "Fetching repository metadata & structure...", icon: <Database className="w-5 h-5" /> },
+  analyzing: { text: "Running local static analysis...", icon: <FileCode className="w-5 h-5" /> },
+  classifying: { text: "Classifying project & consulting the AI Senior Dev...", icon: <BrainCircuit className="w-5 h-5" /> },
+  generating: { text: "Generating your brutal review...", icon: <Flame className="w-5 h-5" /> },
+};
+
+interface LoadingScreenProps {
+  stage?: ReviewStage;
+}
+
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting' }) => {
   const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
@@ -23,41 +39,18 @@ export const LoadingScreen: React.FC = () => {
     return () => clearInterval(quoteInterval);
   }, []);
 
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    // Animate from 0 to 95% over 12 seconds to match the CSS animation
-    const duration = 12000;
-    const intervalTime = 50;
-    const totalSteps = duration / intervalTime;
-    let currentStep = 0;
-
-    const progressInterval = setInterval(() => {
-      currentStep++;
-      const currentProgress = Math.min(Math.round((currentStep / totalSteps) * 95), 95);
-      setProgress(currentProgress);
-      
-      if (currentStep >= totalSteps) {
-        clearInterval(progressInterval);
-      }
-    }, intervalTime);
-
-    return () => clearInterval(progressInterval);
-  }, []);
-
-  const steps = [
-    { text: "Fetching repository metadata...", icon: <Database className="w-5 h-5 text-textSecondary" /> },
-    { text: "Reading file structure...", icon: <Terminal className="w-5 h-5 text-textSecondary" /> },
-    { text: "Analyzing source code...", icon: <FileCode className="w-5 h-5 text-textSecondary" /> },
-    { text: "Consulting the AI Senior Dev...", icon: <BrainCircuit className="w-5 h-5 text-textSecondary" /> },
-    { text: "Generating your brutal review...", icon: <Flame className="w-5 h-5 text-primary" /> }
-  ];
+  // Real progress derived from the server's actual pipeline stage - no fake
+  // timer pretending to know how long an AI call will take.
+  const currentIndex = stage === 'cache_hit'
+    ? STEP_ORDER.length - 1
+    : Math.max(0, STEP_ORDER.indexOf(stage));
+  const progress = Math.round(((currentIndex + 1) / STEP_ORDER.length) * 100);
 
   return (
     <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background">
       {/* Background stays completely fixed */}
       <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
-         <Lightfall 
+         <Lightfall
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"
             speed={0.5}
@@ -76,22 +69,22 @@ export const LoadingScreen: React.FC = () => {
 
       {/* Pulsing Flame Icon */}
       <motion.div
-        animate={{ 
+        animate={{
           scale: [1, 1.2, 1],
           opacity: [0.8, 1, 0.8]
         }}
-        transition={{ 
-          duration: 1.5, 
+        transition={{
+          duration: 1.5,
           repeat: Infinity,
-          ease: "easeInOut" 
+          ease: "easeInOut"
         }}
-        className="relative z-10 mb-16 p-6 rounded-full bg-[#0d1117]/50 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
+        className="relative z-10 mb-16 p-6 rounded-full glass-panel"
       >
         <Flame className="w-14 h-14 text-primary" />
       </motion.div>
 
       {/* Progress Steps container */}
-      <div className="relative z-10 w-full max-w-md bg-[#0d1117]/50 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)] mb-8">
+      <div className="relative z-10 w-full max-w-md glass-panel p-8 rounded-[2.5rem] mb-8">
         <h3 className="text-xl font-bold text-textPrimary mb-6 flex items-center justify-center gap-2">
           <span>Analyzing Codebase</span>
           <span className="flex space-x-1">
@@ -100,43 +93,48 @@ export const LoadingScreen: React.FC = () => {
             <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}>.</motion.span>
           </span>
         </h3>
-        
+
         <div className="space-y-4">
-          {steps.map((step, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 1.5, duration: 0.5 }}
-              className="flex items-center gap-3 text-textSecondary"
-            >
-              {step.icon}
-              <span className={index === steps.length - 1 ? "text-primary font-medium" : ""}>
-                {step.text}
-              </span>
-            </motion.div>
-          ))}
+          {STEP_ORDER.map((key, index) => {
+            const config = STEP_CONFIG[key];
+            const isActive = index === currentIndex;
+            const isComplete = index < currentIndex;
+            return (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: isComplete || isActive ? 1 : 0.35, x: 0 }}
+                transition={{ duration: 0.4 }}
+                className={`flex items-center gap-3 ${isActive ? 'text-primary' : isComplete ? 'text-textPrimary' : 'text-textSecondary'}`}
+              >
+                {config.icon}
+                <span className={isActive ? "font-medium" : ""}>
+                  {config.text}
+                </span>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Loading Bar Container */}
+        {/* Loading Bar - width is driven by the real server-reported stage */}
         <div className="mt-8">
           <div className="flex justify-between items-center mb-2 text-sm font-medium text-textSecondary">
             <span>Progress</span>
             <span className="text-primary font-bold">{progress}%</span>
           </div>
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-            <motion.div 
+            <motion.div
               className="h-full bg-primary"
               initial={{ width: "0%" }}
-              animate={{ width: "95%" }}
-              transition={{ duration: 12, ease: "easeOut" }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             />
           </div>
         </div>
       </div>
 
       {/* Dynamic Roasting Quotes */}
-      <motion.div 
+      <motion.div
         key={quoteIndex}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

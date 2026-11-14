@@ -1,25 +1,28 @@
 import { useState } from 'react';
-import axios from 'axios';
 import type { ApiResponse, ReviewStatus } from '../types';
 import { extractRepoInfo } from '../utils/githubParser';
+
+export type ReviewStage = 'idle' | 'fetching' | 'analyzing' | 'classifying' | 'generating' | 'cache_hit' | 'starting';
 
 export const useRepoReview = () => {
   const [status, setStatus] = useState<ReviewStatus>('idle');
   const [data, setData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [stage, setStage] = useState<ReviewStage>('idle');
 
   const analyzeRepo = async (repoUrl: string) => {
     setStatus('loading');
     setError(null);
-    
+    setStage('starting');
+
     const controller = new AbortController();
     // 120 second timeout to account for Render free tier cold starts
     const timeoutId = setTimeout(() => controller.abort(), 120000);
-    
+
     try {
       const parsed = extractRepoInfo(repoUrl);
       const API_BASE = import.meta.env.VITE_API_URL || '';
-      
+
       let endpoint = `${API_BASE}/api/review`;
       let payload: any = { repoUrl };
 
@@ -28,37 +31,88 @@ export const useRepoReview = () => {
         payload = parsed;
       }
 
-      const response = await axios.post<ApiResponse>(endpoint, payload, {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
         signal: controller.signal
       });
-      
+
+      if (!response.body) {
+        throw new Error('No response body received from server.');
+      }
+
+      // The server streams newline-delimited JSON: zero or more
+      // {"type":"progress","stage":...} lines followed by one final result
+      // (or error) object. Parse it incrementally so the loading UI reflects
+      // the actual pipeline stage instead of a fake timer.
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let finalResult: ApiResponse | null = null;
+      let serverErrorMessage: string | null = null;
+
+      const consumeLine = (line: string) => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+
+        let parsed: any;
+        try {
+          parsed = JSON.parse(trimmed);
+        } catch {
+          return; // Ignore anything that isn't a complete JSON object yet.
+        }
+
+        if (parsed.type === 'progress') {
+          setStage(parsed.stage as ReviewStage);
+        } else if (parsed.success === true) {
+          finalResult = parsed;
+        } else if (parsed.success === false) {
+          serverErrorMessage = parsed.error || 'Analysis failed unexpectedly.';
+        }
+      };
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex;
+        while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
+          consumeLine(buffer.slice(0, newlineIndex));
+          buffer = buffer.slice(newlineIndex + 1);
+        }
+      }
+      consumeLine(buffer); // Handle any trailing content with no final newline.
+
       clearTimeout(timeoutId);
-      
-      if (response.data.success) {
-        localStorage.setItem('reporoast_last_review', JSON.stringify({
-          data: response.data,
-          timestamp: Date.now()
-        }));
-        setData(response.data);
-        setStatus('success');
-      } else {
+
+      if (serverErrorMessage && !finalResult) {
+        throw new Error(serverErrorMessage);
+      }
+      if (!finalResult) {
         throw new Error('Analysis failed unexpectedly.');
       }
+
+      localStorage.setItem('reporoast_last_review', JSON.stringify({
+        data: finalResult,
+        timestamp: Date.now()
+      }));
+      setData(finalResult);
+      setStatus('success');
 
     } catch (err) {
       clearTimeout(timeoutId);
       let errorMessage = 'An unexpected error occurred during review generation.';
-      
-      if (axios.isCancel(err)) {
+
+      if (err instanceof DOMException && err.name === 'AbortError') {
         errorMessage = 'The review request timed out. Please try a smaller repository.';
-      } else if (axios.isAxiosError(err) && err.response?.data?.error) {
-         errorMessage = err.response.data.error;
       } else if (err instanceof Error) {
-         if (err.message === 'Network Error') {
-           errorMessage = 'Network Error: Your browser blocked the connection, or the Render server timed out. Try turning off your ad-blocker/Brave Shields for this site, or do a Hard Refresh (Ctrl+Shift+R).';
-         } else {
-           errorMessage = err.message;
-         }
+        if (err.message === 'Failed to fetch') {
+          errorMessage = 'Network Error: Your browser blocked the connection, or the server timed out. Try turning off your ad-blocker/Brave Shields for this site, or do a Hard Refresh (Ctrl+Shift+R).';
+        } else {
+          errorMessage = err.message;
+        }
       }
 
       setError(errorMessage);
@@ -70,12 +124,14 @@ export const useRepoReview = () => {
     setStatus('idle');
     setData(null);
     setError(null);
+    setStage('idle');
   };
 
   return {
     status,
     data,
     error,
+    stage,
     analyzeRepo,
     reset
   };
