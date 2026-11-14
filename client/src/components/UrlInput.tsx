@@ -34,8 +34,10 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading }) => {
   return (
     <div className="w-full max-w-3xl mx-auto mt-12">
       <form onSubmit={handleSubmit} className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary to-yellow-400 rounded-full blur opacity-25 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
-        <div className="relative flex items-center bg-surface/95 border border-border rounded-full p-2 shadow-xl">
+        {/* Single-color ember glow that answers focus, not hover -- this is
+            a live input, not a decoration, so it should react like one. */}
+        <div className="absolute -inset-px rounded-full bg-primary opacity-0 blur-md transition-opacity duration-300 group-focus-within:opacity-40 pointer-events-none"></div>
+        <div className="relative flex items-center bg-surface/95 border border-border group-focus-within:border-primary/60 rounded-full p-2 shadow-xl transition-colors">
           <div className="pl-6 pr-4 pointer-events-none">
             <Github className="h-7 w-7 text-textSecondary" />
           </div>

@@ -23,12 +23,15 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors focus:outline-none"
         >
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/10 rounded-xl">
-              <Code2 className="w-6 h-6 text-primary" />
-            </div>
+          <div className="flex items-center gap-4 border-l-2 border-primary pl-4">
+            <Code2 className="w-7 h-7 text-primary shrink-0" />
             <div className="flex flex-col items-start">
-              <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">Static Code Analysis</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">Static Code Analysis</h3>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary/80 border border-primary/30 rounded px-1.5 py-0.5">
+                  Measured, not judged
+                </span>
+              </div>
               <span className="text-sm text-textSecondary font-medium mt-1">
                 Parsed {repoMetrics.totalFiles} files • {repoMetrics.totalLOC} LOC
               </span>

@@ -202,17 +202,20 @@ export const HomePage: React.FC = () => {
                 className="glass-panel hover:border-white/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-8 group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                <span className="absolute top-6 right-8 font-mono text-5xl font-bold text-white/[0.04] select-none" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 <div className="relative z-10">
-                  <span className="inline-flex items-center justify-center p-4 bg-background border border-border rounded-full shadow-inner mb-8 group-hover:scale-110 transition-transform">
-                    <feature.icon className="h-8 w-8 text-primary" aria-hidden="true" />
-                  </span>
+                  <div className="flex items-center gap-3 mb-4">
+                    <feature.icon className="h-6 w-6 text-primary shrink-0" aria-hidden="true" />
+                    <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">
+                      {feature.name}
+                    </h3>
+                  </div>
+                  <p className="text-base text-textSecondary leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight mb-3">
-                  {feature.name}
-                </h3>
-                <p className="text-base text-textSecondary leading-relaxed">
-                  {feature.description}
-                </p>
               </motion.div>
             ))}
           </div>
