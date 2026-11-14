@@ -308,7 +308,8 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
       diffDescription: prDescription || '',
       diffContent: diffContent,
       selectedFiles: fileContents,
-      tree: changedFiles
+      tree: changedFiles,
+      headRef // the resolved head commit SHA (PRs) or ref (compare), for cache-key invalidation on new commits
     };
 
   } catch (error) {

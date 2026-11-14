@@ -119,9 +119,17 @@ router.post('/diff', validateDiffComponents, async (req, res, next) => {
 
     const diffData = await fetchDiffData(owner, repo, pullNumber, compareString);
 
-    // Check Cache
-    const headRef = diffData.diffTitle.includes('Comparison') ? compareString : (pullNumber || 'unknown');
-    const cacheKey = `diff:${owner}/${repo}:${headRef}`;
+    // Check Cache. Derive the key from which parameter the request actually
+    // supplied plus the resolved head commit SHA, never from inferring it
+    // off the PR title text -- a PR titled to merely contain the word
+    // "Comparison" used to collapse onto `compareString` (undefined in the
+    // PR-number path), producing an identical cache key for otherwise-
+    // unrelated PRs on the same repo and serving one PR's cached review for
+    // another's request. Including the head SHA also means pushing new
+    // commits to a PR correctly invalidates the cache instead of silently
+    // serving a stale review for the old commit forever.
+    const refKey = diffData.headRef || (pullNumber ? `pr:${pullNumber}` : `cmp:${compareString}`);
+    const cacheKey = `diff:${owner}/${repo}:${refKey}`;
 
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
