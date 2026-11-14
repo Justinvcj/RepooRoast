@@ -255,7 +255,7 @@ npm run dev
 | **Local Analysis** | `web-tree-sitter` (JS/TS/TSX/Python grammars) for per-function complexity/nesting/magic-number metrics on files under 40KB, with a regex-based LOC/comment/import extractor as the fallback above that size or for unrecognized languages; import-graph resolution (`graphResolver.js`) works off either path |
 | **Token Budgeting** | `gpt-tokenizer` (`cl100k_base` encoding) for counting and truncating file content to a fixed budget |
 | **AI Backbone** | Google Gemini, via `@google/generative-ai`, with a 4-tier model fallback chain and per-attempt timeouts |
-| **Testing** | Vitest, with HTML reporting (`npm run test:report`) |
+| **Testing** | Vitest (server, with HTML reporting via `npm run test:report`), Playwright (client, mocked-API smoke tests) |
 
 ---
 
@@ -276,7 +276,12 @@ The suite (`server/tests/`) covers:
 - `responseParser.test.js` — JSON extraction from markdown-fenced/noisy LLM output
 - `security.test.js` — input validation and prompt-injection fencing boundaries
 
-There is no frontend test suite yet (`@playwright/test` is installed as a dev dependency but not wired into a script — see [Known Limitations](#known-limitations--roadmap)).
+```bash
+cd client
+npm run test:e2e
+```
+
+The Playwright suite (`client/tests/reporoast.spec.ts`) boots its own dev server (no backend required — every spec mocks `/api/review`) and covers: the landing page rendering its navbar/hero/footer, a full mocked review run (loading screen masking the navbar/footer, then landing on the result page with the mocked data rendered), client-side URL validation rejecting bad input before any network call, and a server error response surfacing via toast without getting stuck on the loading screen.
 
 ---
 
@@ -287,7 +292,7 @@ Documented here deliberately, instead of only in commit history, so the gap betw
 - **In-memory cache only.** `cacheService.js` is a `Map` with a 100-entry LRU-ish eviction and a 24h TTL — it resets on every server restart/redeploy and doesn't share state across multiple server instances. A Redis-backed cache would fix both; not yet wired up, since it needs infrastructure this repo doesn't currently provision.
 - **Tree-sitter file size cap (40KB).** Files above that are analyzed with the regex fallback instead, to keep peak WASM memory bounded on memory-constrained hosts. Since fetched files are already capped at 50KB by the GitHub tree filter, most selected files qualify for full AST analysis, but some large ones won't.
 - **Large repositories are sampled, not fully ingested.** File selection scales with repo size but is still capped (60 files) for cost and latency reasons; the prompt now discloses this to the model, but a truly huge monorepo will still only get a representative slice reviewed.
-- **No Playwright suite wired up yet**, despite the dependency being present — frontend behavior is currently verified manually.
+- **Playwright coverage is a thin smoke layer, not exhaustive.** It mocks the API, so it verifies UI mechanics (loading states, routing, error handling) but never exercises the real backend pipeline end-to-end in CI.
 - **Classifier and review generation depend on Gemini API availability.** Both paths have timeouts and fall back gracefully (to `unknown` classification, or the next model tier) rather than hanging, but a full Gemini outage will degrade review quality or fail the request entirely — there's no non-LLM fallback for the review itself.
 
 ---
