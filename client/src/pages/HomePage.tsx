@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Code2, GitMerge, FileText, Shield, TestTube, Zap, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { useRepoReview } from '../hooks/useRepoReview';
+import { useCustomReview } from '../hooks/useCustomReview';
 import { useLayout } from '../contexts/LayoutContext';
 import { Hero } from '../components/Hero';
 import { LoadingScreen } from '../components/LoadingScreen';
+import { CustomModeModal } from '../components/CustomModeModal';
 import Lightfall from '../components/Lightfall';
+
+const CUSTOM_MODE_SESSION_KEY = 'reporoast_custom_api_key';
 
 const features = [
   {
@@ -49,8 +53,46 @@ const features = [
 ];
 
 export const HomePage: React.FC = () => {
-  const { analyzeRepo, status, data, error, stage } = useRepoReview();
+  const defaultReview = useRepoReview();
+  const customReview = useCustomReview();
   const navigate = useNavigate();
+
+  const [customModeEnabled, setCustomModeEnabled] = useState(false);
+  const [customApiKey, setCustomApiKey] = useState('');
+  const [rememberKey, setRememberKey] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // A remembered key only ever lives in sessionStorage (cleared when the tab
+  // closes), never localStorage -- see CustomModeModal's trust statement.
+  useEffect(() => {
+    const saved = sessionStorage.getItem(CUSTOM_MODE_SESSION_KEY);
+    if (saved) {
+      setCustomApiKey(saved);
+      setCustomModeEnabled(true);
+      setRememberKey(true);
+    }
+  }, []);
+
+  const handleSaveSettings = (enabled: boolean, apiKey: string, remember: boolean) => {
+    setCustomModeEnabled(enabled);
+    setCustomApiKey(apiKey);
+    setRememberKey(remember);
+    if (remember && apiKey) {
+      sessionStorage.setItem(CUSTOM_MODE_SESSION_KEY, apiKey);
+    } else {
+      sessionStorage.removeItem(CUSTOM_MODE_SESSION_KEY);
+    }
+  };
+
+  const handleAnalyze = (repoUrl: string) => {
+    if (customModeEnabled) {
+      customReview.analyzeRepo(repoUrl, customApiKey);
+    } else {
+      defaultReview.analyzeRepo(repoUrl);
+    }
+  };
+
+  const { status, data, error, stage } = customModeEnabled ? customReview : defaultReview;
 
   // Handle successful review generation
   useEffect(() => {
@@ -89,7 +131,7 @@ export const HomePage: React.FC = () => {
   }, []);
 
   if (status === 'loading') {
-    return <LoadingScreen stage={stage} />;
+    return <LoadingScreen stage={stage} mode={customModeEnabled ? 'custom' : 'default'} />;
   }
 
   return (
@@ -121,7 +163,21 @@ export const HomePage: React.FC = () => {
       >
         <main className="relative z-10">
         {/* Pass the analyze function to the Hero component */}
-        <Hero onAnalyzeRepo={analyzeRepo} isLoading={false} />
+        <Hero
+          onAnalyzeRepo={handleAnalyze}
+          isLoading={false}
+          customModeEnabled={customModeEnabled}
+          onOpenCustomMode={() => setIsSettingsOpen(true)}
+        />
+
+        <CustomModeModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          enabled={customModeEnabled}
+          apiKey={customApiKey}
+          rememberKey={rememberKey}
+          onSave={handleSaveSettings}
+        />
 
         {/* Feature Grid Section */}
         <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">

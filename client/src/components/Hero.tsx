@@ -1,13 +1,16 @@
 import React from 'react';
 import { UrlInput } from './UrlInput';
 import { motion } from 'framer-motion';
+import { KeyRound } from 'lucide-react';
 
 interface HeroProps {
   onAnalyzeRepo: (url: string) => void;
   isLoading: boolean;
+  customModeEnabled?: boolean;
+  onOpenCustomMode?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onAnalyzeRepo, isLoading }) => {
+export const Hero: React.FC<HeroProps> = ({ onAnalyzeRepo, isLoading, customModeEnabled, onOpenCustomMode }) => {
   return (
     <div className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto relative z-10 min-h-[80vh] flex flex-col justify-center">
       <motion.div
@@ -31,6 +34,17 @@ export const Hero: React.FC<HeroProps> = ({ onAnalyzeRepo, isLoading }) => {
         </p>
 
         <UrlInput onSubmit={onAnalyzeRepo} isLoading={isLoading} />
+
+        {onOpenCustomMode && (
+          <button
+            type="button"
+            onClick={onOpenCustomMode}
+            className="mt-6 inline-flex items-center gap-1.5 text-xs font-medium text-textSecondary/80 hover:text-primary transition-colors"
+          >
+            <KeyRound className="w-3.5 h-3.5" />
+            {customModeEnabled ? 'Custom Mode: on (using your own API key)' : 'Use your own API key (Custom Mode)'}
+          </button>
+        )}
       </motion.div>
     </div>
   );

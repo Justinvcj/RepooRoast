@@ -2,7 +2,11 @@ import { useState } from 'react';
 import type { ApiResponse, ReviewStatus } from '../types';
 import { extractRepoInfo } from '../utils/githubParser';
 
-export type ReviewStage = 'idle' | 'fetching' | 'analyzing' | 'classifying' | 'generating' | 'synthesizing' | 'cache_hit' | 'starting';
+export type ReviewStage =
+  | 'idle' | 'fetching' | 'analyzing' | 'classifying' | 'generating' | 'synthesizing' | 'cache_hit' | 'starting'
+  // Custom/BYOK mode stages (see useCustomReview.ts) -- the slow part shifts
+  // to the client's own direct AI calls, which the server never reports on.
+  | 'preparing' | 'reviewing';
 
 export const useRepoReview = () => {
   const [status, setStatus] = useState<ReviewStatus>('idle');

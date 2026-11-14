@@ -1,6 +1,6 @@
 import express from 'express';
 import { fetchRepoData, fetchDiffData } from '../services/githubService.js';
-import { generateCodeReview } from '../services/geminiService.js';
+import { generateCodeReview, prepareCustomReview } from '../services/geminiService.js';
 import { validateRepoUrl, validateDiffComponents } from '../middleware/inputValidator.js';
 import { getCachedReview, setCachedReview } from '../services/cacheService.js';
 
@@ -159,6 +159,45 @@ router.post('/diff', validateDiffComponents, async (req, res, next) => {
 
   } catch (error) {
     if (progress) progress.stop();
+    next(error);
+  }
+});
+
+/**
+ * POST /api/review/prepare
+ * Custom/BYOK mode, step 1: runs everything that doesn't need an AI review
+ * key (GitHub fetch, local static analysis, classification using this
+ * server's own shared key) and returns the exact prompts the server would
+ * have used, so the client can fire the actual review calls directly to
+ * their chosen provider with their own key. This server never receives
+ * that key and never sees the resulting AI response.
+ *
+ * Request Body: { "repoUrl": "https://github.com/owner/repo" }
+ */
+router.post('/prepare', validateRepoUrl, async (req, res, next) => {
+  try {
+    const { repoUrl } = req.body;
+    const repoData = await fetchRepoData(repoUrl);
+    const prepared = await prepareCustomReview(repoData);
+    return res.status(200).json({ success: true, ...prepared });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * POST /api/review/diff/prepare
+ * Same as /prepare, but for a PR or compare diff.
+ *
+ * Request Body: { "owner": "string", "repo": "string", "pullNumber": "string?", "compareString": "string?" }
+ */
+router.post('/diff/prepare', validateDiffComponents, async (req, res, next) => {
+  try {
+    const { owner, repo, pullNumber, compareString } = req.body;
+    const diffData = await fetchDiffData(owner, repo, pullNumber, compareString);
+    const prepared = await prepareCustomReview(diffData);
+    return res.status(200).json({ success: true, ...prepared });
+  } catch (error) {
     next(error);
   }
 });

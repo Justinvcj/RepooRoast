@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Database, FileCode, BrainCircuit, ListChecks } from 'lucide-react';
+import { Flame, Database, FileCode, BrainCircuit, ListChecks, KeyRound } from 'lucide-react';
 import Lightfall from './Lightfall';
 import type { ReviewStage } from '../hooks/useRepoReview';
 
@@ -15,7 +15,12 @@ const roastingQuotes = [
 
 // The real pipeline stages the server reports, in the order they occur.
 // `cache_hit` always jumps straight to the end since no AI call is needed.
-const STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating', 'synthesizing'];
+const DEFAULT_STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating', 'synthesizing'];
+
+// Custom/BYOK mode has a different, shorter pipeline: the server only
+// prepares the prompts (one combined step), then this browser makes the AI
+// calls directly with the user's own key -- see useCustomReview.ts.
+const CUSTOM_STEP_ORDER: ReviewStage[] = ['preparing', 'reviewing', 'synthesizing'];
 
 const STEP_CONFIG: Record<string, { text: string; icon: React.ReactNode }> = {
   fetching: { text: "Fetching repository metadata & structure...", icon: <Database className="w-5 h-5" /> },
@@ -23,13 +28,17 @@ const STEP_CONFIG: Record<string, { text: string; icon: React.ReactNode }> = {
   classifying: { text: "Classifying project & consulting the AI Senior Dev...", icon: <BrainCircuit className="w-5 h-5" /> },
   generating: { text: "Generating your brutal review...", icon: <Flame className="w-5 h-5" /> },
   synthesizing: { text: "Synthesizing your action plan...", icon: <ListChecks className="w-5 h-5" /> },
+  preparing: { text: "Preparing repository context...", icon: <Database className="w-5 h-5" /> },
+  reviewing: { text: "Reviewing with your API key...", icon: <KeyRound className="w-5 h-5" /> },
 };
 
 interface LoadingScreenProps {
   stage?: ReviewStage;
+  mode?: 'default' | 'custom';
 }
 
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting' }) => {
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting', mode = 'default' }) => {
+  const STEP_ORDER = mode === 'custom' ? CUSTOM_STEP_ORDER : DEFAULT_STEP_ORDER;
   const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
