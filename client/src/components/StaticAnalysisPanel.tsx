@@ -110,7 +110,10 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
               <div className="space-y-3">
                 {fileAnalyses && fileAnalyses.length > 0 ? (
                   fileAnalyses.slice(0, 4).map((file, idx) => {
-                    const flags = file.functions.flatMap((f: any) => f.flags);
+                    // Large/unrecognized-language files fall back to a regex
+                    // analyzer whose `functions` are plain name strings, not
+                    // {flags} objects -- guard against that shape here.
+                    const flags = file.functions.flatMap((f: any) => (f && typeof f === 'object' ? f.flags || [] : []));
                     const uniqueFlags = Array.from(new Set(flags));
                     if (uniqueFlags.length === 0 && file.magicNumbers.length === 0) return null;
                     return (
