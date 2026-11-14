@@ -18,6 +18,7 @@
 - [Why RepoRoast](#why-reporoast)
 - [How It Works](#how-it-works)
 - [Features](#features)
+- [Custom Mode (Bring Your Own Key)](#custom-mode-bring-your-own-key)
 - [Live Demo Walkthrough](#live-demo-walkthrough)
 - [Project Structure](#project-structure)
 - [API Reference](#api-reference)
@@ -83,6 +84,22 @@ Every stage of that pipeline is reported back to the browser as it happens — s
 - **Auto-Fix prompt generator.** After the 3 parallel review calls are merged, a 4th synthesis pass — grounded in the critical/high-severity findings across *all 7 categories*, not just one — produces the top priorities and a single CRED-structured prompt (Context / Role / Execute / Details) ready to paste into Claude, Cursor, or ChatGPT.
 - **Defense-in-depth on the API.** Strict CORS allowlisting, `helmet` security headers, per-IP rate limiting, request-body size caps, regex-validated GitHub URLs, prompt-injection fencing (untrusted repo content is wrapped in `<repository_data>`/`<diff_data>` tags with explicit instructions never to treat it as commands), and a 50KB-per-file size filter applied *before* downloading content to avoid memory blowups on huge files.
 - **Zod-validated AI responses.** The expected JSON shape for a review (7 categories, scored 0–100, with issues/positives/suggestions) is defined as a Zod schema, and the parser strips markdown code fences or stray prose around the JSON before parsing.
+- **Custom Mode (Bring Your Own Key).** Run the review against your own Gemini API key instead of RepoRoast's shared quota — see below for how it's architected so the server never sees that key.
+
+---
+
+## Custom Mode (Bring Your Own Key)
+
+Click "Use your own API key" under the URL input to open Custom Mode. Paste a [Gemini API key](https://aistudio.google.com/apikey) and every review runs against your own quota instead of RepoRoast's shared one.
+
+**The architectural guarantee, not just a privacy-policy promise:** your key never reaches RepoRoast's backend.
+
+- `POST /api/review/prepare` (and `/api/review/diff/prepare`) does everything that *doesn't* need an AI review key — fetches the repo, runs local static analysis, classifies the repo type using RepoRoast's own shared key — and returns the exact prompts the server would have used, never calling Gemini for the review itself.
+- Your browser then calls `https://generativelanguage.googleapis.com` **directly** with your key for all 4 AI calls (the 3 parallel review parts + the action-plan synthesis), using the same model-fallback chain and 45s per-attempt timeout as the default path (`client/src/utils/geminiDirectClient.ts`).
+- The category-merge and weighted-score logic, and the action-plan prompt, are computed **in your browser** too (ported 1:1 from the server's own logic — `client/src/utils/reviewMerge.ts` / `actionPlanPrompt.ts`) — so the AI's actual responses never pass through RepoRoast's servers either, not just the key.
+- Your key is held only in memory (React state) by default. An explicit "remember this key" checkbox stores it in `sessionStorage` — cleared when you close the tab, never `localStorage` — nothing persists across browser sessions unless you opt in, and even then it never leaves your device.
+
+This also means Custom Mode reviews don't count against RepoRoast's own rate limit or Gemini quota — they're billed entirely to your own API key.
 
 ---
 
@@ -102,27 +119,38 @@ RepooRoast/
 ├── client/                      # React 19 + TypeScript + Vite frontend
 │   └── src/
 │       ├── components/          # Hero, Navbar, ScoreCard, ScoreChart, CategorySection,
-│       │                        # IssueCard, LoadingScreen, StaticAnalysisPanel, Lightfall, …
+│       │                        # IssueCard, LoadingScreen, StaticAnalysisPanel,
+│       │                        # CustomModeModal, Lightfall, …
 │       ├── hooks/
-│       │   └── useRepoReview.ts # Streams the NDJSON response, drives review state + stage
+│       │   ├── useRepoReview.ts    # Default mode: streams the NDJSON response from the server
+│       │   └── useCustomReview.ts  # Custom/BYOK mode: orchestrates /prepare + direct AI calls
 │       ├── pages/                # HomePage, ResultPage
 │       ├── contexts/             # LayoutContext (navbar/footer visibility during loading)
-│       └── utils/                # githubParser, scoreHelpers
+│       └── utils/
+│           ├── githubParser.ts, scoreHelpers.ts
+│           ├── geminiDirectClient.ts # Custom mode: calls Gemini's REST API directly, with
+│           │                         # the same model-fallback chain and timeout as the server
+│           ├── reviewMerge.ts        # Custom mode: client-side port of the server's category
+│           │                         # merge + weighted-score logic (keep in sync)
+│           └── actionPlanPrompt.ts   # Custom mode: client-side port of the action-plan prompt
 │
 ├── server/                      # Node.js + Express 5 backend
 │   └── src/
 │       ├── routes/
-│       │   └── review.js        # POST /api/review, POST /api/review/diff (NDJSON streaming)
+│       │   └── review.js        # POST /api/review(/diff) (NDJSON streaming) and
+│       │                        # POST /api/review(/diff)/prepare (Custom Mode, plain JSON)
 │       ├── services/
 │       │   ├── githubService.js     # GitHub fetch, smart file selection, diff fetching
 │       │   ├── classifierService.js # Repo-type classification (12s timeout, graceful fallback)
-│       │   ├── geminiService.js     # Parallel 3-part review generation + score aggregation
+│       │   ├── geminiService.js     # Default-mode 3-part review generation + score aggregation,
+│       │   │                        # and prepareCustomReview() for Custom Mode
 │       │   └── cacheService.js      # In-memory, commit-SHA-keyed response cache
 │       ├── analyzers/
-│       │   ├── staticAnalyzer.js    # Orchestrates per-file analysis + dependency graph
+│       │   ├── staticAnalyzer.js    # Orchestrates per-file analysis + dependency graph;
+│       │   │                        # tree-sitter with a regex fallback above 40KB/file
 │       │   ├── genericAnalyzer.js   # Regex-based LOC/comment/import/function-name extraction
 │       │   ├── jstsAnalyzer.js      # Tree-sitter AST walker (cyclomatic complexity, nesting,
-│       │   │                        # magic numbers) — see note in Known Limitations
+│       │   │                        # parameter counts, magic numbers)
 │       │   ├── pythonAnalyzer.js    # Tree-sitter AST walker for Python
 │       │   └── graphResolver.js     # Import resolution + hub/orphan/cycle detection
 │       ├── budget/
@@ -133,7 +161,9 @@ RepooRoast/
 │       │   ├── inputValidator.js    # Regex validation for repo/PR/compare URLs
 │       │   └── errorHandler.js      # Sanitizes error messages in production
 │       ├── utils/
-│       │   ├── promptBuilder.js     # Builds the 3 scoped prompts + applicability context
+│       │   ├── promptBuilder.js     # Builds the 3 scoped prompts + the action-plan prompt
+│       │   ├── reviewMerge.js       # Category merge + weighted-score logic (shared by both
+│       │   │                        # default and custom modes server-side)
 │       │   └── responseParser.js    # JSON extraction/cleanup + Zod schema
 │       └── config/
 │           ├── rubric-weights.json       # Per-repo-type category weights
@@ -181,7 +211,26 @@ The response is **streamed**, not buffered: zero or more newline-delimited progr
 {"success":true,"repo":{...},"analysis":{...},"review":{...}}
 ```
 
-`stage` is one of `fetching`, `analyzing`, `classifying`, `generating`, or `cache_hit` (cache hits skip straight to the final object). On failure the final line is `{"success":false,"error":"..."}` instead. The same mechanism doubles as a keepalive heartbeat during long Gemini generations, so there's no separate ping protocol to implement on the client.
+`stage` is one of `fetching`, `analyzing`, `classifying`, `generating`, `synthesizing`, or `cache_hit` (cache hits skip straight to the final object). On failure the final line is `{"success":false,"error":"..."}` instead. The same mechanism doubles as a keepalive heartbeat during long Gemini generations, so there's no separate ping protocol to implement on the client.
+
+### `POST /api/review/prepare` / `POST /api/review/diff/prepare`
+
+Powers [Custom Mode](#custom-mode-bring-your-own-key). Same request bodies as `/api/review` / `/api/review/diff`, but instead of calling Gemini for the review, returns everything the client needs to make the AI calls itself:
+
+```json
+{
+  "success": true,
+  "repo": { "...": "..." },
+  "analysis": { "...": "..." },
+  "systemInstruction": "...",
+  "promptParts": ["...", "...", "..."],
+  "partNames": ["Overview/Structure/Documentation", "Code Quality/Test Coverage/Performance/Scalability", "Security"],
+  "repoType": "library",
+  "weights": { "Code Quality": 0.2, "...": "..." }
+}
+```
+
+Plain JSON (not streamed) — this endpoint is bounded by the classifier's 12s timeout plus a GitHub fetch, not by a Gemini generation call, so there's no long wait to report progress on.
 
 ### `GET /health`
 
@@ -294,6 +343,7 @@ Documented here deliberately, instead of only in commit history, so the gap betw
 - **Large repositories are sampled, not fully ingested.** File selection scales with repo size but is still capped (60 files) for cost and latency reasons; the prompt now discloses this to the model, but a truly huge monorepo will still only get a representative slice reviewed.
 - **Playwright coverage is a thin smoke layer, not exhaustive.** It mocks the API, so it verifies UI mechanics (loading states, routing, error handling) but never exercises the real backend pipeline end-to-end in CI.
 - **Classifier and review generation depend on Gemini API availability.** Both paths have timeouts and fall back gracefully (to `unknown` classification, or the next model tier) rather than hanging, but a full Gemini outage will degrade review quality or fail the request entirely — there's no non-LLM fallback for the review itself.
+- **Custom Mode is Gemini-only for now.** The settings panel is built to add other providers, but only direct Gemini REST calls are implemented; an OpenAI/Anthropic option would need its own request/response adapter in `geminiDirectClient.ts` (Anthropic's API explicitly supports direct-from-browser calls via an `anthropic-dangerous-direct-browser-access` header, built for exactly this use case; OpenAI's SDK supports it behind a `dangerouslyAllowBrowser` flag).
 
 ---
 
