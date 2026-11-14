@@ -97,6 +97,21 @@ const fetchRepoData = async (repoUrl) => {
     // 1. Fetch Repository Metadata
     const metadataRes = await api.get(`/repos/${owner}/${repo}`);
     const metadata = metadataRes.data;
+
+    // This app has no auth/authorization system -- anyone who knows a
+    // owner/repo pair can request a review of it. Without a GITHUB_TOKEN,
+    // GitHub itself returns 404 for private repos (so they're already
+    // blocked), but if the configured token happens to have private-repo
+    // access, GitHub returns the real metadata with `private: true` instead,
+    // and the server would otherwise hand that repo's source code to any
+    // anonymous caller (verbatim, in Custom Mode's /prepare response).
+    // Reject explicitly, with the same message GitHub's own 404 produces,
+    // so this doesn't become an oracle for "exists but is private" vs
+    // "doesn't exist".
+    if (metadata.private) {
+      throw new Error('Repository not found or is private.');
+    }
+
     const defaultBranch = metadata.default_branch;
 
     // 2. Parallelize subsequent requests to speed up the process
@@ -242,6 +257,13 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
     // 1. Fetch Repository Metadata
     const metadataRes = await api.get(`/repos/${owner}/${repo}`);
     const metadata = metadataRes.data;
+
+    // Same reasoning as fetchRepoData: refuse private repos explicitly even
+    // when the configured token can see them, since there's no per-user
+    // authorization in this app.
+    if (metadata.private) {
+      throw new Error('Repository not found or is private.');
+    }
 
     let diffUrl = '';
     let prTitle = '';
