@@ -78,7 +78,7 @@ export const ResultPage: React.FC = () => {
 
       {/* Floating Navbar */}
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <nav className="pointer-events-auto bg-[#0d1117]/60 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-all duration-300 w-full max-w-7xl">
+        <nav className="pointer-events-auto glass-panel bg-[#0d1117]/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-all duration-300 w-full max-w-7xl">
           <div className="flex items-center gap-6">
             <Link to="/" className="text-xl font-extrabold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
               <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-yellow-400">

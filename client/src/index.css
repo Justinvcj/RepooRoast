@@ -2,6 +2,21 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@layer components {
+  /* Shared "glass" surface used by the navbar, hero card, loading screen
+     panels, and feature tiles. Previously each component reimplemented the
+     same bg/blur/border/shadow combo as a one-off inline arbitrary-value
+     string; override bg-color/shadow per-instance with a trailing utility
+     class (utilities layer wins over components layer in Tailwind). */
+  .glass-panel {
+    background-color: rgb(13 17 23 / 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
