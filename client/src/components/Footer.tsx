@@ -1,6 +1,5 @@
 import React from 'react';
-
-import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
   return (
@@ -13,8 +12,8 @@ export const Footer: React.FC = () => {
           Animated Background by <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:underline">ReactBits (Lightfall)</a>
         </p>
         <div className="flex flex-wrap justify-center gap-6 text-sm text-textSecondary/70">
-          <button onClick={() => toast("This is a portfolio project! We don't have lawyers.", { icon: '🧑‍⚖️' })} className="hover:text-primary transition-colors hover:underline">Privacy Policy</button>
-          <button onClick={() => toast("By using this site, you agree to get your code brutally roasted.", { icon: '🔥' })} className="hover:text-primary transition-colors hover:underline">Terms of Service</button>
+          <Link to="/privacy" className="hover:text-primary transition-colors hover:underline">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-primary transition-colors hover:underline">Terms of Service</Link>
         </div>
       </div>
     </footer>

@@ -28,6 +28,21 @@ test.describe('RepoRoast End-to-End User Flow', () => {
     await expect(page.getByText('Roast your codebase.')).toBeVisible();
   });
 
+  test('footer Privacy Policy and Terms of Service links go to real pages', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('link', { name: 'Privacy Policy' }).click();
+    await expect(page).toHaveURL(/\/privacy$/);
+    await expect(page.getByRole('heading', { name: 'Privacy Policy' })).toBeVisible();
+
+    await page.getByRole('link', { name: 'Back to RepoRoast' }).click();
+    await expect(page).toHaveURL(/\/$/);
+
+    await page.getByRole('link', { name: 'Terms of Service' }).click();
+    await expect(page).toHaveURL(/\/terms$/);
+    await expect(page.getByRole('heading', { name: 'Terms of Service' })).toBeVisible();
+  });
+
   test('should execute a roast, verify Loading Screen masks Navbar/Footer, and navigate to Result Page', async ({ page }) => {
     // Intercept the API call to mock the response, avoiding real backend processing overhead
     await page.route('**/api/review', async route => {

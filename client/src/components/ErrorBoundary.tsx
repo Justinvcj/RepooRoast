@@ -25,8 +25,13 @@ export class ErrorBoundary extends React.Component<
               Something broke.
             </h1>
             <p className="text-textSecondary mb-8">
-              {this.state.error?.message || 'An unexpected error occurred.'}
+              Something went wrong rendering this page. It's not you, it's us — try heading back home.
             </p>
+            {import.meta.env.DEV && this.state.error?.message && (
+              <p className="font-mono text-xs text-textSecondary/50 mb-8 break-words">
+                {this.state.error.message}
+              </p>
+            )}
             <Link
               to="/"
               onClick={() => this.setState({ hasError: false, error: null })}
