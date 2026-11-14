@@ -3,6 +3,7 @@ import { fetchRepoData, fetchDiffData } from '../services/githubService.js';
 import { generateCodeReview, prepareCustomReview } from '../services/geminiService.js';
 import { validateRepoUrl, validateDiffComponents } from '../middleware/inputValidator.js';
 import { getCachedReview, setCachedReview } from '../services/cacheService.js';
+import { buildRepoCacheKey, buildDiffCacheKey } from '../utils/cacheKeys.js';
 
 const router = express.Router();
 
@@ -57,7 +58,7 @@ router.post('/', validateRepoUrl, async (req, res, next) => {
 
     // 2. Check Cache
     const latestCommitSha = repoData.commits && repoData.commits.length > 0 ? repoData.commits[0].sha : 'unknown';
-    const cacheKey = `repo:${repoData.metadata.owner}/${repoData.metadata.repo}:${latestCommitSha}`;
+    const cacheKey = buildRepoCacheKey(repoData.metadata.owner, repoData.metadata.repo, latestCommitSha);
 
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
@@ -119,17 +120,8 @@ router.post('/diff', validateDiffComponents, async (req, res, next) => {
 
     const diffData = await fetchDiffData(owner, repo, pullNumber, compareString);
 
-    // Check Cache. Derive the key from which parameter the request actually
-    // supplied plus the resolved head commit SHA, never from inferring it
-    // off the PR title text -- a PR titled to merely contain the word
-    // "Comparison" used to collapse onto `compareString` (undefined in the
-    // PR-number path), producing an identical cache key for otherwise-
-    // unrelated PRs on the same repo and serving one PR's cached review for
-    // another's request. Including the head SHA also means pushing new
-    // commits to a PR correctly invalidates the cache instead of silently
-    // serving a stale review for the old commit forever.
-    const refKey = diffData.headRef || (pullNumber ? `pr:${pullNumber}` : `cmp:${compareString}`);
-    const cacheKey = `diff:${owner}/${repo}:${refKey}`;
+    // Check Cache (see cacheKeys.js for why this isn't just the PR title).
+    const cacheKey = buildDiffCacheKey(owner, repo, { pullNumber, compareString, headRef: diffData.headRef });
 
     const cachedReview = getCachedReview(cacheKey);
     if (cachedReview) {
