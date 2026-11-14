@@ -25,6 +25,15 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
     }
   }, [isOpen, enabled, apiKey, rememberKey]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   const handleSave = () => {
     onSave(localEnabled, localKey.trim(), localRemember);
     onClose();
@@ -41,6 +50,9 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
           onClick={onClose}
         >
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="custom-mode-title"
             initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
@@ -58,7 +70,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
 
             <div className="flex items-center gap-3 mb-2">
               <KeyRound className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-serif font-bold text-textPrimary">Custom Mode</h2>
+              <h2 id="custom-mode-title" className="text-xl font-serif font-bold text-textPrimary">Custom Mode</h2>
             </div>
             <p className="text-sm text-textSecondary mb-6">
               Bring your own Google Gemini API key for the review. Your key never touches RepoRoast's servers.
