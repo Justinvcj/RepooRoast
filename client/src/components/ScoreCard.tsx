@@ -26,7 +26,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
         duration: 0.8,
         ease: [0.16, 1, 0.3, 1] // Apple-like custom cubic-bezier
       }}
-      className="w-full relative overflow-hidden rounded-3xl bg-surface/90 border border-border/50 p-5 md:p-6 shadow-2xl flex flex-col md:flex-row items-center gap-12"
+      className="w-full relative overflow-hidden rounded-3xl bg-surface/90 border border-border/50 p-5 md:p-6 flex flex-col md:flex-row items-center gap-12"
     >
 
       <div className="relative flex-shrink-0 flex items-center justify-center">

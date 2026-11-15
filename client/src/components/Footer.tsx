@@ -6,7 +6,7 @@ export const Footer: React.FC = () => {
     <footer className="w-full bg-surface border-t border-border mt-auto">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-4">
         <p className="text-center text-sm text-textSecondary">
-          Built with <span className="text-[#f85149]">brains</span> and AI by Justin Varghese.
+          Real static analysis, no sugarcoating. Built by Justin Varghese.
         </p>
         <p className="text-center text-xs text-textSecondary/50">
           Animated Background by <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:underline">ReactBits (Lightfall)</a>

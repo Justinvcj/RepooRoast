@@ -56,7 +56,7 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
         </motion.div>
 
         <motion.div variants={itemVariants} className="flex flex-col gap-8">
-          <div className="bg-surface/90 rounded-3xl border border-[#f85149]/30 p-5 md:p-6 flex-1 border-t-4 shadow-2xl shadow-[#f85149]/5 hover:border-[#f85149]/50 transition-colors">
+          <div className="bg-surface/90 rounded-3xl border border-[#f85149]/30 p-5 md:p-6 flex-1 border-t-4 hover:border-[#f85149]/50 transition-colors">
             <h3 className="text-xl font-serif font-semibold flex items-center gap-3 mb-6 text-textPrimary">
               <Target className="w-6 h-6 text-[#f85149]" />
               Top Priorities
@@ -73,7 +73,7 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
             </ul>
           </div>
 
-          <div className="bg-surface/90 rounded-3xl border border-[#3fb950]/30 p-5 md:p-6 flex-1 border-t-4 shadow-2xl shadow-[#3fb950]/5 hover:border-[#3fb950]/50 transition-colors">
+          <div className="bg-surface/90 rounded-3xl border border-[#3fb950]/30 p-5 md:p-6 flex-1 border-t-4 hover:border-[#3fb950]/50 transition-colors">
             <h3 className="text-xl font-serif font-semibold flex items-center gap-3 mb-6 text-textPrimary">
               <ThumbsUp className="w-6 h-6 text-[#3fb950]" />
               What You Did Well

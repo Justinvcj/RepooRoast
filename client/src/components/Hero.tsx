@@ -81,12 +81,12 @@ export const Hero: React.FC<HeroProps> = ({ onAnalyzeRepo, isLoading, customMode
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="md:col-span-3 text-center md:text-left"
         >
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-semibold tracking-tight mb-6 leading-[1.05] text-textPrimary">
+          <h1 className="text-5xl md:text-7xl font-serif font-semibold tracking-tight mb-6 leading-[1.05] text-textPrimary">
             Roast your codebase.
           </h1>
 
           <p className="max-w-xl mx-auto md:mx-0 text-lg md:text-xl text-textSecondary font-medium leading-relaxed mb-10">
-            Paste a public GitHub repo. Get a scored, categorized review — real static analysis, AI commentary, no sugarcoating.
+            Paste a public GitHub repo. Get a score built on real static analysis, not just an AI's opinion — categorized, no sugarcoating.
           </p>
 
           <UrlInput onSubmit={onAnalyzeRepo} isLoading={isLoading} align="left" />
