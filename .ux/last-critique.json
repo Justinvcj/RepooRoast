@@ -1,0 +1,42 @@
+{
+  "command": "ux-critique",
+  "timestamp": "2026-11-15T00:00:00Z",
+  "surface": "RepoRoast landing hero, loading screen, result dashboard (client/src, post-unslop pass)",
+  "audience": "general",
+  "wins": [
+    {
+      "summary": "Hero shows the product, not a generic illustration",
+      "detail": "The asymmetric split puts a real mocked review card -- score ring, a quote, category bars -- next to the headline instead of an empty input in a box. That's figure-ground done right: the card reads as a distinct object against the backdrop, and it does narrative work a stock illustration never could."
+    },
+    {
+      "summary": "Terminal tags are a real signature, not decoration",
+      "detail": "The terminal tags ([SECURITY], [MEDIUM]) are a genuine signature because they're used identically for both categories and severities. That repetition is what makes it read as a decision rather than a flourish."
+    },
+    {
+      "summary": "\"Measured, not judged\" builds real trust-signal clarity",
+      "detail": "\"Measured, not judged\" plus the left-border accent on the static-analysis panel tells the user which numbers are deterministic and which are AI opinion, which matters a lot for a product whose pitch is real static analysis, not just AI vibes."
+    }
+  ],
+  "misses": [
+    {
+      "summary": "Glassmorphism is the one surface material for everything",
+      "detail": "Navbar, Hero card, loading panels, and the Custom Mode modal all share the identical blur/border/shadow recipe. Chrome and content end up looking like the same kind of object, which fights the quiet-chrome-one-bright-moment direction. Common-region says shared treatment reads as shared grouping -- navigation and content are grouped together visually when they shouldn't be.",
+      "evidence_kind": "visual"
+    },
+    {
+      "summary": "Hero headline is the textbook AI-default size stack",
+      "detail": "text-5xl md:text-6xl lg:text-7xl is three escalating breakpoint jumps on a six-word headline -- sized for \"a hero\" in general, not tuned to the fact that \"Roast your codebase.\" is short and doesn't need three steps of swelling to not wrap.",
+      "evidence_kind": "typography"
+    },
+    {
+      "summary": "Footer sign-off is a tonal seam back to generic indie voice",
+      "detail": "\"Built with brains and AI by Justin Varghese\" is a close cousin of the generic indie-project sign-off. It's the one spot where the blunt, exacting voice built into the tags and labels drops back into default warmth.",
+      "evidence_kind": "content"
+    }
+  ],
+  "strategic_move": {
+    "summary": "Split .glass-panel into a chrome material and a flat content material",
+    "detail": "Keep the blur for actual chrome (Navbar, modals), and give every content surface -- the hero card, loading panel, static-analysis panel -- a flat, opaque dark surface with just a hairline border. That's the change that makes \"one bright moment\" visible, because right now the review card has to compete with a nav, a loading panel, and a modal that all wear the exact same glass."
+  },
+  "prose": "This is a tool that scores a GitHub repo and roasts it, and the latest pass gave it a real point of view: a diagnostic-readout world, a terminal-tag signature, a wordmark that stopped shouting. The bones are good. What's left is that the surface material hasn't caught up to the decisions made everywhere else.\n\nWhat's working:\n1. The hero finally shows the product. The asymmetric split puts a real mocked review card -- score ring, a quote, category bars -- next to the headline instead of an empty input in a box. That's figure-ground done right: the card reads as a distinct object against the backdrop, and it does narrative work a stock illustration never could.\n2. The terminal tags ([SECURITY], [MEDIUM]) are a genuine signature, not decoration, because they're used identically for both categories and severities. That repetition is what makes it read as a decision rather than a flourish.\n3. \"Measured, not judged\" plus the left-border accent on the static-analysis panel is a real trust-signal move -- it tells the user which numbers are deterministic and which are AI opinion, which matters a lot for a product whose pitch is \"real static analysis, not just AI vibes.\"\n\nWhat's not:\n1. Glassmorphism is still the one surface material for everything -- Navbar, Hero card, loading panels, the Custom Mode modal all share the identical blur/border/shadow recipe. Chrome and content end up looking like the same kind of object, which fights the \"quiet chrome, one bright moment\" direction you just spent a pass building. Common-region tells you shared treatment reads as shared grouping -- right now navigation and content are grouped together visually when they shouldn't be.\n2. The hero headline is text-5xl md:text-6xl lg:text-7xl -- three escalating breakpoint jumps on a six-word headline. That's the textbook AI-default hero stack, sized for \"a hero\" in general, not tuned to the fact that \"Roast your codebase.\" is short and doesn't need three steps of swelling to not wrap.\n3. The footer's \"Built with brains and AI by Justin Varghese\" is a close cousin of the generic indie-project sign-off. It's the one spot where the blunt, exacting voice you built into the tags and labels drops back into default warmth -- a tonal seam, not a content error.\n\nThe strategic move:\nSplit .glass-panel into two real materials instead of one: keep the blur for actual chrome (Navbar, modals), and give every content surface -- the hero card, loading panel, static-analysis panel -- a flat, opaque dark surface with just a hairline border. That's the change that makes \"one bright moment\" visible, because right now the review card has to compete with a nav, a loading panel, and a modal that all wear the exact same glass."
+}

@@ -1,0 +1,113 @@
+{
+  "command": "ux-audit",
+  "timestamp": "2026-11-15T00:30:00Z",
+  "surface": "RepoRoast client (client/src) -- landing, loading, result dashboard, Custom Mode",
+  "findings": [
+    {
+      "lens": "FRAME",
+      "severity": "Medium",
+      "title": "Stranger test borderline-passes, swap test fails",
+      "principle": "Lean UX -- hypothesis must be visible in the surface",
+      "evidence_kind": "heuristic",
+      "evidence": "First screen names the product and the action, but the subcopy would read true for almost any AI code-review competitor if the name were swapped.",
+      "fix": "Put the one real differentiator (local static analysis + weighted scoring, not just an LLM opinion) into the headline or sub-line itself."
+    },
+    {
+      "lens": "DISCOVER",
+      "severity": "High",
+      "title": "Repo URL input has no visible label, only a placeholder",
+      "principle": "Norman -- signifiers; placeholder-as-label anti-pattern",
+      "evidence_kind": "measured",
+      "evidence": "UrlInput.tsx:45 -- the <input> has no <label>, only a placeholder. Once focused and typed into, the field's purpose disappears.",
+      "fix": "Add a visually-hidden <label htmlFor=\"repo-url-input\"> so the field's purpose survives focus, screen readers, and autofill."
+    },
+    {
+      "lens": "DISCOVER",
+      "severity": "Medium",
+      "title": "Nine buttons across the app have no explicit type attribute",
+      "principle": "Norman -- mental models; a <button> inside a <form> defaults to type=submit",
+      "evidence_kind": "measured",
+      "evidence": "CategorySection.tsx:28, CustomModeModal.tsx:63/81/134, ReviewDashboard.tsx:109, StaticAnalysisPanel.tsx:22, UrlInput.tsx:70/79/88 all missing type=\"button\".",
+      "fix": "Add type=\"button\" to every non-submit button."
+    },
+    {
+      "lens": "SCAN",
+      "severity": "High",
+      "title": "Three pages size their root container with 100vh and no dvh fallback",
+      "principle": "Krug -- the squint test must survive the real device",
+      "evidence_kind": "measured",
+      "evidence": "App.tsx:79, ErrorBoundary.tsx:22, ResultPage.tsx:57 use 100vh-based classes; mobile browser chrome show/hide will clip or gap the layout.",
+      "fix": "Use min-h-[100dvh] with a min-h-screen fallback on these three root containers."
+    },
+    {
+      "lens": "SCAN",
+      "severity": "Medium",
+      "title": "Hero headline is the default three-breakpoint AI hero stack",
+      "principle": "Krug -- self-evidence should come from what the copy needs, not a template default",
+      "evidence_kind": "measured",
+      "evidence": "Hero.tsx:84 -- text-5xl md:text-6xl lg:text-7xl on a six-word headline that doesn't need three escalating steps.",
+      "fix": "Collapse to two sizes sized to the actual string length."
+    },
+    {
+      "lens": "SCAN",
+      "severity": "Medium",
+      "title": "Three cards combine a 1px border with a heavy drop shadow",
+      "principle": "Gestalt -- one depth cue per element",
+      "evidence_kind": "measured",
+      "evidence": "ScoreCard.tsx:29, ReviewDashboard.tsx:59/76, UrlInput.tsx:41 all pair a border with a heavy shadow.",
+      "fix": "Pick one per surface -- border for flat content panels, shadow only for genuinely floating elements."
+    },
+    {
+      "lens": "ACT",
+      "severity": "Medium",
+      "title": "Render-blocking @import chain in the global stylesheet",
+      "principle": "Doherty threshold -- UI should respond inside ~400ms",
+      "evidence_kind": "measured",
+      "evidence": "index.css:1-3 -- three @import statements for Tailwind layers loaded sequentially before first paint.",
+      "fix": "Confirm the production bundle doesn't ship a blocking import chain (Vite inlines these at build time); downgrade to Cosmetic if it's dev-only."
+    },
+    {
+      "lens": "ACT",
+      "severity": "Cosmetic",
+      "title": "mixBlendMode set via inline style when a Tailwind utility exists",
+      "principle": "Consistency -- one styling mechanism, not two",
+      "evidence_kind": "measured",
+      "evidence": "HomePage.tsx:139 -- style={{ mixBlendMode: 'screen' }} where className=\"mix-blend-screen\" would do the same thing.",
+      "fix": "Swap to the Tailwind utility class."
+    },
+    {
+      "lens": "READ",
+      "severity": "Cosmetic",
+      "title": "Footer sign-off breaks the voice built everywhere else",
+      "principle": "Krug -- voice consistency",
+      "evidence_kind": "observed",
+      "evidence": "Footer.tsx -- \"Built with brains and AI by Justin Varghese\" sits next to terminal-style tags and sentence-case labels built this session.",
+      "fix": "Rewrite in the same blunt register, or cut it -- the navbar's GitHub link already credits authorship."
+    },
+    {
+      "lens": "RECOVER",
+      "severity": "High",
+      "title": "Two inline SVGs (score rings) have no aria-label or aria-hidden",
+      "principle": "WCAG / Norman -- meaningful graphics need a text alternative, decorative ones need hiding",
+      "evidence_kind": "measured",
+      "evidence": "Hero.tsx:41, ScoreCard.tsx:33 -- both render a circular progress SVG exposed to assistive tech with no label.",
+      "fix": "Add aria-hidden=\"true\" (since the score is already announced via adjacent text) or role=\"img\" aria-label=\"Score: N out of 100\"."
+    },
+    {
+      "lens": "RECOVER",
+      "severity": "Cosmetic",
+      "title": "Splash screen uses an arbitrary z-[9999]",
+      "principle": "Consistency -- an undisciplined z-index scale makes stacking bugs hard to reason about",
+      "evidence_kind": "measured",
+      "evidence": "SplashScreen.tsx:8 -- z-[9999] vs LoadingScreen's z-[999], one order of magnitude different for similar full-screen overlays.",
+      "fix": "Normalize to a small app-wide z-index scale instead of magic numbers."
+    }
+  ],
+  "severity_counts": { "critical": 0, "high": 5, "medium": 14, "cosmetic": 12 },
+  "dominant_lens": "SCAN",
+  "strategic_moves": [
+    "Give the URL input a real (visually-hidden) label -- the one control the product hinges on has no accessible name once focused.",
+    "Fix the three 100vh-without-dvh containers before the mobile audience hits address-bar clipping.",
+    "Resolving the border+shadow duplication across cards IS the glass-panel material split from the critique -- one pass fixes both."
+  ]
+}

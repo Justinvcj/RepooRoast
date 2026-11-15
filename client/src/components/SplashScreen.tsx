@@ -5,7 +5,7 @@ import { Flame } from 'lucide-react';
 export const SplashScreen: React.FC = () => {
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center pointer-events-none"
+      className="fixed inset-0 z-[1000] bg-background flex flex-col items-center justify-center pointer-events-none"
       initial={{ opacity: 1 }}
       exit={{ 
         opacity: 0,

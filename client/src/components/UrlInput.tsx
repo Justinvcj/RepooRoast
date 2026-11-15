@@ -39,6 +39,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
             a live input, not a decoration, so it should react like one. */}
         <div className="absolute -inset-px rounded-2xl bg-primary opacity-0 blur-md transition-opacity duration-300 group-focus-within:opacity-40 pointer-events-none"></div>
         <div className="relative flex items-center bg-surface/95 border border-border group-focus-within:border-primary/60 rounded-2xl p-2 shadow-xl transition-colors">
+          <label htmlFor="repo-url-input" className="sr-only">GitHub repository, pull request, or compare URL</label>
           <div className="pl-5 pr-3 pointer-events-none">
             <Github className="h-6 w-6 text-textSecondary" />
           </div>
@@ -54,7 +55,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
           <button
             type="submit"
             disabled={isLoading}
-            className="flex-shrink-0 flex items-center justify-center p-4 rounded-lg shadow-sm text-white bg-primary hover:bg-orange-600 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex-shrink-0 flex items-center justify-center p-4 rounded-lg shadow-sm text-white bg-primary hover:bg-primary-hover transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <Loader2 className="animate-spin h-6 w-6" />

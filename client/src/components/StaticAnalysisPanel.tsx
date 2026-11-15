@@ -20,6 +20,7 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
     >
       <div className="bg-surface/95 rounded-2xl border border-border/50 overflow-hidden shadow-lg">
         <button
+          type="button"
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors focus:outline-none"
         >

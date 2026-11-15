@@ -7,7 +7,10 @@ export default {
         background: '#0d1117',
         surface: '#161b22',
         border: '#30363d',
-        primary: '#f97316',
+        primary: {
+          DEFAULT: '#f97316',
+          hover: '#ea580c'
+        },
         success: '#3fb950',
         warning: '#d29922',
         danger: '#f85149',

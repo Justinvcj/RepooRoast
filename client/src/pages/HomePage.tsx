@@ -136,7 +136,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <>
-      <div className="fixed inset-0 z-0 opacity-80 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
+      <div className="fixed inset-0 z-0 opacity-80 pointer-events-none mix-blend-screen">
          <Lightfall 
             colors={['#f97316', '#f85149', '#d29922']}
             backgroundColor="#0d1117"

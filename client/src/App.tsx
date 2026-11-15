@@ -76,7 +76,7 @@ function AppContent() {
         {showSplash && <SplashScreen />}
       </AnimatePresence>
 
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen supports-[height:100dvh]:min-h-[100dvh]">
         {isNavbarVisible && <Navbar />}
         {/* pt-24 ensures the content sits beneath the new floating pill Navbar */}
         <div className={`flex-grow ${isNavbarVisible ? 'pt-24' : ''}`}>

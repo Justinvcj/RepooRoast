@@ -38,7 +38,7 @@ const ReviewPreviewCard: React.FC = () => {
 
       <div className="flex items-center gap-5 mb-5">
         <div className="relative flex-shrink-0">
-          <svg className="transform -rotate-90 w-20 h-20">
+          <svg className="transform -rotate-90 w-20 h-20" aria-hidden="true">
             <circle cx="40" cy="40" r={radius} stroke="currentColor" strokeWidth="6" fill="transparent" className="text-border/60" />
             <circle
               cx="40" cy="40" r={radius}

@@ -106,7 +106,8 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
             Auto-Fix AI Prompt
           </h2>
           <div className="bg-[#0d1117] rounded-2xl border border-border/50 p-5 md:p-6 relative group shadow-lg">
-            <button 
+            <button
+              type="button"
               onClick={handleCopy}
               className="absolute top-4 right-4 p-2.5 bg-surface border border-border rounded-xl text-textSecondary hover:text-textPrimary hover:border-primary/50 transition-[color,border-color,opacity] opacity-0 group-hover:opacity-100 print:hidden shadow-sm cursor-pointer"
               title="Copy to clipboard"

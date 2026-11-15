@@ -61,6 +61,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              type="button"
               onClick={onClose}
               className="absolute top-5 right-5 text-textSecondary hover:text-textPrimary transition-colors"
               aria-label="Close"
@@ -79,6 +80,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
             <div className="flex items-center justify-between mb-5 p-4 bg-background rounded-xl border border-border/50">
               <span className="text-sm font-semibold text-textPrimary">Enable Custom Mode</span>
               <button
+                type="button"
                 role="switch"
                 aria-checked={localEnabled}
                 onClick={() => setLocalEnabled(!localEnabled)}
@@ -132,8 +134,9 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
             </div>
 
             <button
+              type="button"
               onClick={handleSave}
-              className="w-full mt-6 py-3 rounded-lg bg-primary hover:bg-orange-600 text-white font-semibold transition-colors"
+              className="w-full mt-6 py-3 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold transition-colors"
             >
               Save
             </button>

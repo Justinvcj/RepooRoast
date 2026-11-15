@@ -30,7 +30,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
     >
 
       <div className="relative flex-shrink-0 flex items-center justify-center">
-        <svg className="transform -rotate-90 w-64 h-64">
+        <svg className="transform -rotate-90 w-64 h-64" aria-hidden="true">
           {/* Background Ring */}
           <circle
             cx="128"

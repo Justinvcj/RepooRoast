@@ -25,7 +25,8 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="w-full bg-surface/95 rounded-2xl border border-border/50 overflow-hidden shadow-lg hover:border-border transition-colors"
     >
-      <button 
+      <button
+        type="button"
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors focus:outline-none"
       >

@@ -28,7 +28,7 @@ export const Navbar: React.FC = () => {
           <Link 
             to="/" 
             onClick={handleScrollToTop}
-            className="flex items-center gap-2 text-sm font-semibold text-white bg-primary hover:bg-orange-600 px-4 py-2 rounded-lg transition-colors shadow-sm"
+            className="flex items-center gap-2 text-sm font-semibold text-white bg-primary hover:bg-primary-hover px-4 py-2 rounded-lg transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" />
             <span className="hidden sm:inline">New Roast</span>

@@ -54,7 +54,7 @@ export const ResultPage: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="min-h-screen bg-background text-textPrimary selection:bg-primary/30 pb-20 relative"
+      className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background text-textPrimary selection:bg-primary/30 pb-20 relative"
     >
 
       {/* Floating Navbar */}
