@@ -10,7 +10,7 @@ export const TermsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="glass-panel rounded-[2rem] p-8 md:p-12"
+        className="content-panel rounded-[2rem] p-8 md:p-12"
       >
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-textSecondary hover:text-primary transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" />

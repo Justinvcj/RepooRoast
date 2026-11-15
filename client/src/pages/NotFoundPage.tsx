@@ -10,7 +10,7 @@ export const NotFoundPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="glass-panel rounded-[2.5rem] p-10 md:p-16 max-w-xl"
+        className="content-panel rounded-[2.5rem] p-10 md:p-16 max-w-xl"
       >
         <Flame className="w-12 h-12 text-primary mx-auto mb-6" strokeWidth={1.5} />
         <h1 className="text-5xl md:text-6xl font-serif font-semibold tracking-tight text-textPrimary mb-4">

@@ -69,13 +69,13 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="relative z-10 mb-16 p-6 rounded-full glass-panel"
+        className="relative z-10 mb-16 p-6 rounded-full content-panel"
       >
         <Flame className="w-14 h-14 text-primary" />
       </motion.div>
 
       {/* Progress Steps container */}
-      <div className="relative z-10 w-full max-w-md glass-panel p-8 rounded-[2.5rem] mb-8">
+      <div className="relative z-10 w-full max-w-md content-panel p-8 rounded-[2.5rem] mb-8">
         <h3 className="text-xl font-semibold text-textPrimary mb-6 flex items-center justify-center gap-2">
           <span>Analyzing Codebase</span>
           <span className="flex space-x-1">
