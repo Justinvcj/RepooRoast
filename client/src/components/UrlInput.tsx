@@ -45,8 +45,8 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
           <input
             id="repo-url-input"
             type="text"
-            className="flex-grow bg-transparent border-none text-textPrimary placeholder-textSecondary focus:outline-none focus:ring-0 text-lg font-medium"
-            placeholder="github.com/username/repository"
+            className="flex-grow min-w-0 bg-transparent border-none text-textPrimary placeholder-textSecondary focus:outline-none focus:ring-0 text-base sm:text-lg font-medium"
+            placeholder="github.com/owner/repo"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             disabled={isLoading}
