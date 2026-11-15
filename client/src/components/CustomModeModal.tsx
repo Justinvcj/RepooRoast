@@ -70,7 +70,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
 
             <div className="flex items-center gap-3 mb-2">
               <KeyRound className="w-6 h-6 text-primary" />
-              <h2 id="custom-mode-title" className="text-xl font-serif font-bold text-textPrimary">Custom Mode</h2>
+              <h2 id="custom-mode-title" className="text-xl font-serif font-semibold text-textPrimary">Custom Mode</h2>
             </div>
             <p className="text-sm text-textSecondary mb-6">
               Bring your own Google Gemini API key for the review. Your key never touches RepoRoast's servers.
@@ -89,7 +89,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
             </div>
 
             <div className={localEnabled ? '' : 'opacity-40 pointer-events-none'}>
-              <label htmlFor="custom-api-key" className="block text-xs font-bold text-textSecondary uppercase tracking-wider mb-2">
+              <label htmlFor="custom-api-key" className="block text-xs font-semibold text-textSecondary uppercase tracking-wider mb-2">
                 Gemini API Key
               </label>
               <input
@@ -133,7 +133,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({ isOpen, onClos
 
             <button
               onClick={handleSave}
-              className="w-full mt-6 py-3 rounded-full bg-primary hover:bg-orange-600 text-white font-semibold transition-colors"
+              className="w-full mt-6 py-3 rounded-lg bg-primary hover:bg-orange-600 text-white font-semibold transition-colors"
             >
               Save
             </button>

@@ -9,6 +9,11 @@ interface CategorySectionProps {
   category: Category;
 }
 
+// Signature detail: categories read as terminal-style tags instead of a
+// large emoji -- quieter, and it's the one thing that's unmistakably this
+// product's own voice rather than a generic AI-generated icon choice.
+const toTag = (name: string) => name.toUpperCase().replace(/\s+/g, '_');
+
 export const CategorySection: React.FC<CategorySectionProps> = ({ category }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -25,11 +30,16 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
         className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors focus:outline-none"
       >
         <div className="flex items-center gap-4">
-          <span className="text-3xl">{category.emoji}</span>
+          <span
+            className="font-mono text-xs font-semibold px-2 py-1 rounded border shrink-0"
+            style={{ color: getScoreColor(category.score), borderColor: `${getScoreColor(category.score)}40` }}
+          >
+            [{toTag(category.name)}]
+          </span>
           <div className="flex flex-col items-start">
-            <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">{category.name}</h3>
-            <span 
-              className="font-mono font-extrabold mt-1 tracking-wider"
+            <h3 className="text-xl font-serif font-semibold text-textPrimary tracking-tight">{category.name}</h3>
+            <span
+              className="font-mono font-semibold mt-1"
               style={{ color: getScoreColor(category.score) }}
             >
               {category.score} / 100
@@ -60,7 +70,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
 
               {category.positives.length > 0 && (
                 <div className="mb-8">
-                  <h4 className="text-sm font-bold text-textPrimary uppercase tracking-widest pl-2 mb-4 border-l-2 border-[#3fb950]">What's Good</h4>
+                  <h4 className="text-sm font-semibold text-textPrimary pl-2 mb-4 border-l-2 border-[#3fb950]">What's good</h4>
                   <ul className="space-y-3">
                     {category.positives.map((positive, i) => (
                       <li key={i} className="flex items-start gap-3 text-textSecondary">
@@ -74,7 +84,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
 
               {category.issues.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-bold text-textPrimary uppercase tracking-widest pl-2 mb-4 border-l-2 border-[#f85149]">Areas to Improve</h4>
+                  <h4 className="text-sm font-semibold text-textPrimary pl-2 mb-4 border-l-2 border-[#f85149]">Areas to improve</h4>
                   <div className="flex flex-col gap-4">
                     {category.issues.map((issue, i) => (
                       <IssueCard key={i} issue={issue} />

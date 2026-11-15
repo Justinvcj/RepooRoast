@@ -21,7 +21,7 @@ export class ErrorBoundary extends React.Component<
       return (
         <div className="min-h-screen bg-background flex items-center justify-center p-8">
           <div className="max-w-md text-center">
-            <h1 className="text-4xl font-serif font-extrabold text-danger mb-4">
+            <h1 className="text-4xl font-serif font-semibold text-danger mb-4">
               Something broke.
             </h1>
             <p className="text-textSecondary mb-8">
@@ -35,7 +35,7 @@ export class ErrorBoundary extends React.Component<
             <Link
               to="/"
               onClick={() => this.setState({ hasError: false, error: null })}
-              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition-colors"
+              className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
             >
               Back to Home
             </Link>

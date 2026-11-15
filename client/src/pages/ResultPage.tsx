@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
 import { StaticAnalysisPanel } from '../components/StaticAnalysisPanel';
 import type { ApiResponse } from '../types';
-import Lightfall from '../components/Lightfall';
 import { useLayout } from '../contexts/LayoutContext';
 import { Github, ExternalLink, ArrowLeft, Star, GitFork, Code } from 'lucide-react';
 
@@ -57,39 +56,19 @@ export const ResultPage: React.FC = () => {
       transition={{ duration: 0.8 }}
       className="min-h-screen bg-background text-textPrimary selection:bg-primary/30 pb-20 relative"
     >
-      {/* Subtle Continuous Lightfall Background */}
-      <div className="fixed inset-0 z-0 opacity-30 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
-         <Lightfall 
-            colors={['#f97316', '#f85149', '#d29922']}
-            backgroundColor="#0d1117"
-            speed={0.5}
-            streakCount={2}
-            streakWidth={1}
-            streakLength={1.5}
-            glow={0.5}
-            density={0.5}
-            twinkle={0.5}
-            zoom={2.5}
-            backgroundGlow={0.1}
-            mouseInteraction={false}
-            dpr={1}
-         />
-      </div>
 
       {/* Floating Navbar */}
       <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <nav className="pointer-events-auto glass-panel bg-[#0d1117]/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-all duration-300 w-full max-w-7xl">
+        <nav className="pointer-events-auto glass-panel bg-[#0d1117]/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-colors duration-300 w-full max-w-7xl">
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl font-extrabold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <span className="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-yellow-400">
-                RepoRoast 🔥
-              </span>
+            <Link to="/" className="text-xl font-serif font-semibold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <span className="text-textPrimary">Repo<span className="text-primary">Roast</span></span>
             </Link>
           </div>
           <div className="flex items-center gap-4">
             <Link 
               to="/" 
-              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface/50 border border-border/50 px-4 py-2 rounded-full hover:border-[#8b949e]"
+              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface/50 border border-border/50 px-4 py-2 rounded-lg hover:border-[#8b949e]"
             >
               <ArrowLeft className="w-4 h-4" />
               Roast Another
@@ -112,7 +91,7 @@ export const ResultPage: React.FC = () => {
                 <Github className="w-6 h-6" />
                 <span className="text-lg font-medium">{repo.owner}</span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-serif font-extrabold text-textPrimary tracking-tight leading-tight">
+              <h1 className="text-2xl md:text-3xl font-serif font-semibold text-textPrimary tracking-tight leading-tight">
                 {repo.repo}
               </h1>
               {repo.description && (
@@ -143,7 +122,7 @@ export const ResultPage: React.FC = () => {
               href={`https://github.com/${repo.owner}/${repo.repo}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-sm font-bold text-primary hover:text-orange-400 transition-colors bg-primary/10 px-5 py-3 rounded-xl border border-primary/20 hover:bg-primary/15 whitespace-nowrap"
+              className="group flex items-center gap-2 text-sm font-semibold text-primary hover:text-orange-400 transition-colors bg-primary/10 px-5 py-3 rounded-xl border border-primary/20 hover:bg-primary/15 whitespace-nowrap"
             >
               View on GitHub
               <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

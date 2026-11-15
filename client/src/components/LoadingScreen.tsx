@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Flame, Database, FileCode, BrainCircuit, ListChecks, KeyRound } from 'lucide-react';
-import Lightfall from './Lightfall';
 import type { ReviewStage } from '../hooks/useRepoReview';
 
 const roastingQuotes = [
@@ -58,24 +57,6 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
 
   return (
     <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background">
-      {/* Background stays completely fixed */}
-      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" style={{ mixBlendMode: 'screen' }}>
-         <Lightfall
-            colors={['#f97316', '#f85149', '#d29922']}
-            backgroundColor="#0d1117"
-            speed={0.5}
-            streakCount={3}
-            streakWidth={1}
-            streakLength={1.5}
-            glow={0.5}
-            density={0.6}
-            twinkle={0.6}
-            zoom={2.5}
-            backgroundGlow={0.1}
-            mouseInteraction={false}
-            dpr={1}
-         />
-      </div>
 
       {/* Pulsing Flame Icon */}
       <motion.div
@@ -95,7 +76,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
 
       {/* Progress Steps container */}
       <div className="relative z-10 w-full max-w-md glass-panel p-8 rounded-[2.5rem] mb-8">
-        <h3 className="text-xl font-bold text-textPrimary mb-6 flex items-center justify-center gap-2">
+        <h3 className="text-xl font-semibold text-textPrimary mb-6 flex items-center justify-center gap-2">
           <span>Analyzing Codebase</span>
           <span className="flex space-x-1">
             <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}>.</motion.span>
@@ -130,7 +111,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
         <div className="mt-8">
           <div className="flex justify-between items-center mb-2 text-sm font-medium text-textSecondary">
             <span>Progress</span>
-            <span className="text-primary font-bold">{progress}%</span>
+            <span className="text-primary font-semibold">{progress}%</span>
           </div>
           <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
             <motion.div

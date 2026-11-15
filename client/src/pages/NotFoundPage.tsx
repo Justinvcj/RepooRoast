@@ -13,7 +13,7 @@ export const NotFoundPage: React.FC = () => {
         className="glass-panel rounded-[2.5rem] p-10 md:p-16 max-w-xl"
       >
         <Flame className="w-12 h-12 text-primary mx-auto mb-6" strokeWidth={1.5} />
-        <h1 className="text-5xl md:text-6xl font-serif font-extrabold tracking-tight text-textPrimary mb-4">
+        <h1 className="text-5xl md:text-6xl font-serif font-semibold tracking-tight text-textPrimary mb-4">
           404
         </h1>
         <p className="text-lg text-textSecondary font-medium mb-8">
@@ -21,7 +21,7 @@ export const NotFoundPage: React.FC = () => {
         </p>
         <Link
           to="/"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary hover:bg-orange-600 text-white font-semibold transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary hover:bg-orange-600 text-white font-semibold transition-colors"
         >
           <Home className="w-4 h-4" />
           Back to safety

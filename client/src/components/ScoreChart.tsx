@@ -39,7 +39,7 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({ categories }) => {
                   transition={{ duration: 0.8, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
                 />
               </div>
-              <span className="w-10 shrink-0 text-right font-mono text-sm font-bold" style={{ color }}>
+              <span className="w-10 shrink-0 text-right font-mono text-sm font-semibold" style={{ color }}>
                 {category.score}
               </span>
             </div>

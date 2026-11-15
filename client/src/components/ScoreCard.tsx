@@ -22,19 +22,13 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.01 }}
-      transition={{ 
-        duration: 0.8, 
+      transition={{
+        duration: 0.8,
         ease: [0.16, 1, 0.3, 1] // Apple-like custom cubic-bezier
       }}
       className="w-full relative overflow-hidden rounded-3xl bg-surface/90 border border-border/50 p-5 md:p-6 shadow-2xl flex flex-col md:flex-row items-center gap-12"
     >
-      {/* Decorative gradient blob behind the score */}
-      <div 
-        className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl opacity-20"
-        style={{ backgroundColor: ringColor }}
-      />
-      
+
       <div className="relative flex-shrink-0 flex items-center justify-center">
         <svg className="transform -rotate-90 w-64 h-64">
           {/* Background Ring */}
@@ -67,12 +61,12 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="text-4xl font-serif font-extrabold tracking-tighter"
+            className="text-4xl font-serif font-semibold tracking-tighter"
             style={{ color: ringColor }}
           >
             {score}
           </motion.span>
-          <span className="text-sm font-semibold text-textSecondary uppercase tracking-widest mt-2">/ 100</span>
+          <span className="text-sm font-semibold text-textSecondary mt-2">/ 100</span>
         </div>
       </div>
 
@@ -81,7 +75,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-2xl md:text-3xl font-serif font-extrabold text-textPrimary tracking-tight mb-6"
+          className="text-2xl md:text-3xl font-serif font-semibold text-textPrimary tracking-tight mb-6"
         >
           {verdict}
         </motion.h2>
@@ -99,11 +93,11 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="inline-flex items-center justify-center md:justify-start gap-2 text-sm font-semibold tracking-wide uppercase"
+          className="inline-flex items-center justify-center md:justify-start gap-2 text-sm font-semibold"
           style={{ color: ringColor }}
         >
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ringColor }} />
-          Hiring Verdict: {hiringVerdict}
+          Hiring verdict: {hiringVerdict}
         </motion.div>
       </div>
     </motion.div>

@@ -27,8 +27,8 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
             <Code2 className="w-7 h-7 text-primary shrink-0" />
             <div className="flex flex-col items-start">
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">Static Code Analysis</h3>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary/80 border border-primary/30 rounded px-1.5 py-0.5">
+                <h3 className="text-xl font-serif font-semibold text-textPrimary tracking-tight">Static Code Analysis</h3>
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-primary/80 border border-primary/30 rounded px-1.5 py-0.5">
                   Measured, not judged
                 </span>
               </div>
@@ -58,9 +58,9 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
             
             {/* Repo Metrics */}
             <div className="bg-background rounded-xl p-5 border border-border/50">
-              <h4 className="text-sm font-bold text-textPrimary uppercase tracking-widest flex items-center gap-2 mb-4">
+              <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-2 mb-4">
                 <FileCode className="w-4 h-4 text-primary" />
-                Repository Metrics
+                Repository metrics
               </h4>
               <ul className="space-y-3 text-sm text-textSecondary">
                 <li className="flex justify-between"><span>Total LOC:</span> <span className="font-mono text-textPrimary">{repoMetrics.totalLOC}</span></li>
@@ -73,9 +73,9 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
 
             {/* Dependency Graph */}
             <div className="bg-background rounded-xl p-5 border border-border/50">
-              <h4 className="text-sm font-bold text-textPrimary uppercase tracking-widest flex items-center gap-2 mb-4">
+              <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-2 mb-4">
                 <GitMerge className="w-4 h-4 text-[#8b949e]" />
-                Dependency Graph
+                Dependency graph
               </h4>
               <div className="space-y-4">
                 {dependencyGraph?.metrics?.hubs?.length > 0 ? (
@@ -106,9 +106,9 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
 
             {/* Notable Files Insights */}
             <div className="bg-background rounded-xl p-5 border border-border/50 lg:col-span-1 md:col-span-2">
-              <h4 className="text-sm font-bold text-textPrimary uppercase tracking-widest flex items-center gap-2 mb-4">
+              <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-2 mb-4">
                 <AlertTriangle className="w-4 h-4 text-[#d29922]" />
-                File Insights
+                File insights
               </h4>
               <div className="space-y-3">
                 {fileAnalyses && fileAnalyses.length > 0 ? (
@@ -124,10 +124,10 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                         <span className="font-mono text-textPrimary text-xs break-all block mb-1">{file.path}</span>
                         <div className="flex flex-wrap gap-1">
                           {uniqueFlags.map((flag: any, i: number) => (
-                            <span key={i} className="px-1.5 py-0.5 bg-[#d29922]/10 rounded text-[10px] uppercase text-[#d29922] font-bold tracking-wider">{flag}</span>
+                            <span key={i} className="px-1.5 py-0.5 bg-[#d29922]/10 rounded text-[10px] uppercase text-[#d29922] font-semibold tracking-wider">{flag}</span>
                           ))}
                           {file.magicNumbers.length > 0 && (
-                            <span className="px-1.5 py-0.5 bg-[#8b949e]/10 rounded text-[10px] uppercase text-[#8b949e] font-bold tracking-wider">{file.magicNumbers.length} Magic Numbers</span>
+                            <span className="px-1.5 py-0.5 bg-[#8b949e]/10 rounded text-[10px] uppercase text-[#8b949e] font-semibold tracking-wider">{file.magicNumbers.length} Magic Numbers</span>
                           )}
                         </div>
                       </div>

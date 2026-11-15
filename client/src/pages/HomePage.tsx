@@ -179,40 +179,33 @@ export const HomePage: React.FC = () => {
           onSave={handleSaveSettings}
         />
 
-        {/* Feature Grid Section */}
-        <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-extrabold tracking-tight text-textPrimary">
-              What we roast.
+        {/* What we roast - a quiet list, not a grid of identical cards */}
+        <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+          <div className="mb-12">
+            <h2 className="text-3xl md:text-4xl font-serif font-semibold tracking-tight text-textPrimary">
+              What we roast
             </h2>
-            <p className="mt-4 text-lg text-textSecondary font-medium max-w-2xl mx-auto">
-              We leave no stone unturned in our quest to find your bugs.
+            <p className="mt-3 text-lg text-textSecondary font-medium">
+              Seven categories, every repo, no exceptions.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2">
             {features.map((feature, i) => (
-              <motion.div 
+              <motion.div
                 key={feature.name}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className="glass-panel hover:border-white/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-3xl p-8 group relative overflow-hidden"
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.4, delay: Math.min(i * 0.05, 0.3) }}
+                className="flex items-start gap-4 py-6 border-t border-border/50 md:odd:pr-8 md:even:pl-8"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-                <span className="absolute top-6 right-8 font-mono text-5xl font-bold text-white/[0.04] select-none" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <feature.icon className="h-6 w-6 text-primary shrink-0" aria-hidden="true" />
-                    <h3 className="text-xl font-serif font-bold text-textPrimary tracking-tight">
-                      {feature.name}
-                    </h3>
-                  </div>
-                  <p className="text-base text-textSecondary leading-relaxed">
+                <feature.icon className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+                <div>
+                  <h3 className="text-base font-serif font-semibold text-textPrimary tracking-tight mb-1">
+                    {feature.name}
+                  </h3>
+                  <p className="text-sm text-textSecondary leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
