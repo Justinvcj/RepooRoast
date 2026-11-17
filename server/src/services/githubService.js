@@ -18,6 +18,10 @@ const parseGitHubUrl = (url) => {
   }
 };
 
+// Every user-influenced value placed into a GitHub API path goes through this,
+// so it can never add path segments such as "..".
+const enc = (value) => encodeURIComponent(String(value));
+
 /**
  * Creates an Axios instance for GitHub API requests.
  * @returns {import('axios').AxiosInstance}
@@ -71,7 +75,8 @@ const handleGitHubError = (error) => {
  */
 const fetchFileContent = async (api, owner, repo, path, ref = null) => {
   try {
-    const url = ref ? `/repos/${owner}/${repo}/contents/${path}?ref=${ref}` : `/repos/${owner}/${repo}/contents/${path}`;
+    const base = `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
+    const url = ref ? `${base}?ref=${encodeURIComponent(ref)}` : base;
     const response = await api.get(url);
     if (response.data && response.data.content) {
       return Buffer.from(response.data.content, 'base64').toString('utf-8');
@@ -255,7 +260,7 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
 
   try {
     // 1. Fetch Repository Metadata
-    const metadataRes = await api.get(`/repos/${owner}/${repo}`);
+    const metadataRes = await api.get(`/repos/${enc(owner)}/${enc(repo)}`);
     const metadata = metadataRes.data;
 
     // Same reasoning as fetchRepoData: refuse private repos explicitly even
@@ -272,17 +277,18 @@ const fetchDiffData = async (owner, repo, pullNumber = null, compareString = nul
     let headRef = null;
 
     if (pullNumber) {
-      const prRes = await api.get(`/repos/${owner}/${repo}/pulls/${pullNumber}`);
+      const prRes = await api.get(`/repos/${enc(owner)}/${enc(repo)}/pulls/${enc(pullNumber)}`);
       prTitle = prRes.data.title;
       prDescription = prRes.data.body;
       diffUrl = prRes.data.diff_url; 
       headRef = prRes.data.head.sha;
 
-      const filesRes = await api.get(`/repos/${owner}/${repo}/pulls/${pullNumber}/files`);
+      const filesRes = await api.get(`/repos/${enc(owner)}/${enc(repo)}/pulls/${enc(pullNumber)}/files`);
       changedFiles = filesRes.data.filter(f => f.status !== 'removed').map(f => f.filename);
     } else if (compareString) {
-      const compareRes = await api.get(`/repos/${owner}/${repo}/compare/${compareString}`);
-      diffUrl = `https://api.github.com/repos/${owner}/${repo}/compare/${compareString}`;
+      const compareSegments = compareString.split('/').map(encodeURIComponent).join('/');
+      const compareRes = await api.get(`/repos/${enc(owner)}/${enc(repo)}/compare/${compareSegments}`);
+      diffUrl = `https://api.github.com/repos/${enc(owner)}/${enc(repo)}/compare/${compareSegments}`;
       headRef = compareString.split('...')[1] || compareString;
       changedFiles = compareRes.data.files.filter(f => f.status !== 'removed').map(f => f.filename);
     } else {

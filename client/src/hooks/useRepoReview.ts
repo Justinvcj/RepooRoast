@@ -23,8 +23,20 @@ export const useRepoReview = () => {
     setStage('starting');
 
     const controller = new AbortController();
-    // 120 second timeout to account for Render free tier cold starts
-    const timeoutId = setTimeout(() => controller.abort(), 120000);
+    // The server sends a heartbeat every few seconds while it works, so a
+    // healthy review never goes quiet. Time out on silence, not on total
+    // duration: a long review on a big repo is fine, a dead connection is not.
+    // The first byte gets longer to cover Render's free-tier cold start, and a
+    // hard cap stops a stuck request from running forever.
+    const FIRST_BYTE_MS = 90_000;
+    const IDLE_MS = 40_000;
+    const HARD_CAP_MS = 6 * 60_000;
+    let timeoutId = setTimeout(() => controller.abort(), FIRST_BYTE_MS);
+    const armIdle = (ms: number) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => controller.abort(), ms);
+    };
+    const hardCapId = setTimeout(() => controller.abort(), HARD_CAP_MS);
 
     try {
       const parsed = extractRepoInfo(repoUrl);
@@ -82,6 +94,7 @@ export const useRepoReview = () => {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+        armIdle(IDLE_MS);
         buffer += decoder.decode(value, { stream: true });
 
         let newlineIndex;
@@ -93,6 +106,7 @@ export const useRepoReview = () => {
       consumeLine(buffer); // Handle any trailing content with no final newline.
 
       clearTimeout(timeoutId);
+      clearTimeout(hardCapId);
 
       if (serverErrorMessage && !finalResult) {
         throw new Error(serverErrorMessage);
@@ -110,10 +124,11 @@ export const useRepoReview = () => {
 
     } catch (err) {
       clearTimeout(timeoutId);
+      clearTimeout(hardCapId);
       let errorMessage = 'An unexpected error occurred during review generation.';
 
       if (err instanceof DOMException && err.name === 'AbortError') {
-        errorMessage = 'The review request timed out. Please try a smaller repository.';
+        errorMessage = 'The server stopped responding before the review finished. Try again in a minute. If it had already finished, the retry loads instantly.';
       } else if (err instanceof Error) {
         if (err.message === 'Failed to fetch') {
           errorMessage = 'Network Error: Your browser blocked the connection, or the server timed out. Try turning off your ad-blocker/Brave Shields for this site, or do a Hard Refresh (Ctrl+Shift+R).';

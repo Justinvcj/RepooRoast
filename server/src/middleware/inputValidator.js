@@ -28,6 +28,22 @@ export const validateRepoUrl = (req, res, next) => {
   next();
 };
 
+// The diff endpoints interpolate these values into GitHub API paths that are
+// requested with the server's token. Anything containing "/" or ".." segments
+// could redirect that request to a different GitHub endpoint (for example
+// another repository the token can read), so they must be strictly shaped.
+const NAME = /^[A-Za-z0-9_.-]{1,100}$/;
+const SEGMENT = /^[A-Za-z0-9_.-]+$/;
+const PULL_NUMBER = /^\d{1,9}$/;
+
+const isSafeName = (value) => NAME.test(value) && value !== '.' && value !== '..';
+const isSafeRef = (value) =>
+  value.length > 0 && value.length <= 250 && value.split('/').every((seg) => SEGMENT.test(seg) && seg !== '.' && seg !== '..');
+const isSafeCompare = (value) => {
+  const parts = value.split(/\.{2,3}/);
+  return parts.length === 2 && parts.every(isSafeRef);
+};
+
 export const validateDiffComponents = (req, res, next) => {
   const { owner, repo, pullNumber, compareString } = req.body;
 
@@ -61,6 +77,19 @@ export const validateDiffComponents = (req, res, next) => {
   req.body.repo = repo.trim();
   if (pullNumber) req.body.pullNumber = pullNumber.trim();
   if (compareString) req.body.compareString = compareString.trim();
+
+  const bad =
+    !isSafeName(req.body.owner) ||
+    !isSafeName(req.body.repo) ||
+    (pullNumber && !PULL_NUMBER.test(req.body.pullNumber)) ||
+    (compareString && !isSafeCompare(req.body.compareString));
+  if (bad) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid owner, repository, pull request number or compare range.',
+      code: 'INPUT_INVALID'
+    });
+  }
 
   next();
 };
