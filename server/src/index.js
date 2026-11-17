@@ -56,6 +56,26 @@ app.get('/health', (req, res) => {
 
 app.use(errorHandler);
 
+// Make a dying process visible in the host's logs. Without these, an
+// out-of-memory exit or an uncaught error just cuts the response stream with
+// nothing to read afterwards.
+const rssMb = () => Math.round(process.memoryUsage().rss / 1024 / 1024);
+process.on('uncaughtException', (err) => {
+  console.error(`[Process] uncaughtException (rss ${rssMb()}MB):`, err?.stack || err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error(`[Process] unhandledRejection (rss ${rssMb()}MB):`, reason?.stack || reason);
+  process.exit(1);
+});
+process.on('SIGTERM', () => {
+  console.error(`[Process] SIGTERM received, the host is stopping this instance (rss ${rssMb()}MB)`);
+  process.exit(0);
+});
+process.on('exit', (code) => {
+  console.error(`[Process] exiting with code ${code} (rss ${rssMb()}MB)`);
+});
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, '0.0.0.0', () => {

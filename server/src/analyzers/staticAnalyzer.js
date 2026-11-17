@@ -10,10 +10,25 @@ import { buildDependencyGraph } from './graphResolver.js';
 // repo (which the previous unconditional bypass did).
 const MAX_TREE_SITTER_FILE_SIZE = 40000; // 40KB
 
+// Small hosts (Render's free tier is 512MB) can be killed by the OS with no
+// error when memory runs out. Past this resident size we stop starting new
+// WASM parses and use the regex analyzer for the rest of the request.
+const MAX_RSS_FOR_PARSE_MB = Number(process.env.MAX_RSS_FOR_PARSE_MB) || 320;
+const rssMb = () => Math.round(process.memoryUsage().rss / 1024 / 1024);
+
+// Operators can set DISABLE_TREE_SITTER=1 to turn the WASM parser off
+// entirely without a code change.
+const treeSitterDisabled = () => process.env.DISABLE_TREE_SITTER === '1';
+
 export const analyzeFile = async (sourceCode, filePath) => {
   const language = getLanguageForFile(filePath);
 
-  if (!language || sourceCode.length > MAX_TREE_SITTER_FILE_SIZE) {
+  if (
+    !language ||
+    sourceCode.length > MAX_TREE_SITTER_FILE_SIZE ||
+    treeSitterDisabled() ||
+    rssMb() > MAX_RSS_FOR_PARSE_MB
+  ) {
     return analyzeGeneric(sourceCode, filePath);
   }
 
@@ -62,6 +77,10 @@ export const runStaticAnalysis = async (filesContentMap) => {
   for (const [filePath, content] of Object.entries(filesContentMap)) {
     const analysis = await analyzeFile(content, filePath);
     fileAnalyses.push(analysis);
+
+    // Parsing is CPU-bound. Yield between files so the event loop can answer
+    // health checks and keep the response stream alive on a slow shared CPU.
+    await new Promise((resolve) => setImmediate(resolve));
     
     // Aggregate Repo Metrics
     repoMetrics.totalFiles++;

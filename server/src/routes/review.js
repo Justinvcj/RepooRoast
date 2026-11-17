@@ -19,6 +19,7 @@ const createProgressReporter = (res, heartbeatMs) => {
 
   const sendProgress = (stage) => {
     currentStage = stage;
+    console.log(`[Stage] ${stage} (rss ${Math.round(process.memoryUsage().rss / 1024 / 1024)}MB)`);
     try {
       res.write(JSON.stringify({ type: 'progress', stage }) + '\n');
       res.flushHeaders();
