@@ -16,13 +16,13 @@ export const NotFoundPage: React.FC = () => {
         {...pageTransition}
         className="w-full max-w-lg"
       >
-        <Card level={1} className="p-8 sm:p-12 border-border-hairline shadow-2xl backdrop-blur-xl flex flex-col items-center">
-          <div className="mb-6 p-4 rounded-2xl bg-surface-secondary border border-border-hairline">
+        <Card level={1} className="p-8 sm:p-12 border-border-hairline flex flex-col items-center">
+          <div className="mb-6 p-4 rounded-lg bg-surface-secondary border border-border-hairline">
             <LogoMark size={40} />
           </div>
 
-          <span className="text-xs font-mono font-semibold uppercase tracking-wider text-primary mb-2">
-            Status: Route_Not_Found
+          <span className="text-sm font-semibold text-primary mb-2">
+            Page not found
           </span>
 
           <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-textPrimary font-sans mb-4">

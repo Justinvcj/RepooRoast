@@ -24,7 +24,7 @@ export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
     const levelStyles: Record<0 | 1 | 2, string> = {
       0: 'bg-dominant text-textPrimary',
       1: 'bg-surface-secondary text-textPrimary',
-      2: 'bg-surface-elevated text-textPrimary backdrop-blur-xl shadow-xl',
+      2: 'bg-surface-secondary text-textPrimary',
     };
 
     const borderStyles = border
@@ -35,14 +35,14 @@ export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
 
     const hoverStyles =
       hoverable || interactive
-        ? 'transition-all duration-fast ease-spring hover:border-border-focused hover:shadow-lg'
+        ? 'transition-all duration-fast ease-spring hover:border-border-focused'
         : '';
 
     return (
       <div
         ref={ref}
         className={cn(
-          'rounded-xl',
+          'rounded-lg',
           levelStyles[level],
           borderStyles,
           hoverStyles,

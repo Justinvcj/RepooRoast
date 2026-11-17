@@ -62,9 +62,9 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
       </div>
 
       {/* Progress Card */}
-      <Card level={1} className="w-full max-w-md p-6 sm:p-8 rounded-2xl border-border-hairline shadow-2xl backdrop-blur-xl mb-6">
+      <Card level={1} className="w-full max-w-md p-6 sm:p-8 rounded-lg border-border-hairline mb-6">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-hairline">
-          <h3 className="text-base sm:text-lg font-bold text-textPrimary font-sans flex items-center gap-2">
+          <h3 className="text-base sm:text-lg font-bold text-textPrimary font-display flex items-center gap-2">
             <span>Analyzing Codebase</span>
             <span className="inline-flex space-x-0.5 text-primary">
               <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.4, repeat: Infinity, delay: 0 }}>.</motion.span>
@@ -72,8 +72,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
               <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.4, repeat: Infinity, delay: 0.5 }}>.</motion.span>
             </span>
           </h3>
-          <span className="text-xs font-mono font-semibold text-primary tabular-nums">
-            [{currentIndex + 1}/{STEP_ORDER.length}]
+          <span className="text-sm font-semibold text-textSecondary tabular-nums">
+            Step {currentIndex + 1} of {STEP_ORDER.length}
           </span>
         </div>
 
@@ -91,7 +91,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: isComplete || isActive ? 1 : 0.4, x: 0 }}
                 transition={{ duration: 0.25 }}
-                className={`flex items-center gap-3 text-xs sm:text-sm font-mono transition-colors ${
+                className={`flex items-center gap-3 text-sm transition-colors ${
                   isActive
                     ? 'text-primary font-medium'
                     : isComplete
@@ -122,9 +122,9 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
 
         {/* Real Progress Bar */}
         <div className="mt-8 pt-4 border-t border-border-hairline">
-          <div className="flex justify-between items-center mb-2 text-xs font-mono text-textMuted">
-            <span>Pipeline Execution</span>
-            <span className="text-primary font-bold tabular-nums">{progress}%</span>
+          <div className="flex justify-between items-center mb-2 text-sm text-textSecondary">
+            <span>Progress</span>
+            <span className="text-primary font-semibold tabular-nums">{progress}%</span>
           </div>
           <div className="w-full h-1.5 bg-surface-secondary rounded-full overflow-hidden border border-border-hairline">
             <motion.div

@@ -110,7 +110,7 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: prefersReduced ? 0.05 : 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-dominant/80 backdrop-blur-md"
+            className="fixed inset-0 bg-ink/50"
             aria-hidden="true"
           />
 
@@ -138,7 +138,7 @@ export const Modal: React.FC<ModalProps> = ({
               ease: [0.16, 1, 0.3, 1],
             }}
             className={cn(
-              'relative w-full rounded-2xl bg-surface-elevated border border-border-focused p-6 shadow-2xl z-10 focus:outline-none',
+              'relative w-full rounded-lg bg-surface border border-border-focused p-6 z-10 focus:outline-none',
               maxWidthStyles[maxWidth]
             )}
           >

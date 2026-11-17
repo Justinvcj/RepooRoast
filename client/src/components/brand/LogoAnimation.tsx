@@ -25,9 +25,9 @@ export const LogoAnimation: React.FC<LogoAnimationProps> = ({
   const shouldReduceMotion = manualReducedMotion || !!systemReducedMotion;
 
   // Colors
-  const caliperStroke = monochrome ? 'currentColor' : '#F0F3F6';
-  const emberFill = monochrome ? 'currentColor' : '#FF5426';
-  const kernelFill = monochrome ? '#0C0E12' : '#FEF08A';
+  const caliperStroke = monochrome ? 'currentColor' : '#16181D';
+  const emberFill = monochrome ? 'currentColor' : '#D1301C';
+  const kernelFill = monochrome ? '#F3F4F1' : '#F3F4F1';
 
   // Spacing calculation matching 0.375x mark size gap
   const gap = Math.round(size * 0.375);

@@ -12,10 +12,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border transition-all duration-fast ease-spring',
+          'rounded-lg border transition-all duration-fast ease-spring',
           level === 1
             ? 'bg-surface-secondary border-border-hairline'
-            : 'bg-surface-elevated border-border-focused shadow-xl backdrop-blur-xl',
+            : 'bg-surface-secondary border-border-focused',
           interactive && 'hover:border-border-focused hover:translate-y-[-1px] cursor-pointer',
           className
         )}

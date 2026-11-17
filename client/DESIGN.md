@@ -1,3 +1,48 @@
+# RepoRoast Design Specification (v4: "Red Pen")
+
+> **v4 supersedes v3 for color, type, layout and tone.** Logo geometry (section 7 onward) is unchanged.
+> Branch: `redesign/v4` (off `redesign/v3`). Not merged, not pushed.
+
+## v4 concept
+
+RepoRoast is a senior engineer's markup of your code. The product measures first (static analysis), then a reviewer marks it up in red pen. The interface is the printed review: paper, ink, one pen.
+
+v3 was a dark console with a vermilion accent, uppercase mono labels, bracket tags and nested cards. That is the default "developer tool" look. v4 drops all of it.
+
+## v4 tokens
+
+| Role | Value | Notes |
+|---|---|---|
+| Paper (canvas) | `#F3F4F1` | cool, not cream |
+| Sheet (surfaces) | `#FFFFFF`, `#FAFAF7` | flat, 1px borders, no shadows or blur |
+| Ink | `#16181D` | text and rules (17:1 on paper) |
+| Ink 2 / muted | `#4A505A` / `#646A73` | 7.9:1 / 4.9:1 on paper |
+| Rule | `#D8DAD3`, focus `#8E948C` | |
+| Pen red (only accent) | `#D1301C`, hover `#B52614` | white text on it: 5.5:1 |
+| Data | `#17794A` ok, `#946000` caution, `#B4480A` high, `#C62A1B` critical | all pass 4.5:1 on paper |
+
+## v4 type
+
+- Display and headings: Bricolage Grotesque (700/800, tight tracking).
+- Body and UI: Instrument Sans.
+- Monospace: IBM Plex Mono, only for real code, file paths and the URL field.
+- Sentence case everywhere. No uppercase labels, no bracket tags, no eyebrow labels.
+
+## v4 layout and signature
+
+- Hero is a real code printout with red-pen marks (circled call, numbered margin notes) and a score slip. The pen ring is the one entrance animation.
+- Result page leads with the verdict: score circled in pen, verdict headline, reviewer quote. Measured stats follow, then scores, priorities, breakdown.
+- Severity is a plain-text pill. Category rows are one flat row each. No cards inside cards.
+- Structural devices (numbers, rules) appear only where the content is a sequence or a reference.
+
+## v4 motion
+
+Pen ring draws once on the hero and once on the score. Everything else responds to user action. `prefers-reduced-motion` is honoured.
+
+---
+
+# Legacy v3 specification (logo geometry still valid)
+
 # RepoRoast Visual Identity & Design Specification (v3)
 
 **Version:** 3.0.0  

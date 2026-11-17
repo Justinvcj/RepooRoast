@@ -1,132 +1,99 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { ReviewResult } from '../types';
 import { ScoreCard } from './ScoreCard';
 import { ScoreChart } from './ScoreChart';
 import { CategorySection } from './CategorySection';
-import { Target, ThumbsUp, Terminal } from 'lucide-react';
-import { Card, CodeBlock } from './ui';
+import { CodeBlock } from './ui';
 
 interface ReviewDashboardProps {
   review: ReviewResult;
 }
 
 export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 16 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-    },
-  };
+  const reduce = useReducedMotion();
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-10"
+      initial={reduce ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-14"
     >
-      {/* 1. Overall Score & Verdict */}
-      <motion.div variants={itemVariants}>
-        <ScoreCard
-          score={review.overallScore}
-          verdict={review.overallVerdict}
-          quote={review.seniorDevQuote}
-          hiringVerdict={review.hiringVerdict}
-        />
-      </motion.div>
+      {/* Verdict leads: the reader came for this. */}
+      <ScoreCard
+        score={review.overallScore}
+        verdict={review.overallVerdict}
+        quote={review.seniorDevQuote}
+        hiringVerdict={review.hiringVerdict}
+      />
 
-      {/* 2. Breakdown and Key Takeaways */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-        <motion.div variants={itemVariants} className="flex flex-col h-full">
-          <ScoreChart categories={review.categories} />
-        </motion.div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-16">
+        <ScoreChart categories={review.categories} />
 
-        <motion.div variants={itemVariants} className="flex flex-col gap-6">
-          {/* Top Priorities Card */}
-          <Card level={1} className="p-6 sm:p-7 flex-1 border-border-hairline shadow-sm">
-            <h3 className="text-base font-bold flex items-center gap-2.5 mb-5 text-textPrimary font-sans">
-              <div className="p-1.5 rounded-md bg-data-critical/10 text-data-critical border border-data-critical/20">
-                <Target className="w-4 h-4" />
-              </div>
-              <span>Top Priorities</span>
+        <div className="flex flex-col gap-10">
+          <section aria-labelledby="priorities-title">
+            <h3 id="priorities-title" className="font-display text-xl font-bold tracking-tight text-textPrimary mb-4">
+              Fix these first
             </h3>
-            <ul className="space-y-3.5">
+            <ol className="space-y-3">
               {review.topPriorities.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3.5">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-md bg-surface-elevated border border-border-hairline text-data-critical font-mono text-xs font-bold shrink-0 mt-0.5 tabular-nums">
+                <li key={idx} className="flex items-start gap-3.5 text-[15px] text-textPrimary leading-relaxed">
+                  <span className="shrink-0 mt-[3px] inline-flex items-center justify-center w-5 h-5 rounded-full border-[1.5px] border-primary text-primary text-[11px] font-semibold tabular-nums">
                     {idx + 1}
                   </span>
-                  <span className="text-textSecondary text-xs sm:text-sm leading-relaxed">{item}</span>
+                  <span>{item}</span>
                 </li>
               ))}
-            </ul>
-          </Card>
+            </ol>
+          </section>
 
-          {/* What You Did Well Card */}
-          <Card level={1} className="p-6 sm:p-7 flex-1 border-border-hairline shadow-sm">
-            <h3 className="text-base font-bold flex items-center gap-2.5 mb-5 text-textPrimary font-sans">
-              <div className="p-1.5 rounded-md bg-data-success/10 text-data-success border border-data-success/20">
-                <ThumbsUp className="w-4 h-4" />
-              </div>
-              <span>What You Did Well</span>
+          <section aria-labelledby="well-title" className="pt-8 border-t border-border-hairline">
+            <h3 id="well-title" className="font-display text-xl font-bold tracking-tight text-textPrimary mb-4">
+              What you did well
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {review.whatYouDidWell.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-textSecondary text-xs sm:text-sm leading-relaxed">
-                  <span className="w-1.5 h-1.5 rounded-full bg-data-success shrink-0 mt-2" />
+                <li key={idx} className="flex items-start gap-3 text-[15px] text-textSecondary leading-relaxed">
+                  <span className="w-1.5 h-1.5 rounded-full bg-data-success shrink-0 mt-[9px]" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-          </Card>
-        </motion.div>
+          </section>
+        </div>
       </div>
 
-      {/* 3. Detailed Category Breakdown */}
-      <motion.div variants={itemVariants} className="mt-4">
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-hairline">
-          <h2 className="text-xl sm:text-2xl font-extrabold text-textPrimary tracking-tight font-sans">
-            Detailed Breakdown
+      <section aria-labelledby="breakdown-title">
+        <div className="flex items-baseline justify-between mb-5 pb-3 border-b border-ink">
+          <h2 id="breakdown-title" className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-textPrimary">
+            Detailed breakdown
           </h2>
-          <span className="text-xs font-mono text-textMuted select-none">
-            {review.categories.length} Categories Inspected
-          </span>
+          <span className="text-sm text-textMuted tabular-nums">{review.categories.length} categories</span>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {review.categories.map((category, idx) => (
             <CategorySection key={idx} category={category} />
           ))}
         </div>
-      </motion.div>
+      </section>
 
-      {/* 4. Auto-Fix AI Prompt Block */}
       {review.fixPrompt && (
-        <motion.div variants={itemVariants} className="mt-4 print:break-inside-avoid">
-          <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-border-hairline">
-            <Terminal className="w-5 h-5 text-primary" />
-            <h2 className="text-lg sm:text-xl font-bold text-textPrimary font-sans">
-              Auto-Fix AI Prompt
-            </h2>
-          </div>
+        <section aria-labelledby="fix-title" className="print:break-inside-avoid">
+          <h2 id="fix-title" className="font-display text-2xl font-bold tracking-tight text-textPrimary">
+            Auto-fix AI prompt
+          </h2>
+          <p className="text-sm text-textSecondary mt-1 mb-4 max-w-[60ch]">
+            Paste this into Claude or Copilot to work through the fixes above.
+          </p>
           <CodeBlock
             code={review.fixPrompt}
             language="markdown"
             fileName="CLAUDE_OR_COPILOT_PROMPT.md"
             copyable={true}
           />
-        </motion.div>
+        </section>
       )}
     </motion.div>
   );

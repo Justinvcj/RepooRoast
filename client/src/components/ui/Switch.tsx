@@ -82,7 +82,7 @@ export const Switch: React.FC<SwitchProps> = ({
         className={cn(
           'relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors duration-fast ease-spring',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-          checked ? 'bg-primary' : 'bg-surface-elevated border-border-hairline',
+          checked ? 'bg-primary' : 'bg-border-focused border-border-focused',
           disabled && 'opacity-40 cursor-not-allowed'
         )}
       >

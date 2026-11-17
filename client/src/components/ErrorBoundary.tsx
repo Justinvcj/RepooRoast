@@ -22,13 +22,13 @@ export class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <div className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background flex items-center justify-center p-6 select-none">
-          <Card level={1} className="max-w-md w-full p-8 sm:p-10 text-center border-border-hairline shadow-2xl flex flex-col items-center">
-            <div className="p-3.5 rounded-2xl bg-data-critical/10 text-data-critical border border-data-critical/20 mb-6">
+          <Card level={1} className="max-w-md w-full p-8 sm:p-10 text-center border-border-hairline flex flex-col items-center">
+            <div className="p-3.5 rounded-lg bg-data-critical/10 text-data-critical border border-data-critical/20 mb-6">
               <AlertCircle className="w-8 h-8" />
             </div>
 
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-data-critical mb-2">
-              Runtime_Exception_Caught
+            <span className="text-sm font-semibold text-data-critical mb-2">
+              Something broke
             </span>
 
             <h1 className="text-3xl font-extrabold text-textPrimary tracking-tight font-sans mb-3">

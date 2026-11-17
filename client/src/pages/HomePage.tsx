@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Code2, GitMerge, FileText, Shield, TestTube, Zap, TrendingUp } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { getPageTransition } from '../utils/motion';
 
@@ -18,37 +17,30 @@ const features = [
   {
     name: 'Code Quality',
     description: 'We analyze readability, naming conventions, and best practices.',
-    icon: Code2,
   },
   {
     name: 'Architecture',
     description: 'Evaluating project structure, modularity, and scalability.',
-    icon: GitMerge,
   },
   {
     name: 'Documentation',
     description: 'Checking READMEs, inline comments, and API explanations.',
-    icon: FileText,
   },
   {
     name: 'Security',
     description: 'Identifying vulnerabilities, exposed secrets, and bad patterns.',
-    icon: Shield,
   },
   {
     name: 'Testing',
     description: 'Reviewing test coverage, mocked data logic, and CI/CD setup.',
-    icon: TestTube,
   },
   {
     name: 'Performance',
     description: 'Finding slow loops, memory leaks, and inefficient algorithms.',
-    icon: Zap,
   },
   {
     name: 'Scalability',
     description: 'Assessing if the codebase can handle 10x growth without collapsing.',
-    icon: TrendingUp,
   },
 ];
 
@@ -135,7 +127,7 @@ export const HomePage: React.FC = () => {
   return (
     <motion.div
       {...pageTransition}
-      className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 flex flex-col relative z-10"
+      className="min-h-full bg-background text-textPrimary pb-16 flex flex-col relative z-10"
     >
       <main className="relative z-10">
         <Hero
@@ -154,40 +146,25 @@ export const HomePage: React.FC = () => {
           onSave={handleSaveSettings}
         />
 
-        {/* What we roast - a quiet, high-craft list instead of identical cards */}
-        <section aria-labelledby="what-we-roast-title" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-border-hairline">
-          <div className="mb-10">
-            <h2 id="what-we-roast-title" className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary font-sans">
-              What we roast
-            </h2>
-            <p className="mt-2 text-base text-textSecondary font-normal">
-              Seven categories, every repo, no exceptions.
-            </p>
-          </div>
+        <section aria-labelledby="what-we-roast-title" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-border-hairline">
+          <div className="grid lg:grid-cols-[1fr_2fr] gap-8 lg:gap-16">
+            <div>
+              <h2 id="what-we-roast-title" className="font-display text-3xl font-bold tracking-tight text-textPrimary">
+                What gets marked
+              </h2>
+              <p className="mt-2 text-base text-textSecondary max-w-[32ch]">
+                Seven categories on every repo, each scored out of 100.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
-            {features.map((feature, i) => (
-              <motion.div
-                key={feature.name}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.24) }}
-                className="flex items-start gap-3.5 py-5 border-t border-border-hairline"
-              >
-                <div className="p-2 rounded-lg bg-surface-secondary border border-border-hairline text-primary shrink-0 mt-0.5">
-                  <feature.icon className="h-4 w-4" aria-hidden="true" />
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-12">
+              {features.map((feature) => (
+                <div key={feature.name} className="py-4 border-t border-border-hairline first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
+                  <dt className="font-display text-lg font-bold tracking-tight text-textPrimary">{feature.name}</dt>
+                  <dd className="mt-1 text-[15px] text-textSecondary leading-relaxed">{feature.description}</dd>
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-textPrimary tracking-tight mb-1 font-sans">
-                    {feature.name}
-                  </h3>
-                  <p className="text-xs text-textSecondary leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+              ))}
+            </dl>
           </div>
         </section>
       </main>

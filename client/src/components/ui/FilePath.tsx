@@ -21,7 +21,7 @@ export const FilePath: React.FC<FilePathProps> = ({
     <span
       title={display}
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-secondary/80 border border-border-hairline font-mono text-xs text-textSecondary hover:text-textPrimary transition-colors select-all',
+        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-elevated border border-border-hairline font-mono text-xs text-textSecondary hover:text-textPrimary transition-colors select-all',
         className
       )}
       {...props}

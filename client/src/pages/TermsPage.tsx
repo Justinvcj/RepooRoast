@@ -14,10 +14,10 @@ export const TermsPage: React.FC = () => {
       <motion.div
         {...pageTransition}
       >
-        <Card level={1} className="p-8 sm:p-12 border-border-hairline shadow-xl">
+        <Card level={1} className="p-8 sm:p-12 border-border-hairline">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-textSecondary hover:text-primary transition-colors mb-8 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded p-1"
+            className="inline-flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-primary transition-colors mb-8 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded p-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to RepoRoast</span>
@@ -26,7 +26,7 @@ export const TermsPage: React.FC = () => {
           <h1 className="text-3xl sm:text-4xl font-extrabold text-textPrimary tracking-tight mb-2 font-sans">
             Terms of Service
           </h1>
-          <p className="text-xs sm:text-sm text-textMuted font-mono mb-10 pb-4 border-b border-border-hairline">
+          <p className="text-sm text-textMuted mb-10 pb-4 border-b border-border-hairline">
             Short, readable, and free of legalese.
           </p>
 

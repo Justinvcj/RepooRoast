@@ -56,7 +56,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-ink/50"
           onClick={onClose}
         >
           <motion.div
@@ -67,7 +67,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="bg-surface-secondary border border-border-focused shadow-2xl rounded-2xl p-6 sm:p-8 w-full max-w-lg relative select-none"
+            className="bg-surface-secondary border border-border-focused rounded-lg p-6 sm:p-8 w-full max-w-lg relative select-none"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -94,7 +94,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
             <div className="flex items-center justify-between mb-5 p-4 bg-background rounded-xl border border-border-hairline">
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-textPrimary font-sans">Enable Custom Mode</span>
-                <span className="text-xs text-textMuted font-mono">Bypasses default API endpoint</span>
+                <span className="text-xs text-textMuted">Bypasses default API endpoint</span>
               </div>
               <button
                 type="button"
@@ -116,7 +116,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
             <div className={`space-y-3 transition-opacity ${localEnabled ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
               <label
                 htmlFor="custom-api-key"
-                className="block text-xs font-mono font-medium text-textSecondary uppercase tracking-wider"
+                className="block text-sm font-medium text-textPrimary"
               >
                 Gemini API Key
               </label>
@@ -127,14 +127,14 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
                 value={localKey}
                 onChange={(e) => setLocalKey(e.target.value)}
                 placeholder="AIza..."
-                className="w-full bg-background border border-border-hairline rounded-xl px-4 py-2.5 text-textPrimary placeholder-textMuted font-mono text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all selection:bg-primary/30"
+                className="w-full bg-surface border border-border-focused rounded-lg px-4 py-2.5 text-textPrimary placeholder-textMuted font-mono text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all selection:bg-primary/30"
               />
               <div className="flex justify-between items-center pt-1">
                 <a
                   href="https://aistudio.google.com/apikey"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-mono"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
                 >
                   Get a free Gemini API key <ExternalLink className="w-3 h-3" />
                 </a>

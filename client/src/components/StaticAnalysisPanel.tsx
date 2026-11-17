@@ -1,51 +1,48 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { StaticAnalysis } from '../types';
-import { Code2, GitMerge, FileCode, AlertTriangle, ChevronDown } from 'lucide-react';
-import { Card, Badge, FilePath } from './ui';
+import { ChevronDown } from 'lucide-react';
+import { Badge, FilePath } from './ui';
 
 interface StaticAnalysisPanelProps {
   analysis: StaticAnalysis;
 }
+
+const Stat: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
+  <div className="flex items-baseline justify-between gap-4 py-2 border-b border-border-hairline last:border-b-0">
+    <dt className="text-sm text-textSecondary">{label}</dt>
+    <dd className="font-mono text-sm text-textPrimary tabular-nums">{value}</dd>
+  </div>
+);
 
 export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analysis }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { repoMetrics, dependencyGraph, fileAnalyses } = analysis;
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-      <Card level={1} className="overflow-hidden border-border-hairline shadow-md transition-all hover:border-border-focused">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">
+      <div className="bg-surface border border-border-hairline rounded-lg overflow-hidden">
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full p-5 sm:p-6 flex items-center justify-between hover:bg-surface-elevated/40 transition-colors focus:outline-none cursor-pointer select-none text-left"
+          className="w-full px-5 py-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-surface-elevated transition-colors duration-fast cursor-pointer select-none text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
           aria-expanded={isExpanded}
         >
-          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-surface-secondary border border-border-hairline text-primary shrink-0">
-              <Code2 className="w-5 h-5" />
-            </div>
-            <div className="flex flex-col items-start">
-              <div className="flex items-center gap-2.5">
-                <h3 className="text-base sm:text-lg font-bold text-textPrimary tracking-tight font-sans">
-                  Static Code Analysis
-                </h3>
-                <Badge variant="accent" size="sm">
-                  Measured Telemetry
-                </Badge>
-              </div>
-              <span className="text-xs font-mono text-textMuted mt-0.5 tabular-nums">
-                Parsed {repoMetrics.totalFiles.toLocaleString()} files • {repoMetrics.totalLOC.toLocaleString()} LOC
-              </span>
-            </div>
+          <div>
+            <h3 className="font-display text-lg font-bold tracking-tight text-textPrimary">
+              Measured before the review
+            </h3>
+            <p className="text-sm text-textSecondary mt-0.5 tabular-nums">
+              {repoMetrics.totalFiles.toLocaleString()} files parsed, {repoMetrics.totalLOC.toLocaleString()} lines of code. These numbers come from the parser, not the AI.
+            </p>
           </div>
-          <motion.div
+          <motion.span
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.2 }}
-            className="text-textMuted p-1"
+            className="text-textMuted shrink-0"
           >
             <ChevronDown className="w-5 h-5" />
-          </motion.div>
+          </motion.span>
         </button>
 
         <AnimatePresence initial={false}>
@@ -54,55 +51,32 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden border-t border-border-hairline bg-background/50"
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden border-t border-border-hairline"
             >
-              <div className="p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* 1. Repo Metrics */}
-                <div className="bg-surface-secondary/70 rounded-xl p-5 border border-border-hairline">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-textPrimary flex items-center gap-2 mb-4">
-                    <FileCode className="w-4 h-4 text-primary" />
-                    <span>Repository Metrics</span>
-                  </h4>
-                  <ul className="space-y-2.5 text-xs font-mono text-textSecondary">
-                    <li className="flex justify-between py-1 border-b border-border-hairline/50">
-                      <span>Total LOC:</span>
-                      <span className="text-textPrimary font-semibold tabular-nums">{repoMetrics.totalLOC.toLocaleString()}</span>
-                    </li>
-                    <li className="flex justify-between py-1 border-b border-border-hairline/50">
-                      <span>Comment LOC:</span>
-                      <span className="text-textPrimary font-semibold tabular-nums">{repoMetrics.commentLOC.toLocaleString()}</span>
-                    </li>
-                    <li className="flex justify-between py-1 border-b border-border-hairline/50">
-                      <span>Comment/Code Ratio:</span>
-                      <span className="text-textPrimary font-semibold tabular-nums">{Number(repoMetrics.commentToCodeRatio).toFixed(2)}</span>
-                    </li>
-                    <li className="flex justify-between py-1 border-b border-border-hairline/50">
-                      <span>Functions/Methods:</span>
-                      <span className="text-textPrimary font-semibold tabular-nums">{repoMetrics.totalFunctions.toLocaleString()}</span>
-                    </li>
-                    <li className="flex justify-between py-1">
-                      <span>TODOs Found:</span>
-                      <span className="text-textPrimary font-semibold tabular-nums">{repoMetrics.todoCount}</span>
-                    </li>
-                  </ul>
-                </div>
+              <div className="px-5 py-6 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                <section>
+                  <h4 className="font-display text-base font-bold text-textPrimary mb-2">Size and comments</h4>
+                  <dl>
+                    <Stat label="Total lines" value={repoMetrics.totalLOC.toLocaleString()} />
+                    <Stat label="Comment lines" value={repoMetrics.commentLOC.toLocaleString()} />
+                    <Stat label="Comment to code" value={Number(repoMetrics.commentToCodeRatio).toFixed(2)} />
+                    <Stat label="Functions" value={repoMetrics.totalFunctions.toLocaleString()} />
+                    <Stat label="TODOs" value={repoMetrics.todoCount} />
+                  </dl>
+                </section>
 
-                {/* 2. Dependency Graph */}
-                <div className="bg-surface-secondary/70 rounded-xl p-5 border border-border-hairline">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-textPrimary flex items-center gap-2 mb-4">
-                    <GitMerge className="w-4 h-4 text-textMuted" />
-                    <span>Dependency Graph</span>
-                  </h4>
+                <section>
+                  <h4 className="font-display text-base font-bold text-textPrimary mb-3">Dependencies</h4>
                   <div className="space-y-4">
                     {dependencyGraph?.metrics?.hubs && dependencyGraph.metrics.hubs.length > 0 ? (
                       <div>
-                        <span className="text-[11px] font-mono text-textMuted block mb-1.5">Architecture Hubs:</span>
+                        <p className="text-sm text-textSecondary mb-2">Files everything depends on</p>
                         <div className="flex flex-wrap gap-1.5">
                           {dependencyGraph.metrics.hubs.slice(0, 5).map((hub) => (
                             <span
                               key={hub}
-                              className="px-2 py-0.5 bg-background rounded font-mono text-[10px] text-textSecondary border border-border-hairline break-all"
+                              className="px-2 py-0.5 bg-surface-elevated rounded font-mono text-[11px] text-textSecondary border border-border-hairline break-all"
                             >
                               {hub}
                             </span>
@@ -110,17 +84,17 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                         </div>
                       </div>
                     ) : (
-                      <span className="text-xs text-textMuted">No distinct hubs found.</span>
+                      <p className="text-sm text-textMuted">No central files found.</p>
                     )}
 
                     {dependencyGraph?.metrics?.orphans && dependencyGraph.metrics.orphans.length > 0 && (
                       <div>
-                        <span className="text-[11px] font-mono text-data-critical block mb-1.5">Potential Orphans (Unused):</span>
+                        <p className="text-sm text-data-critical font-medium mb-2">Possibly unused</p>
                         <div className="flex flex-wrap gap-1.5">
                           {dependencyGraph.metrics.orphans.slice(0, 3).map((orphan) => (
                             <span
                               key={orphan}
-                              className="px-2 py-0.5 bg-data-critical/10 rounded font-mono text-[10px] text-data-critical border border-data-critical/30 break-all"
+                              className="px-2 py-0.5 bg-data-critical/10 rounded font-mono text-[11px] text-data-critical border border-data-critical/25 break-all"
                             >
                               {orphan}
                             </span>
@@ -129,14 +103,10 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                       </div>
                     )}
                   </div>
-                </div>
+                </section>
 
-                {/* 3. Notable Files Insights */}
-                <div className="bg-surface-secondary/70 rounded-xl p-5 border border-border-hairline lg:col-span-1 md:col-span-2">
-                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-textPrimary flex items-center gap-2 mb-4">
-                    <AlertTriangle className="w-4 h-4 text-data-warning" />
-                    <span>File Insights</span>
-                  </h4>
+                <section>
+                  <h4 className="font-display text-base font-bold text-textPrimary mb-3">Flagged files</h4>
                   <div className="space-y-3">
                     {fileAnalyses && fileAnalyses.length > 0 ? (
                       fileAnalyses.slice(0, 4).map((file, idx) => {
@@ -149,9 +119,9 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                         if (uniqueFlags.length === 0 && file.magicNumbers.length === 0) return null;
 
                         return (
-                          <div key={idx} className="text-xs space-y-1">
+                          <div key={idx} className="space-y-1.5">
                             <FilePath path={file.path} className="text-[11px]" />
-                            <div className="flex flex-wrap gap-1 pt-0.5">
+                            <div className="flex flex-wrap gap-1">
                               {uniqueFlags.map((flag: string, i: number) => (
                                 <Badge key={i} variant="warning" size="sm">
                                   {flag}
@@ -159,7 +129,7 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                               ))}
                               {file.magicNumbers.length > 0 && (
                                 <Badge variant="default" size="sm">
-                                  {file.magicNumbers.length} Magic Nums
+                                  {file.magicNumbers.length} magic numbers
                                 </Badge>
                               )}
                             </div>
@@ -167,15 +137,15 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                         );
                       })
                     ) : (
-                      <span className="text-xs text-textMuted">Clean AST scan across parsed files.</span>
+                      <p className="text-sm text-textMuted">Nothing flagged in the parsed files.</p>
                     )}
                   </div>
-                </div>
+                </section>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </Card>
+      </div>
     </div>
   );
 };

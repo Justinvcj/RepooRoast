@@ -4,59 +4,53 @@ export default {
   theme: {
     extend: {
       colors: {
-        // --- 60-30-10 Brand Architecture & Tokens ---
-        // 60% Dominant Canvas
-        background: '#0C0E12',
-        dominant: '#0C0E12',
-
-        // 30% Structural Surfaces & Typography
+        // v4 "Red Pen": cool paper, white sheets, ink, one pen-red accent.
+        background: '#F3F4F1',
+        dominant: '#F3F4F1',
         surface: {
-          DEFAULT: '#161920',
-          secondary: '#161920',
-          elevated: '#1F242E',
+          DEFAULT: '#FFFFFF',
+          secondary: '#FFFFFF',
+          elevated: '#FAFAF7',
         },
         border: {
-          DEFAULT: '#222733',
-          hairline: '#222733',
-          focused: '#3A4356',
+          DEFAULT: '#D8DAD3',
+          hairline: '#D8DAD3',
+          focused: '#8E948C',
         },
-        textPrimary: '#F0F3F6',
-        textSecondary: '#949CA6',
-        textMuted: '#646E7E',
+        textPrimary: '#16181D',
+        textSecondary: '#4A505A',
+        textMuted: '#646A73',
         text: {
-          primary: '#F0F3F6',
-          secondary: '#949CA6',
-          muted: '#646E7E',
+          primary: '#16181D',
+          secondary: '#4A505A',
+          muted: '#646A73',
         },
-
-        // 10% Brand Accent
+        ink: '#16181D',
         primary: {
-          DEFAULT: '#FF5426',
-          hover: '#E84518',
+          DEFAULT: '#D1301C',
+          hover: '#B52614',
         },
         accent: {
-          DEFAULT: '#FF5426',
-          hover: '#E84518',
-          dark: '#0C0E12',
-          deep: '#D83B01',
+          DEFAULT: '#D1301C',
+          hover: '#B52614',
+          dark: '#FFFFFF',
+          deep: '#B52614',
         },
-
-        // Semantic Telemetry Data Colors (outside accent budget)
-        success: '#10B981',
-        warning: '#F59E0B',
-        danger: '#EF4444',
+        success: '#17794A',
+        warning: '#946000',
+        danger: '#C62A1B',
         data: {
-          success: '#10B981',
-          warning: '#F59E0B',
-          flawed: '#E67E22',
-          critical: '#EF4444',
+          success: '#17794A',
+          warning: '#946000',
+          flawed: '#B4480A',
+          critical: '#C62A1B',
         },
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
-        // Backward-compatibility alias: maps legacy font-serif usages to Plus Jakarta Sans
-        serif: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Instrument Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['"Bricolage Grotesque"', '"Instrument Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        serif: ['"Instrument Sans"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         'xs': '2px',

@@ -48,16 +48,16 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   return (
     <div
       className={cn(
-        'relative rounded-xl border border-border-hairline bg-dominant overflow-hidden text-left flex flex-col',
+        'relative rounded-md border border-border-hairline bg-surface overflow-hidden text-left flex flex-col',
         className
       )}
       {...props}
     >
       {(fileName || language || copyable) && (
-        <div className="flex items-center justify-between px-3.5 py-2 bg-surface-secondary/80 border-b border-border-hairline text-xs font-mono">
+        <div className="flex items-center justify-between px-3.5 py-2 bg-surface-elevated border-b border-border-hairline text-xs font-mono">
           <div className="flex items-center gap-2 truncate text-textSecondary">
             {fileName && <span className="font-semibold text-textPrimary truncate">{fileName}</span>}
-            {language && <span className="text-textMuted uppercase text-[10px]">[{language}]</span>}
+            {language && <span className="text-textMuted">{language}</span>}
           </div>
 
           {copyable && (

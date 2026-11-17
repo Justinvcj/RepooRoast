@@ -37,13 +37,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
       // Primary: WCAG AA verified 6.02:1 contrast using dark obsidian text on vermilion
       primary:
-        'bg-primary text-dominant font-semibold hover:bg-primary-hover active:bg-accent-deep shadow-sm',
+        'bg-primary text-white font-semibold hover:bg-primary-hover active:bg-accent-deep',
       secondary:
         'bg-surface-secondary text-textPrimary border border-border-hairline hover:bg-surface-elevated hover:border-border-focused active:bg-surface-secondary',
       ghost:
         'bg-transparent text-textSecondary hover:text-textPrimary hover:bg-surface-secondary active:bg-surface-elevated',
       icon:
-        'bg-surface-secondary/70 text-textSecondary hover:text-textPrimary hover:bg-surface-secondary active:bg-surface-elevated border border-border-hairline',
+        'bg-surface-secondary text-textSecondary hover:text-textPrimary hover:bg-surface-secondary active:bg-surface-elevated border border-border-hairline',
     };
 
     // Size tokens

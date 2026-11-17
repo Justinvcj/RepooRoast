@@ -67,7 +67,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           cy={dimension / 2}
           r={radius}
           fill="none"
-          stroke="var(--border-hairline, #222733)"
+          stroke="var(--border-hairline, #D8DAD3)"
           strokeWidth={stroke}
         />
 
@@ -108,14 +108,14 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span
           className={cn(
-            'font-mono font-bold tabular-nums text-textPrimary tracking-tight',
+            'font-display font-bold tabular-nums text-textPrimary tracking-tight',
             fontSize
           )}
         >
           {clampedScore}
         </span>
         {showLabel && dimension >= 90 && (
-          <span className="text-[10px] uppercase font-mono text-textMuted tracking-wider mt-0.5">
+          <span className="text-[11px] text-textMuted mt-0.5">
             / 100
           </span>
         )}

@@ -29,8 +29,8 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
     );
   }
 
-  const caliperStroke = monochrome ? 'currentColor' : '#F0F3F6';
-  const emberFill = monochrome ? 'currentColor' : '#FF5426';
+  const caliperStroke = monochrome ? 'currentColor' : '#16181D';
+  const emberFill = monochrome ? 'currentColor' : '#D1301C';
 
   // Crisp 16x16 integer-snapped vector path for sizes <= 18px (prevents subpixel antialiasing blur)
   if (size <= 18) {
@@ -111,7 +111,7 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
           />
           <path
             d="M 16 10 L 18 14 L 16 18 L 14 14 Z"
-            fill="#FEF08A"
+            fill="#F3F4F1"
           />
         </>
       )}

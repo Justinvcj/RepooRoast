@@ -2,53 +2,50 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Category } from '../types';
 import { IssueCard } from './IssueCard';
-import { ChevronDown, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { getScoreColor } from '../utils/scoreHelpers';
-import { Card, TerminalTag } from './ui';
 
 interface CategorySectionProps {
   category: Category;
 }
 
-const toTag = (name: string) => name.toUpperCase().replace(/\s+/g, '_');
-
 export const CategorySection: React.FC<CategorySectionProps> = ({ category }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const scoreColor = getScoreColor(category.score);
+  const issueCount = category.issues.length;
 
   return (
-    <Card level={1} className="w-full overflow-hidden border-border-hairline shadow-md transition-all hover:border-border-focused">
+    <div className="w-full bg-surface border border-border-hairline rounded-lg overflow-hidden">
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-5 sm:p-6 flex items-center justify-between hover:bg-surface-elevated/40 transition-colors focus:outline-none cursor-pointer select-none text-left"
+        className="w-full px-5 py-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-surface-elevated transition-colors duration-fast cursor-pointer select-none text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
         aria-expanded={isExpanded}
       >
-        <div className="flex items-center gap-4">
-          <TerminalTag variant="default" className="text-xs">
-            {toTag(category.name)}
-          </TerminalTag>
-
-          <div className="flex flex-col items-start">
-            <h3 className="text-base sm:text-lg font-bold text-textPrimary tracking-tight font-sans">
+        <div className="flex items-baseline gap-4 min-w-0">
+          <span
+            className="font-display font-bold text-2xl tabular-nums w-12 shrink-0"
+            style={{ color: scoreColor }}
+          >
+            {category.score}
+          </span>
+          <div className="min-w-0">
+            <h3 className="font-display text-lg font-bold tracking-tight text-textPrimary">
               {category.name}
             </h3>
-            <span
-              className="font-mono text-xs font-semibold tabular-nums mt-0.5"
-              style={{ color: scoreColor }}
-            >
-              {category.score} / 100
+            <span className="text-sm text-textMuted">
+              {issueCount === 0 ? 'No issues found' : `${issueCount} ${issueCount === 1 ? 'issue' : 'issues'}`}
             </span>
           </div>
         </div>
 
-        <motion.div
+        <motion.span
           animate={{ rotate: isExpanded ? 180 : 0 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
-          className="text-textMuted p-1"
+          className="text-textMuted shrink-0"
         >
           <ChevronDown className="w-5 h-5" />
-        </motion.div>
+        </motion.span>
       </button>
 
       <AnimatePresence initial={false}>
@@ -57,24 +54,19 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-border-hairline bg-background/50"
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-border-hairline"
           >
-            <div className="p-5 sm:p-6 space-y-6">
-              <p className="text-sm sm:text-base text-textSecondary italic font-normal border-l-2 border-border-hairline pl-4 py-0.5">
-                "{category.summary}"
-              </p>
+            <div className="px-5 py-6 sm:px-6 space-y-7">
+              <p className="text-base text-textSecondary leading-relaxed max-w-[65ch]">{category.summary}</p>
 
               {category.positives.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-data-success mb-3 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-data-success" />
-                    Strengths & Clean Patterns
-                  </h4>
-                  <ul className="space-y-2.5">
+                  <h4 className="text-sm font-semibold text-data-success mb-2.5">Working well</h4>
+                  <ul className="space-y-2">
                     {category.positives.map((positive, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-textSecondary leading-relaxed">
-                        <CheckCircle2 className="w-4 h-4 text-data-success shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-2.5 text-[15px] text-textSecondary leading-relaxed">
+                        <Check className="w-4 h-4 text-data-success shrink-0 mt-1" />
                         <span>{positive}</span>
                       </li>
                     ))}
@@ -82,11 +74,10 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
                 </div>
               )}
 
-              {category.issues.length > 0 && (
+              {issueCount > 0 && (
                 <div>
-                  <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-data-critical mb-3 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-data-critical" />
-                    Areas to Improve ({category.issues.length})
+                  <h4 className="text-sm font-semibold text-primary mb-3">
+                    To fix ({issueCount})
                   </h4>
                   <div className="flex flex-col gap-4">
                     {category.issues.map((issue, i) => (
@@ -99,6 +90,6 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
           </motion.div>
         )}
       </AnimatePresence>
-    </Card>
+    </div>
   );
 };

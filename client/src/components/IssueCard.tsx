@@ -1,8 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import type { Issue } from '../types';
-import { AlertCircle, Lightbulb } from 'lucide-react';
-import { Card, Badge, FilePath, CodeBlock } from './ui';
+import { Badge, FilePath, CodeBlock } from './ui';
 
 interface IssueCardProps {
   issue: Issue;
@@ -14,56 +12,37 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       case 'critical':
         return 'critical';
       case 'high':
-        return 'warning';
-      case 'medium':
         return 'flawed';
+      case 'medium':
+        return 'warning';
       default:
         return 'default';
     }
   };
 
+  const severity = issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1).toLowerCase();
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full"
-    >
-      <Card level={1} className="overflow-hidden border-border-hairline shadow-sm hover:border-border-focused transition-all">
-        <div className="p-5 sm:p-6 flex flex-col gap-3">
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-border-hairline">
-            <Badge variant={getBadgeVariant(issue.severity)}>
-              {issue.severity.toUpperCase()}
-            </Badge>
-
-            {issue.file && (
-              <FilePath path={issue.file} />
-            )}
-          </div>
-
-          <h4 className="text-base font-bold text-textPrimary flex items-start gap-2.5 mt-1 font-sans">
-            <AlertCircle className="w-5 h-5 text-textMuted shrink-0 mt-0.5" />
-            <span>{issue.title}</span>
-          </h4>
-
-          <p className="text-xs sm:text-sm text-textSecondary leading-relaxed pl-7.5">
-            {issue.description}
-          </p>
+    <article className="w-full rounded-lg border border-border-hairline bg-background/60">
+      <div className="p-5 flex flex-col gap-2.5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <Badge variant={getBadgeVariant(issue.severity)}>{severity}</Badge>
+          {issue.file && <FilePath path={issue.file} />}
         </div>
 
-        {issue.suggestion && (
-          <div className="bg-surface-secondary/70 border-t border-border-hairline p-5">
-            <div className="text-xs font-mono font-medium text-textMuted flex items-center gap-2 mb-2.5">
-              <Lightbulb className="w-3.5 h-3.5 text-primary" />
-              <span>Suggested Remediation:</span>
-            </div>
-            <CodeBlock
-              code={issue.suggestion}
-              className="mt-1"
-            />
-          </div>
-        )}
-      </Card>
-    </motion.div>
+        <h4 className="font-display text-lg font-bold tracking-tight text-textPrimary mt-1">
+          {issue.title}
+        </h4>
+
+        <p className="text-[15px] text-textSecondary leading-relaxed max-w-[65ch]">{issue.description}</p>
+      </div>
+
+      {issue.suggestion && (
+        <div className="px-5 pb-5">
+          <p className="text-sm font-semibold text-textPrimary mb-2">Suggested fix</p>
+          <CodeBlock code={issue.suggestion} />
+        </div>
+      )}
+    </article>
   );
 };

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const AFTER_DIR = path.resolve(__dirname, '../design/after');
+const AFTER_DIR = path.resolve(__dirname, '../design/after-v4');
 
 if (!fs.existsSync(AFTER_DIR)) {
   fs.mkdirSync(AFTER_DIR, { recursive: true });

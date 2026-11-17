@@ -36,7 +36,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
   return (
     <div className={`w-full max-w-xl ${align === 'center' ? 'mx-auto' : ''}`}>
       <form onSubmit={handleSubmit} className="relative group">
-        <div className="relative flex items-center bg-surface-secondary/90 border border-border-hairline rounded-xl p-1.5 transition-all duration-instant shadow-sm group-focus-within:border-primary group-focus-within:ring-2 group-focus-within:ring-primary/20">
+        <div className="relative flex items-center bg-surface-secondary border border-border-focused rounded-lg p-1.5 transition-colors duration-instant group-focus-within:border-primary group-focus-within:ring-2 group-focus-within:ring-primary/25">
           <label htmlFor="repo-url-input" className="sr-only">
             GitHub repository, pull request, or compare URL
           </label>
@@ -46,7 +46,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
           <input
             id="repo-url-input"
             type="text"
-            className="flex-grow min-w-0 bg-transparent border-none text-textPrimary placeholder-textMuted focus:outline-none focus:ring-0 text-sm sm:text-base font-mono font-medium tracking-tight selection:bg-primary/30"
+            className="flex-grow min-w-0 bg-transparent border-none text-textPrimary placeholder-textMuted focus:outline-none focus:ring-0 text-sm sm:text-base font-mono"
             placeholder="github.com/owner/repo"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
@@ -72,14 +72,14 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
       </form>
 
       <div
-        className={`mt-4 flex flex-wrap items-center gap-2.5 text-xs font-mono text-textMuted ${
+        className={`mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-textMuted ${
           align === 'center' ? 'justify-center' : 'justify-start'
         }`}
       >
-        <span className="text-textSecondary select-none">Examples:</span>
+        <span className="text-textSecondary select-none">Try</span>
         <button
           onClick={() => handleExampleClick('https://github.com/facebook/react')}
-          className="hover:text-primary transition-colors hover:underline cursor-pointer select-none"
+          className="font-mono text-textSecondary hover:text-primary transition-colors underline decoration-border-focused underline-offset-4 cursor-pointer select-none"
           disabled={isLoading}
           type="button"
         >
@@ -88,7 +88,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
         <span className="text-border-hairline select-none">•</span>
         <button
           onClick={() => handleExampleClick('https://github.com/vuejs/core')}
-          className="hover:text-primary transition-colors hover:underline cursor-pointer select-none"
+          className="font-mono text-textSecondary hover:text-primary transition-colors underline decoration-border-focused underline-offset-4 cursor-pointer select-none"
           disabled={isLoading}
           type="button"
         >
@@ -97,7 +97,7 @@ export const UrlInput: React.FC<UrlInputProps> = ({ onSubmit, isLoading, align =
         <span className="text-border-hairline select-none">•</span>
         <button
           onClick={() => handleExampleClick('https://github.com/vercel/next.js')}
-          className="hover:text-primary transition-colors hover:underline cursor-pointer select-none"
+          className="font-mono text-textSecondary hover:text-primary transition-colors underline decoration-border-focused underline-offset-4 cursor-pointer select-none"
           disabled={isLoading}
           type="button"
         >

@@ -2,32 +2,28 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/* RepoRoast v4 "Red Pen": a senior engineer's markup of your code.
+   Cool paper, white sheets, ink text, one pen-red accent. */
 :root {
-  /* 60% Dominant Canvas */
-  --bg-dominant: #0C0E12;
+  --bg-dominant: #F3F4F1;
+  --surface-secondary: #FFFFFF;
+  --surface-elevated: #FAFAF7;
+  --border-hairline: #D8DAD3;
+  --border-focused: #8E948C;
+  --text-primary: #16181D;
+  --text-secondary: #4A505A;
+  --text-muted: #646A73;
 
-  /* 30% Structural Surfaces & Typography */
-  --surface-secondary: #161920;
-  --surface-elevated: #1F242E;
-  --border-hairline: #222733;
-  --border-focused: #3A4356;
-  --text-primary: #F0F3F6;
-  --text-secondary: #949CA6;
-  --text-muted: #646E7E;
+  --accent-brand: #D1301C;
+  --accent-brand-hover: #B52614;
+  --accent-text-dark: #FFFFFF;
+  --accent-ember-deep: #B52614;
 
-  /* 10% Brand Accent */
-  --accent-brand: #FF5426;
-  --accent-brand-hover: #E84518;
-  --accent-text-dark: #0C0E12;
-  --accent-ember-deep: #D83B01;
+  --data-success: #17794A;
+  --data-warning: #946000;
+  --data-flawed: #B4480A;
+  --data-critical: #C62A1B;
 
-  /* Semantic Data Palette (Outside Accent Budget) */
-  --data-success: #10B981;
-  --data-warning: #F59E0B;
-  --data-flawed: #E67E22;
-  --data-critical: #EF4444;
-
-  /* Motion Tokens */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
   --duration-instant: 80ms;
@@ -39,52 +35,54 @@
 }
 
 @layer components {
-  /* Chrome material: floating nav bars and modals */
-  .glass-panel {
-    background-color: rgba(31, 36, 46, 0.7);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--border-hairline);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Content material: flat opaque structural panels */
+  .glass-panel,
   .content-panel {
     background-color: var(--surface-secondary);
     border: 1px solid var(--border-hairline);
   }
+  /* Faint ruled-paper texture for hero areas */
+  .ruled {
+    background-image: linear-gradient(to bottom, transparent 31px, rgba(22,24,29,0.06) 32px);
+    background-size: 100% 32px;
+  }
 }
 
 @layer utilities {
-  .border-hairline {
-    border-width: 1px;
-    border-color: var(--border-hairline);
-  }
-  .border-focused {
-    border-color: var(--border-focused);
-  }
-  .tabular-nums {
-    font-variant-numeric: tabular-nums;
-  }
+  .border-hairline { border-width: 1px; border-color: var(--border-hairline); }
+  .border-focused { border-color: var(--border-focused); }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--bg-dominant);
   color: var(--text-primary);
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ensure code and mono metrics default to tabular numbers */
-.font-mono,
-code,
-pre,
-kbd,
-samp {
-  font-variant-numeric: tabular-nums;
+h1, h2, h3 {
+  font-family: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  text-wrap: balance;
+}
+
+.font-mono, code, pre, kbd, samp { font-variant-numeric: tabular-nums; }
+
+::selection { background: rgba(209, 48, 28, 0.2); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* The one orchestrated moment: pen rings draw in once on load. */
+@media (prefers-reduced-motion: no-preference) {
+  .pen-ring {
+    animation: pen-in 500ms var(--ease-spring) 700ms both;
+  }
+  @keyframes pen-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
 }

@@ -35,12 +35,12 @@ export const ScoreBar: React.FC<ScoreBarProps> = ({
       aria-label={`${label}: ${clampedScore} out of ${maxScore}`}
     >
       {/* Category / Metric Label */}
-      <span className="text-xs sm:text-sm font-medium text-textPrimary w-28 sm:w-36 shrink-0 truncate text-left">
+      <span className="text-sm font-medium text-textPrimary w-28 sm:w-36 shrink-0 truncate text-left">
         {label}
       </span>
 
       {/* Progress Track */}
-      <div className="flex-1 h-2 sm:h-2.5 bg-surface-secondary border border-border-hairline rounded-full overflow-hidden relative">
+      <div className="flex-1 h-2 bg-border-hairline/70 rounded-full overflow-hidden relative">
         {prefersReduced ? (
           <div
             className="h-full rounded-full transition-none"
@@ -67,7 +67,7 @@ export const ScoreBar: React.FC<ScoreBarProps> = ({
       {/* Tabular Score */}
       {showValue && (
         <span
-          className="font-mono tabular-nums text-xs sm:text-sm font-semibold w-10 sm:w-12 text-right shrink-0"
+          className="font-display tabular-nums text-base font-bold w-10 sm:w-12 text-right shrink-0"
           style={{ color: scoreColor }}
         >
           {clampedScore}
