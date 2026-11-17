@@ -40,10 +40,11 @@ const cooldownFor = (message: string): number => {
     return /per ?day/i.test(message) ? Math.min(retry ?? 3600000, 12 * 3600000) : Math.min(retry ?? 60000, 600000);
   }
   if (/^404/.test(message)) return 3600000;
-  if (/^503|timed out|high demand|overloaded/i.test(message)) return 45000;
+  if (/timed out/i.test(message)) return 300000;
+  if (/^503|high demand|overloaded/i.test(message)) return 180000;
   return 0;
 };
-const MODEL_ATTEMPT_TIMEOUT_MS = 45000;
+const MODEL_ATTEMPT_TIMEOUT_MS = 25000;
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 export class GeminiDirectError extends Error {}

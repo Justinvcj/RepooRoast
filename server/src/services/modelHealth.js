@@ -5,8 +5,8 @@
  * Free-tier keys have a small daily request cap per model (about 20). Once a
  * model returns a daily-quota 429, every later attempt in the same day fails
  * the same way, so we skip it until Google says it recovers. Overloaded (503)
- * and timed-out models get a short cooldown instead, because they usually
- * recover within a minute.
+ * and timed-out models get a few minutes instead, so a review stops
+ * paying the timeout on every request while a model is struggling.
  *
  * Keep the chain below in sync with client/src/utils/geminiDirectClient.ts.
  */
@@ -53,7 +53,9 @@ export const classifyFailure = (message = '') => {
   }
   if (message.includes('404')) return { kind: 'not-found', cooldownMs: HOUR };
   if (message.includes('503') || /timed out|fetch failed|overloaded|high demand/i.test(message)) {
-    return { kind: 'overloaded', cooldownMs: 45 * 1000 };
+    // A model that hangs is usually overloaded for a while, so remember it
+    // longer than a quick 503 and stop paying the timeout on every review.
+    return { kind: 'overloaded', cooldownMs: /timed out/i.test(message) ? 5 * MINUTE : 3 * MINUTE };
   }
   return { kind: 'other', cooldownMs: 0 };
 };

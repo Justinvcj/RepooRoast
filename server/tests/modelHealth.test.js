@@ -57,6 +57,6 @@ describe('modelHealth', () => {
 
   it('explains a transient outage in minutes', () => {
     for (const m of MODEL_CHAIN) markUnavailable(m, '[503] high demand');
-    expect(describeUnavailable(MODEL_CHAIN)).toMatch(/Try again in about 1 minute/);
+    expect(describeUnavailable(MODEL_CHAIN)).toMatch(/Try again in about 3 minutes/);
   });
 });

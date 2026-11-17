@@ -86,7 +86,7 @@ const prepareReviewContext = async (repoData, onProgress) => {
   return { promptParts, classification };
 };
 
-const MODEL_ATTEMPT_TIMEOUT_MS = 45000;
+const MODEL_ATTEMPT_TIMEOUT_MS = 25000;
 
 /**
  * Executes a single prompt using fallback models. Models that recently
