@@ -2,8 +2,8 @@
 
 **Branch:** `redesign/v3`  
 **Base Commit:** `de5199b` (`main`)  
-**Status:** Phase 3 Complete — Ready for Phase 4  
-**Current Next Step:** Begin Phase 4: UI Primitives Library (Button, Input, Switch, Surface/Card, TerminalTag/Badge, Modal, ScoreRing, ScoreBar, CodeBlock, FilePath, Tooltip, index.ts, Primitives Showcase in DesignReviewPage).
+**Status:** Phase 4 Complete — Ready for Phase 5  
+**Current Next Step:** Begin Phase 5: Screens & Dashboard Redesign (Navbar, Footer, Splash, Home Hero, URL Input, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary).
 
 ---
 
@@ -30,7 +30,7 @@ npm run dev
 | **Phase 1** | **Brand Direction & Specification** | Write `client/DESIGN.md` (concept, rejected directions, 60-30-10 palette, type system, motion rules) | **COMPLETE** |
 | **Phase 2** | **Logo System & Animation** | Original geometric SVG mark, wordmark, lockup, favicon, 1.2–1.6s path animation, calm loop, standalone review page under `client/design/` | **COMPLETE** |
 | **Phase 3** | **Foundations & Tokens** | Design tokens in `tailwind.config.js`, `index.css`, fonts, inline pre-React loader in `index.html`, retire `Lightfall` & `ogl` | **COMPLETE** |
-| **Phase 4** | **UI Primitives Library** | Button, Input, Switch, Surface/Card, Terminal Tag/Badge, Modal, Score Ring, Score Bar, Code display | PLANNED |
+| **Phase 4** | **UI Primitives Library** | Button, Input, Switch, Surface/Card, Terminal Tag/Badge, Modal, Score Ring, Score Bar, Code display | **COMPLETE** |
 | **Phase 5** | **Screens & Dashboard Redesign** | Navbar, Footer, Splash, Home, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary | PLANNED |
 | **Phase 6** | **Motion System Polish** | Cohesive transitions, tokenized easing, reduced-motion fallbacks | PLANNED |
 | **Phase 7** | **Review, Audits & Final Screenshots** | 60-30-10 audit, avoid list check, keyboard a11y, after screenshots in `client/design/after/`, verify build/lint/e2e | PLANNED |
@@ -73,19 +73,23 @@ npm run dev
 
 | Primitive | Target Path | Variants / Requirements | Status |
 |---|---|---|---|
-| **Button** | `client/src/components/ui/Button.tsx` | Primary, Secondary, Ghost, Icon (sm/md/lg) | Planned |
-| **Input** | `client/src/components/ui/Input.tsx` | Form input with focus ring, error & disabled states | Planned |
-| **Switch** | `client/src/components/ui/Switch.tsx` | Accessible toggle (`role="switch"`, keyboard operable) | Planned |
-| **Surface / Card** | `client/src/components/ui/Surface.tsx` | Layered surface cards with hairline borders | Planned |
-| **Terminal Tag / Badge**| `client/src/components/ui/Badge.tsx` | Monospace tags (`[TAG]`, `[CRITICAL]`) | Planned |
-| **Modal Dialog** | `client/src/components/ui/Modal.tsx` | Accessible dialog with backdrop blur & focus trap | Planned |
-| **Score Ring / Meter** | `client/src/components/ui/ScoreRing.tsx` | Animated circular SVG meter with tabular score | Planned |
-| **Score Bar** | `client/src/components/ui/ScoreBar.tsx` | Horizontal score progress bar with tabular numbers | Planned |
-| **Code Display** | `client/src/components/ui/CodeBlock.tsx` | Monospace code block with copy action | Planned |
+| **Button** | `client/src/components/ui/Button.tsx` | Primary, Secondary, Ghost, Icon (sm/md/lg), loading, disabled | **COMPLETE** |
+| **Input** | `client/src/components/ui/Input.tsx` | Form input with focus ring, error & disabled states, mono/tabular | **COMPLETE** |
+| **Switch** | `client/src/components/ui/Switch.tsx` | Accessible toggle (`role="switch"`, keyboard operable, description) | **COMPLETE** |
+| **Surface / Card** | `client/src/components/ui/Surface.tsx`, `Card.tsx` | Layered surface cards with hairline borders & elevated tiers | **COMPLETE** |
+| **Terminal Tag / Badge**| `client/src/components/ui/Badge.tsx`, `TerminalTag.tsx` | Monospace severity tags (`[CRITICAL]`, `[WARNING]`, `[SUCCESS]`) | **COMPLETE** |
+| **Modal Dialog** | `client/src/components/ui/Modal.tsx` | Accessible dialog with backdrop blur, Escape key, & focus trap | **COMPLETE** |
+| **Score Ring / Meter** | `client/src/components/ui/ScoreRing.tsx` | Animated circular SVG meter with tabular score & data palette | **COMPLETE** |
+| **Score Bar** | `client/src/components/ui/ScoreBar.tsx` | Horizontal score progress bar with tabular numbers | **COMPLETE** |
+| **Code Display** | `client/src/components/ui/CodeBlock.tsx` | Monospace code block with copy action & syntax styling | **COMPLETE** |
+| **File Path Display** | `client/src/components/ui/FilePath.tsx` | Line-number tag with truncate and select-all | **COMPLETE** |
+| **Tooltip** | `client/src/components/ui/Tooltip.tsx` | Accessible spring micro-tooltip (top/bottom/left/right) | **COMPLETE** |
 
 ---
 
 ## 5. Decisions Log
+
+- **2026-11-17**: Completed Phase 4 by authoring complete accessible UI Primitives Suite (`Button`, `Input`, `Switch`, `Surface`, `Card`, `Badge`, `TerminalTag`, `Modal`, `ScoreRing`, `ScoreBar`, `CodeBlock`, `FilePath`, `Tooltip`) in `client/src/components/ui/`. Implemented Apple-inspired tactile responsiveness (<100ms response, `active:scale-[0.98]`, spring curves, tabular figures, high-contrast focus rings, WCAG AA compliance). Integrated interactive UI Primitives inspection suite with live controls in `DesignReviewPage.tsx`. Verified 100% clean build and zero functional regressions in test suite.
 
 - **2026-11-17**: Created branch `redesign/v3` from `main` (`de5199b`).
 - **2026-11-17**: Verified baseline client build (`npm run build`) succeeds cleanly with zero errors.
