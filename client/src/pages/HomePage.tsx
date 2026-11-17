@@ -56,21 +56,17 @@ export const HomePage: React.FC = () => {
   const customReview = useCustomReview();
   const navigate = useNavigate();
 
-  const [customModeEnabled, setCustomModeEnabled] = useState(false);
-  const [customApiKey, setCustomApiKey] = useState('');
-  const [rememberKey, setRememberKey] = useState(false);
+  // Lazy initializer to read persisted key from sessionStorage without setState-in-effect
+  const [customApiKey, setCustomApiKey] = useState(() => {
+    return sessionStorage.getItem(CUSTOM_MODE_SESSION_KEY) || '';
+  });
+  const [customModeEnabled, setCustomModeEnabled] = useState(() => {
+    return Boolean(sessionStorage.getItem(CUSTOM_MODE_SESSION_KEY));
+  });
+  const [rememberKey, setRememberKey] = useState(() => {
+    return Boolean(sessionStorage.getItem(CUSTOM_MODE_SESSION_KEY));
+  });
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-  // A remembered key only ever lives in sessionStorage (cleared when the tab
-  // closes), never localStorage -- see CustomModeModal's trust statement.
-  useEffect(() => {
-    const saved = sessionStorage.getItem(CUSTOM_MODE_SESSION_KEY);
-    if (saved) {
-      setCustomApiKey(saved);
-      setCustomModeEnabled(true);
-      setRememberKey(true);
-    }
-  }, []);
 
   const handleSaveSettings = (enabled: boolean, apiKey: string, remember: boolean) => {
     setCustomModeEnabled(enabled);
@@ -117,14 +113,13 @@ export const HomePage: React.FC = () => {
       setIsNavbarVisible(true);
       setIsFooterVisible(true);
     }
-    // Cleanup function to ensure they are visible if component unmounts
     return () => {
       setIsNavbarVisible(true);
       setIsFooterVisible(true);
     };
   }, [status, setIsNavbarVisible, setIsFooterVisible]);
 
-  // Force scroll to top on mount (e.g. page refresh)
+  // Force scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -134,17 +129,14 @@ export const HomePage: React.FC = () => {
   }
 
   return (
-    <>
-
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-        exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)', transition: { duration: 0.5 } }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="min-h-full bg-transparent text-textPrimary selection:bg-primary/30 pb-32 flex flex-col relative z-10"
-      >
-        <main className="relative z-10">
-        {/* Pass the analyze function to the Hero component */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.25 } }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 flex flex-col relative z-10"
+    >
+      <main className="relative z-10">
         <Hero
           onAnalyzeRepo={handleAnalyze}
           isLoading={false}
@@ -161,42 +153,43 @@ export const HomePage: React.FC = () => {
           onSave={handleSaveSettings}
         />
 
-        {/* What we roast - a quiet list, not a grid of identical cards */}
-        <div className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-          <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif font-semibold tracking-tight text-textPrimary">
+        {/* What we roast - a quiet, high-craft list instead of identical cards */}
+        <section aria-labelledby="what-we-roast-title" className="py-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-border-hairline">
+          <div className="mb-10">
+            <h2 id="what-we-roast-title" className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary font-sans">
               What we roast
             </h2>
-            <p className="mt-3 text-lg text-textSecondary font-medium">
+            <p className="mt-2 text-base text-textSecondary font-normal">
               Seven categories, every repo, no exceptions.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
             {features.map((feature, i) => (
               <motion.div
                 key={feature.name}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.4, delay: Math.min(i * 0.05, 0.3) }}
-                className="flex items-start gap-4 py-6 border-t border-border/50 md:odd:pr-8 md:even:pl-8"
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.35, delay: Math.min(i * 0.04, 0.24) }}
+                className="flex items-start gap-3.5 py-5 border-t border-border-hairline"
               >
-                <feature.icon className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+                <div className="p-2 rounded-lg bg-surface-secondary border border-border-hairline text-primary shrink-0 mt-0.5">
+                  <feature.icon className="h-4 w-4" aria-hidden="true" />
+                </div>
                 <div>
-                  <h3 className="text-base font-serif font-semibold text-textPrimary tracking-tight mb-1">
+                  <h3 className="text-sm font-semibold text-textPrimary tracking-tight mb-1 font-sans">
                     {feature.name}
                   </h3>
-                  <p className="text-sm text-textSecondary leading-relaxed">
+                  <p className="text-xs text-textSecondary leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
               </motion.div>
             ))}
           </div>
-        </div>
+        </section>
       </main>
-      </motion.div>
-    </>
+    </motion.div>
   );
 };
