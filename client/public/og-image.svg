@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" fill="none">
+  <defs>
+    <radialGradient id="og-glow" cx="20%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#FF5426" stop-opacity="0.14" />
+      <stop offset="100%" stop-color="#0C0E12" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="dot-grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#222733" fill-opacity="0.6" />
+    </pattern>
+  </defs>
+
+  <!-- Deep Obsidian Canvas Background -->
+  <rect width="1200" height="630" fill="#0C0E12" />
+  <rect width="1200" height="630" fill="url(#og-glow)" />
+  <rect width="1200" height="630" fill="url(#dot-grid)" />
+
+  <!-- Outer Hairline Calibration Border -->
+  <rect x="40" y="40" width="1120" height="550" rx="16" fill="none" stroke="#222733" stroke-width="1.5" />
+
+  <!-- Brand Mark (Scale 3.75 at x=100, y=90) -->
+  <g transform="translate(100, 90) scale(3.75)">
+    <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426" />
+    <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A" />
+  </g>
+
+  <!-- Brand Wordmark Typography -->
+  <text x="240" y="165" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="700" letter-spacing="-0.03em" fill="#F0F3F6">
+    Repo<tspan fill="#FF5426">Roast</tspan>
+  </text>
+
+  <!-- Hero Headline -->
+  <text x="100" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="800" letter-spacing="-0.03em" fill="#FFFFFF">
+    Roast your codebase.
+  </text>
+
+  <!-- Subtitle -->
+  <text x="100" y="380" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="400" fill="#949CA6">
+    Brutally honest code review grounded in AST static analysis and dependency graphs.
+  </text>
+
+  <!-- Telemetry Evidence Badges -->
+  <g transform="translate(100, 460)">
+    <rect x="0" y="0" width="160" height="42" rx="8" fill="#161920" stroke="#222733" stroke-width="1.5" />
+    <text x="80" y="26" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#FF5426" text-anchor="middle">[AST PARSER]</text>
+
+    <rect x="180" y="0" width="180" height="42" rx="8" fill="#161920" stroke="#222733" stroke-width="1.5" />
+    <text x="270" y="26" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#F0F3F6" text-anchor="middle">[GRAPH EVIDENCE]</text>
+
+    <rect x="380" y="0" width="170" height="42" rx="8" fill="#161920" stroke="#222733" stroke-width="1.5" />
+    <text x="465" y="26" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#F0F3F6" text-anchor="middle">[BRUTAL TRUTH]</text>
+  </g>
+</svg>

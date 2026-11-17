@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Database, FileCode, BrainCircuit, ListChecks, KeyRound } from 'lucide-react';
+import { Database, FileCode, BrainCircuit, ListChecks, KeyRound } from 'lucide-react';
+import { Logo, LogoMark } from './brand';
 import type { ReviewStage } from '../hooks/useRepoReview';
 
 const roastingQuotes = [
@@ -25,7 +26,7 @@ const STEP_CONFIG: Record<string, { text: string; icon: React.ReactNode }> = {
   fetching: { text: "Fetching repository metadata & structure...", icon: <Database className="w-5 h-5" /> },
   analyzing: { text: "Running local static analysis...", icon: <FileCode className="w-5 h-5" /> },
   classifying: { text: "Classifying project & consulting the AI Senior Dev...", icon: <BrainCircuit className="w-5 h-5" /> },
-  generating: { text: "Generating your brutal review...", icon: <Flame className="w-5 h-5" /> },
+  generating: { text: "Generating your brutal review...", icon: <LogoMark size={20} /> },
   synthesizing: { text: "Synthesizing your action plan...", icon: <ListChecks className="w-5 h-5" /> },
   preparing: { text: "Preparing repository context...", icon: <Database className="w-5 h-5" /> },
   reviewing: { text: "Reviewing with your API key...", icon: <KeyRound className="w-5 h-5" /> },
@@ -58,21 +59,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
   return (
     <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background">
 
-      {/* Pulsing Flame Icon */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.8, 1, 0.8]
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="relative z-10 mb-16 p-6 rounded-full content-panel"
-      >
-        <Flame className="w-14 h-14 text-primary" />
-      </motion.div>
+      {/* Calm Looping Brand Indicator */}
+      <div className="relative z-10 mb-16 p-6 rounded-full content-panel flex items-center justify-center">
+        <Logo variant="mark" looping={true} size={56} />
+      </div>
 
       {/* Progress Steps container */}
       <div className="relative z-10 w-full max-w-md content-panel p-8 rounded-[2.5rem] mb-8">

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Deep Obsidian Canvas (Maskable Background) -->
+  <rect width="512" height="512" fill="#0C0E12" />
+
+  <!-- Subtle Hairline Reticle Ring (80% Safe Zone Boundary) -->
+  <circle cx="256" cy="256" r="204" stroke="#222733" stroke-width="1.5" stroke-dasharray="8 8" opacity="0.6" />
+
+  <!-- Master Brand Geometry Scaled Inside Safe Zone -->
+  <g transform="translate(256, 256) scale(8.5) translate(-16, -16)">
+    <!-- Left Diagnostic Caliper -->
+    <path
+      d="M 12 5 L 5 12 L 5 20 L 12 27"
+      stroke="#F0F3F6"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Right Diagnostic Caliper -->
+    <path
+      d="M 20 5 L 27 12 L 27 20 L 20 27"
+      stroke="#F0F3F6"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Outer Faceted Thermal Ember -->
+    <path
+      d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z"
+      fill="#FF5426"
+    />
+    <!-- Inner Luminous Kernel -->
+    <path
+      d="M 16 10 L 18 14 L 16 18 L 14 14 Z"
+      fill="#FEF08A"
+    />
+  </g>
+</svg>

@@ -2,8 +2,8 @@
 
 **Branch:** `redesign/v3`  
 **Base Commit:** `de5199b` (`main`)  
-**Status:** Phase 1 Complete — Ready for Phase 2  
-**Current Next Step:** Begin Phase 2: Build original geometric SVG logo system (`LogoMark`, `LogoWordmark`, `LogoLockup`, `LogoAnimation`, `Logo`), replace favicon, author app icon and OG image, author `logo-preview.html`, author `DesignReviewPage.tsx`, update splash and loading screens.
+**Status:** Phase 2 Complete — Ready for Phase 3  
+**Current Next Step:** Begin Phase 3: Foundations & Tokens (tailwind.config.js, index.css, fonts, pre-React loader in index.html, retire Lightfall & ogl).
 
 ---
 
@@ -28,7 +28,7 @@ npm run dev
 |---|---|---|---|
 | **Phase 0** | **Orient & Baseline Setup** | Inspect codebase, tests, create `client/REDESIGN_PROGRESS.md`, capture baseline screenshots in `client/design/before/` | **COMPLETE** |
 | **Phase 1** | **Brand Direction & Specification** | Write `client/DESIGN.md` (concept, rejected directions, 60-30-10 palette, type system, motion rules) | **COMPLETE** |
-| **Phase 2** | **Logo System & Animation** | Original geometric SVG mark, wordmark, lockup, favicon, 1.2–1.6s path animation, calm loop, standalone review page under `client/design/` | IN_PROGRESS |
+| **Phase 2** | **Logo System & Animation** | Original geometric SVG mark, wordmark, lockup, favicon, 1.2–1.6s path animation, calm loop, standalone review page under `client/design/` | **COMPLETE** |
 | **Phase 3** | **Foundations & Tokens** | Design tokens in `tailwind.config.js`, `index.css`, fonts, inline pre-React loader in `index.html`, retire `Lightfall` & `ogl` | PLANNED |
 | **Phase 4** | **UI Primitives Library** | Button, Input, Switch, Surface/Card, Terminal Tag/Badge, Modal, Score Ring, Score Bar, Code display | PLANNED |
 | **Phase 5** | **Screens & Dashboard Redesign** | Navbar, Footer, Splash, Home, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary | PLANNED |
@@ -42,7 +42,7 @@ npm run dev
 
 | Component / Screen | File Path | Baseline Status | Redesign Status | Verification Notes |
 |---|---|---|---|---|
-| **Splash Screen** | `client/src/components/SplashScreen.tsx` | Stock Lucide Flame, pulse scale | Pending Phase 5 | Baseline screenshot captured |
+| **Splash Screen** | `client/src/components/SplashScreen.tsx` | Stock Lucide Flame, pulse scale | Phase 2 Complete (LogoLockup + 1.4s LogoAnimation) | 1600ms sync timer verified |
 | **Global Navbar** | `client/src/components/Navbar.tsx` | Glass pill nav, stock typography | Pending Phase 5 | Baseline screenshot captured |
 | **Result Navbar** | `client/src/pages/ResultPage.tsx` | Glass pill with "Roast Another" | Pending Phase 5 | Baseline screenshot captured |
 | **Global Footer** | `client/src/components/Footer.tsx` | Basic footer with Lightfall credit | Pending Phase 5 | Baseline screenshot captured |
@@ -50,7 +50,7 @@ npm run dev
 | **URL Input & Validation** | `client/src/components/UrlInput.tsx` | Glow input with example repo chips | Pending Phase 5 | Baseline screenshot captured |
 | **What We Roast (Features)** | `client/src/pages/HomePage.tsx` | 7-category icon grid | Pending Phase 5 | Baseline screenshot captured |
 | **Custom Mode Modal** | `client/src/components/CustomModeModal.tsx` | BYOK modal with switch & API key input | Pending Phase 5 | Baseline screenshot captured |
-| **Pipeline Loading Screen** | `client/src/components/LoadingScreen.tsx` | Pipeline stages & rotating quotes | Pending Phase 5 | Baseline screenshot captured |
+| **Pipeline Loading Screen** | `client/src/components/LoadingScreen.tsx` | Pipeline stages & rotating quotes | Phase 2 Complete (Logo 2.4s calm respiration) | Replaced Lucide flame |
 | **Review Dashboard** | `client/src/components/ReviewDashboard.tsx` | Staggered container for report | Pending Phase 5 | Baseline screenshot captured |
 | **ScoreCard** | `client/src/components/ScoreCard.tsx` | Overall score ring & senior quote | Pending Phase 5 | Baseline screenshot captured |
 | **ScoreChart** | `client/src/components/ScoreChart.tsx` | Recharts bar chart | Pending Phase 5 | Baseline screenshot captured |
@@ -64,8 +64,8 @@ npm run dev
 | **Error Boundary** | `client/src/components/ErrorBoundary.tsx` | Fallback error card | Pending Phase 5 | Covered by tests |
 | **Toasts** | `client/src/App.tsx` | react-hot-toast container | Pending Phase 5 | Baseline screenshot captured |
 | **HTML Pre-React Loader** | `client/index.html` | Stock inline SVG flame pulse | Pending Phase 3 | Inspected |
-| **Favicon & App Icon** | `client/public/favicon.svg` | Stock flame SVG | Pending Phase 2 | Inspected |
-| **Design Review Page** | `client/design/` | Does not exist | Pending Phase 2 | Standalone route planned |
+| **Favicon & App Icon** | `client/public/favicon.svg` | Stock flame SVG | Phase 2 Complete (Integer 16px SVG & 512px icon) | Zero Lucide flame |
+| **Design Review Page** | `client/design/` | Does not exist | Phase 2 Complete (/design route & logo-preview.html) | Interactive suite |
 
 ---
 
@@ -96,6 +96,7 @@ npm run dev
 - **2026-11-17**: Verified full e2e test suite with baseline capture: 36 passed cleanly (38.2s).
 - **2026-11-17**: Isolated baseline screenshot capture behind environment guard (`CAPTURE_BASELINE`) and added dedicated `npm run test:baseline` script with `cross-env`. Standard test suite (`npm run test:e2e`) now executes exclusively functional regression tests (9/9 passed, 27 baseline capture specs skipped) without side-effects, preserving committed baseline screenshots in `client/design/before/` across all future redesign phases.
 - **2026-11-17**: Completed Phase 1 by authoring canonical design specification `client/DESIGN.md`: defined "The Thermal Observatory / Precision Caliper" dual-metaphor concept uniting Tree-Sitter AST telemetry with searing code roast; documented 3 directions and 1-line rejection rationales for the losing 2; codified 60-30-10 palette tokens with empirical WCAG AA contrast evaluations; established tabular numerals mandate; defined modular type scale (Plus Jakarta Sans + JetBrains Mono); formulated 6 Apple working design rules; codified strict anti-pattern avoid list; specified motion choreography (1.4s assembly and 2.4s calm respiration) with reduced-motion fallbacks; and formulated mathematical 32x32 master grid vectors, integer-snapped 16px favicon coordinates, and clear space rules.
+- **2026-11-17**: Completed Phase 2 by implementing the original hand-authored geometric SVG logo system in `client/src/components/brand/` (`LogoMark.tsx`, `LogoWordmark.tsx`, `LogoLockup.tsx`, `LogoAnimation.tsx`, `Logo.tsx`, `index.ts`): built master 32x32 vector grid with 45-degree caliper chamfers, faceted ember core, single-color `fill-rule="evenodd"` cutout, and integer-snapped 16x16 vector path for `size <= 18`; implemented 1.4s Framer Motion assembly choreography and 2.4s calm thermal respiration looping variant with full `prefers-reduced-motion` fallbacks; replaced `client/public/favicon.svg` with dedicated 16x16 crisp integer-aligned SVG (zero Lucide flame, zero blur); authored `client/public/icon.svg` (maskable 512x512 app icon with 80% safe zone); authored `client/public/og-image.svg` (1200x630 Open Graph card with brand lockup, AST telemetry badges, and zero emoji); created offline static preview `client/design/logo-preview.html`; authored interactive studio review dashboard `client/src/pages/DesignReviewPage.tsx` routed to `/design` and `/design/logo` redirect in `client/src/App.tsx`; updated `client/src/components/SplashScreen.tsx` to use `LogoLockup` with 1.4s animation; synchronized splash screen timeout to 1600ms in `client/src/App.tsx`; updated `client/src/components/LoadingScreen.tsx` with calm 2.4s looping respiration logo; and verified 100% pass across build (`tsc -b && vite build`) and Playwright E2E suite (9/9 passed).
 
 ---
 

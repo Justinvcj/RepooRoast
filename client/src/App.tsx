@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
 
@@ -10,6 +10,7 @@ import { ResultPage } from './pages/ResultPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
+import { DesignReviewPage } from './pages/DesignReviewPage';
 import { SplashScreen } from './components/SplashScreen';
 
 import { LayoutProvider, useLayout } from './contexts/LayoutContext';
@@ -26,6 +27,8 @@ const AnimatedRoutes = () => {
           <Route path="/result" element={<ResultPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/design" element={<DesignReviewPage />} />
+          <Route path="/design/logo" element={<Navigate to="/design" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AnimatePresence>
@@ -38,10 +41,10 @@ function AppContent() {
   const { isNavbarVisible, isFooterVisible } = useLayout();
 
   useEffect(() => {
-    // Hide splash screen after 2.2 seconds
+    // Synchronize splash screen with 1.4s logo assembly animation + 200ms settled view
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 2200);
+    }, 1600);
     return () => clearTimeout(timer);
   }, []);
 

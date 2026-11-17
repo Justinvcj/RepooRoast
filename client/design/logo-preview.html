@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RepoRoast Logo System Specification & Companion Preview</title>
+  <style>
+    :root {
+      --bg: #0C0E12;
+      --surface: #161920;
+      --surface-elevated: #1F242E;
+      --border: #222733;
+      --text-primary: #F0F3F6;
+      --text-secondary: #949CA6;
+      --accent: #FF5426;
+      --kernel: #FEF08A;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      padding: 40px 24px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(255, 84, 38, 0.1);
+      border: 1px solid rgba(255, 84, 38, 0.25);
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 12px;
+    }
+
+    section {
+      margin-bottom: 48px;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    /* Size Matrix Grid */
+    .size-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .size-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 140px;
+    }
+
+    .size-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+
+    /* Contrast Matrix */
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .contrast-card {
+      border-radius: 8px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .contrast-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Surface variants */
+    .surface-obsidian { background: #0C0E12; color: #F0F3F6; }
+    .surface-panel { background: #161920; color: #F0F3F6; }
+    .surface-white { background: #FFFFFF; color: #0C0E12; border-color: #E2E8F0; }
+    .surface-black { background: #000000; color: #FFFFFF; }
+
+    /* Lockup preview */
+    .lockup-preview {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wordmark {
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .wordmark-repo { color: inherit; font-weight: 600; }
+    .wordmark-roast { color: var(--accent); font-weight: 800; }
+
+    /* Animation Preview */
+    .anim-card {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .anim-box {
+      text-align: center;
+    }
+
+    /* Keyframes for pure CSS animation demo */
+    @keyframes caliperDraw {
+      0% { stroke-dashoffset: 28; opacity: 0; }
+      40% { stroke-dashoffset: 0; opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 1; }
+    }
+
+    @keyframes emberAscent {
+      0%, 25% { transform: scale(0.2) translateY(4px); opacity: 0; }
+      60% { transform: scale(1.05) translateY(-1px); opacity: 1; }
+      75%, 100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    @keyframes kernelIgnite {
+      0%, 45% { transform: scale(0); opacity: 0; }
+      80% { transform: scale(1.25); opacity: 1; }
+      90%, 100% { transform: scale(1); opacity: 0.9; }
+    }
+
+    @keyframes thermalRespiration {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    .caliper-animated {
+      stroke-dasharray: 28;
+      animation: caliperDraw 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .ember-animated {
+      transform-origin: 16px 15px;
+      animation: emberAscent 3s cubic-bezier(0.34, 1.3, 0.64, 1) infinite;
+    }
+
+    .kernel-animated {
+      transform-origin: 16px 14px;
+      animation: kernelIgnite 3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .loop-animated {
+      transform-origin: 16px 15px;
+      animation: thermalRespiration 2.4s ease-in-out infinite;
+    }
+
+    /* Blueprint Grid */
+    .blueprint {
+      position: relative;
+      background: #090B0E;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .grid-lines {
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 0.5;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>RepoRoast Brand Identity System</h1>
+      <p class="subtitle">Zero-dependency static companion preview for Milestone 1</p>
+      <div class="badge">[CANONICAL SPEC: client/DESIGN.md]</div>
+    </header>
+
+    <!-- Master Brand Lockup -->
+    <section>
+      <h2>Canonical Brand Lockup</h2>
+      <div class="card" style="display: flex; justify-content: center; padding: 48px 24px;">
+        <div class="lockup-preview">
+          <!-- 48px Master Mark -->
+          <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="wordmark" style="font-size: 30px;">
+            <span class="wordmark-repo" style="color: #F0F3F6;">Repo</span><span class="wordmark-roast">Roast</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Size Matrix -->
+    <section>
+      <h2>Scale & Rendering Matrix</h2>
+      <div class="size-grid">
+        <!-- 16px Snapped -->
+        <div class="size-card">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M 5 2 L 2 5 L 2 11 L 5 14" stroke="#F0F3F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 11 2 L 14 5 L 14 11 L 11 14" stroke="#F0F3F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z" fill="#FF5426"/>
+            <path d="M 8 5 L 9 7.5 L 8 10 L 7 7.5 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">16px (Snapped)</div>
+        </div>
+
+        <!-- 24px -->
+        <div class="size-card">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">24px (Compact)</div>
+        </div>
+
+        <!-- 32px -->
+        <div class="size-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">32px (Master Grid)</div>
+        </div>
+
+        <!-- 48px -->
+        <div class="size-card">
+          <svg width="48" height="48" viewBox="0 0 32 32" fill="none">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">48px (Header)</div>
+        </div>
+
+        <!-- 64px -->
+        <div class="size-card">
+          <svg width="64" height="64" viewBox="0 0 32 32" fill="none">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">64px (Feature)</div>
+        </div>
+
+        <!-- 128px -->
+        <div class="size-card">
+          <svg width="128" height="128" viewBox="0 0 32 32" fill="none">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">128px (Hero)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Surface Contrast Matrix -->
+    <section>
+      <h2>Surface Contrast Matrix</h2>
+      <div class="contrast-grid">
+        <!-- Obsidian Dark -->
+        <div class="contrast-card surface-obsidian">
+          <div class="lockup-preview">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+              <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+            </svg>
+            <div class="wordmark" style="font-size: 20px;">
+              <span class="wordmark-repo" style="color: #F0F3F6;">Repo</span><span class="wordmark-roast">Roast</span>
+            </div>
+          </div>
+          <div class="contrast-label">Obsidian Canvas (#0C0E12)</div>
+        </div>
+
+        <!-- Thermal Slate Panel -->
+        <div class="contrast-card surface-panel">
+          <div class="lockup-preview">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+              <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+            </svg>
+            <div class="wordmark" style="font-size: 20px;">
+              <span class="wordmark-repo" style="color: #F0F3F6;">Repo</span><span class="wordmark-roast">Roast</span>
+            </div>
+          </div>
+          <div class="contrast-label">Thermal Slate Panel (#161920)</div>
+        </div>
+
+        <!-- Pure White Inversion -->
+        <div class="contrast-card surface-white">
+          <div class="lockup-preview">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#0C0E12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#0C0E12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+              <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+            </svg>
+            <div class="wordmark" style="font-size: 20px;">
+              <span class="wordmark-repo" style="color: #0C0E12;">Repo</span><span class="wordmark-roast">Roast</span>
+            </div>
+          </div>
+          <div class="contrast-label">Light Surface (#FFFFFF)</div>
+        </div>
+
+        <!-- Monochrome Cutout -->
+        <div class="contrast-card surface-black">
+          <div class="lockup-preview">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z M 16 10 L 14 14 L 16 18 L 18 14 Z" fill="#FFFFFF" fill-rule="evenodd"/>
+            </svg>
+            <div class="wordmark" style="font-size: 20px;">
+              <span class="wordmark-repo" style="color: #FFFFFF;">Repo</span><span class="wordmark-roast" style="color: #FFFFFF;">Roast</span>
+            </div>
+          </div>
+          <div class="contrast-label">Single-Color EvenOdd (#000000)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Animation Keyframe Demos -->
+    <section>
+      <h2>Motion Choreography Preview (Pure CSS Simulation)</h2>
+      <div class="card anim-card">
+        <div class="anim-box">
+          <svg width="64" height="64" viewBox="0 0 32 32" fill="none" style="margin-bottom: 12px;">
+            <path class="caliper-animated" d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="caliper-animated" d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="ember-animated" d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+            <path class="kernel-animated" d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+          </svg>
+          <div class="size-label">1.4s Assembly Choreography</div>
+        </div>
+
+        <div class="anim-box">
+          <svg width="64" height="64" viewBox="0 0 32 32" fill="none" style="margin-bottom: 12px;">
+            <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g class="loop-animated">
+              <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+              <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+            </g>
+          </svg>
+          <div class="size-label">2.4s Calm Thermal Respiration</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Master Blueprint Grid -->
+    <section>
+      <h2>32x32 Master Geometric Blueprint</h2>
+      <div class="blueprint">
+        <svg width="320" height="320" viewBox="0 0 32 32" fill="none">
+          <!-- Cartesian grid background (every 2 units) -->
+          <line x1="0" y1="4" x2="32" y2="4" class="grid-lines" />
+          <line x1="0" y1="8" x2="32" y2="8" class="grid-lines" />
+          <line x1="0" y1="12" x2="32" y2="12" class="grid-lines" />
+          <line x1="0" y1="16" x2="32" y2="16" class="grid-lines" stroke="rgba(255,84,38,0.25)" />
+          <line x1="0" y1="20" x2="32" y2="20" class="grid-lines" />
+          <line x1="0" y1="24" x2="32" y2="24" class="grid-lines" />
+          <line x1="0" y1="28" x2="32" y2="28" class="grid-lines" />
+
+          <line x1="4" y1="0" x2="4" y2="32" class="grid-lines" />
+          <line x1="8" y1="0" x2="8" y2="32" class="grid-lines" />
+          <line x1="12" y1="0" x2="12" y2="32" class="grid-lines" />
+          <line x1="16" y1="0" x2="16" y2="32" class="grid-lines" stroke="rgba(255,84,38,0.25)" />
+          <line x1="20" y1="0" x2="20" y2="32" class="grid-lines" />
+          <line x1="24" y1="0" x2="24" y2="32" class="grid-lines" />
+          <line x1="28" y1="0" x2="28" y2="32" class="grid-lines" />
+
+          <!-- Master Vectors -->
+          <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="rgba(255, 84, 38, 0.5)" stroke="#FF5426" stroke-width="0.75"/>
+          <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A" stroke="#FEF08A" stroke-width="0.5"/>
+
+          <!-- Key Vertex Anchors -->
+          <circle cx="16" cy="4" r="0.6" fill="#FF5426" />
+          <circle cx="16" cy="25" r="0.6" fill="#FF5426" />
+          <circle cx="16" cy="16" r="0.6" fill="#FFFFFF" />
+          <circle cx="5" cy="16" r="0.6" fill="#F0F3F6" />
+          <circle cx="27" cy="16" r="0.6" fill="#F0F3F6" />
+        </svg>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
