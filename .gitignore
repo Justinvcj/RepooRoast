@@ -27,3 +27,5 @@ Thumbs.db
 server/test-gemini.js
 
 server/test-reports/
+test-results/
+client/test-results/

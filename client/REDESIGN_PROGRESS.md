@@ -2,27 +2,68 @@
 
 **Branch:** `redesign/v3`  
 **Base Commit:** `de5199b` (`main`)  
-**Status:** Phase 5 Complete — Ready for Phase 6  
-**Current Next Step:** Begin Phase 6: Motion System Polish (Tokenized easings, spring physics, route transitions, and strict prefers-reduced-motion validation across all redesigned components).
+**Status:** **PHASES 0–8 COMPLETE — READY FOR LOCAL PREVIEW**  
+**Current Next Step:** Complete hand-off verified. Launch local dev server for user review (`npm --prefix client run dev`).
 
 ---
 
-## 1. Quick Overview & Local Preview Instructions
+## 1. Executive Hand-Off Summary
 
-This branch (`redesign/v3`) contains the complete front-end redesign and brand identity system for RepoRoast. All work is kept strictly local on this branch without merging, pushing, or deploying.
+### The Concept
+RepoRoast is redesigned around **"The Thermal Observatory / Precision Caliper"** dual-metaphor: uniting rigorous Tree-Sitter AST inspection and code telemetry with an unvarnished, searing roast. The visual identity rejects generic AI purple glows and boilerplate cards in favor of deep obsidian depth, mathematical 60-30-10 palette discipline, tactile Apple-style responsiveness, and an original grid-constructed SVG caliper mark.
 
-### Preview Locally
+### What Changed
+- **Brand & Vector Logo System**: Authored a hand-crafted geometric SVG logo system from scratch (`LogoMark`, `LogoWordmark`, `LogoLockup`, `LogoAnimation`, `favicon.svg`, `icon.svg`, `og-image.svg`). Integrated a 1.4s stroke-draw intro animation for the splash screen and a 2.4s calm respiration variant for the loading screen, with complete `prefers-reduced-motion` fallbacks. Zero external icon libraries, tracing, or AI generators used.
+- **Design Foundations & Tokens**: Codified 60-30-10 palette tokens in `tailwind.config.js` and `client/src/index.css` (60% `#0C0E12` obsidian canvas, 30% `#161920`/`#1F242E` thermal slate surfaces and `#F0F3F6`/`#949CA6` type, 10% `#FF5426` vermilion accent, plus 4 semantic data colors). Implemented Plus Jakarta Sans, JetBrains Mono, and tabular numerals everywhere. Retired 385 lines of legacy `ogl`/`Lightfall` shader code and dropped the `ogl` dependency.
+- **Accessible UI Primitives Library**: Built 14 tactile, WCAG AA compliant components in `client/src/components/ui/` (`Button`, `Input`, `Switch`, `Surface`, `Card`, `Badge`, `TerminalTag`, `Modal`, `ScoreRing`, `ScoreBar`, `CodeBlock`, `FilePath`, `Tooltip`).
+- **Complete Screen Redesign**:
+  - Global Navbar & Result Navbar: Floating caliper lockups, tactile actions, hairline borders, no blurry glow decoration.
+  - Global Footer: Monospace telemetry credit and verified legal navigation.
+  - Home Page: High-impact display typography ("Roast your codebase."), AST telemetry badge, and quiet 7-category inspection list (avoiding 3-card template traps).
+  - URL Input & Validation: Monospace input, high-contrast focus rings, and sample repo chips.
+  - Custom Mode (BYOK) Modal: Accessible toggle switch, secure input states, and zero-leakage client trust messaging.
+  - Pipeline Loading Screen: Calm respiration logo animation, real server-reported pipeline progress steps, and dynamic developer quips.
+  - Result Page & Dashboard: Re-architected into a clear report from verdict to evidence to action (`ScoreCard` with tabular score ring and editorial quote, `ScoreChart` with sorted `ScoreBar` telemetry, `CategorySection` with expandable `TerminalTag` cards, `IssueCard` with `FilePath` and `CodeBlock` remediations, `StaticAnalysisPanel` with typed AST metrics and architecture hubs).
+  - Utility & Legal Pages: `NotFoundPage` (404 with caliper mark), `PrivacyPage`, `TermsPage`, and `ErrorBoundary`.
+- **Motion System**: Tokenized spring physics (`[0.16, 1, 0.3, 1]`), instant tactile button feedback (<100ms response, `active:scale-[0.98]`), quiet route transitions, and universal reduced-motion support.
+- **Visual Evidence**: Captured 60 baseline before-screenshots (`client/design/before/`) and 66 after-screenshots (`client/design/after/`) across 375px, 768px, and 1440px viewports.
+
+### Review Routes & Companion Tools
+- **Interactive Design Review Suite**: Navigate to `/design` in the client app to test the Brand & Logo System alongside the live UI Primitives Library with interactive controls.
+- **Standalone Offline Logo Inspector**: Open `client/design/logo-preview.html` in any browser to verify multi-scale rendering (16px, 32px, 64px, 256px), integer coordinate alignment, monochrome cutouts, and contrast ratios without running a dev server.
+
+### Observed Test, Build & Lint Results
+- **Production Build (`npm --prefix client run build`)**: **PASSED (0 errors)** in 588ms.
+- **E2E Functional Regression Suite (`npm --prefix client run test:e2e`)**: **9 passed / 0 failed (100% pass)** in 8.1s. All core user flows, custom mode BYOK, 404 navigation, and error toasts verified.
+- **After Screenshot Automation (`npm --prefix client run test:after`)**: **30 passed / 0 failed** in 18.3s, generating 66 screenshot files in `client/design/after/`.
+- **Lint (`npm --prefix client run lint`)**: Reduced baseline ESLint issues from 20 -> 14 -> 9 (all 9 remaining errors are pre-existing in non-UI modules: `useRepoReview.ts`, `geminiDirectClient.ts`, `LayoutContext.tsx`, and `types/index.ts`). **Zero lint errors exist in any redesign file.**
+
+### Test Strings Changed
+- **Zero test strings changed.** All 9 test assertions in `client/tests/reporoast.spec.ts` pass unaltered against the new redesign markup.
+
+### Notes & Verifications
+- Single-chunk bundle size warning: Vite notes the main bundle is ~509 kB (155 kB gzip) due to Framer Motion and Lucide. In a future production optimization, dynamic `React.lazy()` imports could be used for the `/design` studio.
+- Isolation: All redesign commits remain strictly local on branch `redesign/v3`. Nothing has been merged, pushed, or deployed.
+
+---
+
+## 2. Local Preview Instructions
+
 ```bash
-# In the client directory:
+# Navigate to the client directory
 cd client
-npm install
+
+# Start Vite development server
 npm run dev
-# Vite server runs at http://localhost:5173
+
+# Preview URLs:
+# App:           http://localhost:5173
+# Design Studio: http://localhost:5173/design
 ```
 
 ---
 
-## 2. Phase Checklist
+## 3. Phase Checklist
 
 | Phase | Description | Deliverables | Status |
 |---|---|---|---|
@@ -32,17 +73,17 @@ npm run dev
 | **Phase 3** | **Foundations & Tokens** | Design tokens in `tailwind.config.js`, `index.css`, fonts, inline pre-React loader in `index.html`, retire `Lightfall` & `ogl` | **COMPLETE** |
 | **Phase 4** | **UI Primitives Library** | Button, Input, Switch, Surface/Card, Terminal Tag/Badge, Modal, Score Ring, Score Bar, Code display | **COMPLETE** |
 | **Phase 5** | **Screens & Dashboard Redesign** | Navbar, Footer, Splash, Home, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary | **COMPLETE** |
-| **Phase 6** | **Motion System Polish** | Cohesive transitions, tokenized easing, reduced-motion fallbacks | PLANNED |
-| **Phase 7** | **Review, Audits & Final Screenshots** | 60-30-10 audit, avoid list check, keyboard a11y, after screenshots in `client/design/after/`, verify build/lint/e2e | PLANNED |
-| **Phase 8** | **Hand-off & Review Documentation** | Executive summary, local preview guide, test observation report | PLANNED |
+| **Phase 6** | **Motion System Polish** | Cohesive transitions, tokenized easing, reduced-motion fallbacks | **COMPLETE** |
+| **Phase 7** | **Review, Audits & Final Screenshots** | 60-30-10 audit, avoid list check, keyboard a11y, after screenshots in `client/design/after/`, verify build/lint/e2e | **COMPLETE** |
+| **Phase 8** | **Hand-off & Review Documentation** | Executive summary, local preview guide, test observation report | **COMPLETE** |
 
 ---
 
-## 3. Component & Screen Status Matrix
+## 4. Component & Screen Status Matrix
 
 | Component / Screen | File Path | Baseline Status | Redesign Status | Verification Notes |
 |---|---|---|---|---|
-| **Splash Screen** | `client/src/components/SplashScreen.tsx` | Stock Lucide Flame, pulse scale | Phase 2 Complete (LogoLockup + 1.4s LogoAnimation) | 1600ms sync timer verified |
+| **Splash Screen** | `client/src/components/SplashScreen.tsx` | Stock Lucide Flame, pulse scale | **COMPLETE** (LogoLockup + 1.4s LogoAnimation) | 1600ms sync timer verified |
 | **Global Navbar** | `client/src/components/Navbar.tsx` | Glass pill nav, stock typography | **COMPLETE** (Caliper Lockup, tactile Button, hairline border) | E2E verified |
 | **Result Navbar** | `client/src/pages/ResultPage.tsx` | Glass pill with "Roast Another" | **COMPLETE** (Integrated LogoLockup & Button trigger) | E2E verified |
 | **Global Footer** | `client/src/components/Footer.tsx` | Basic footer with Lightfall credit | **COMPLETE** (Clean mono metadata & navigation links) | E2E verified |
@@ -63,13 +104,13 @@ npm run dev
 | **404 Page** | `client/src/pages/NotFoundPage.tsx` | "Back to safety" link with Flame | **COMPLETE** (Replaced Lucide flame with LogoMark & Card) | E2E verified |
 | **Error Boundary** | `client/src/components/ErrorBoundary.tsx` | Fallback error card | **COMPLETE** (Card container, data-critical styling, Button) | E2E verified |
 | **Toasts** | `client/src/App.tsx` | react-hot-toast container | **COMPLETE** (CSS variable tokens for surface, border, text & data) | E2E verified |
-| **HTML Pre-React Loader** | `client/index.html` | Stock inline SVG flame pulse | Phase 3 Complete (Geometric caliper & ember SVG mark + calm breathing animation) | Inspected |
-| **Favicon & App Icon** | `client/public/favicon.svg` | Stock flame SVG | Phase 2 Complete (Integer 16px SVG & 512px icon) | Zero Lucide flame |
-| **Design Review Page** | `client/design/` | Does not exist | Phase 2 Complete (/design route & logo-preview.html) | Interactive suite |
+| **HTML Pre-React Loader** | `client/index.html` | Stock inline SVG flame pulse | **COMPLETE** (Geometric caliper & ember SVG mark + calm breathing animation) | Inspected |
+| **Favicon & App Icon** | `client/public/favicon.svg` | Stock flame SVG | **COMPLETE** (Integer 16px SVG & 512px icon) | Zero Lucide flame |
+| **Design Review Page** | `client/design/` | Does not exist | **COMPLETE** (/design route & logo-preview.html) | Interactive suite |
 
 ---
 
-## 4. UI Primitives Matrix (Phase 4)
+## 5. UI Primitives Matrix (Phase 4)
 
 | Primitive | Target Path | Variants / Requirements | Status |
 |---|---|---|---|
@@ -87,24 +128,14 @@ npm run dev
 
 ---
 
-## 5. Decisions Log
+## 6. Decisions Log
 
-- **2026-11-17**: Completed Phase 4 by authoring complete accessible UI Primitives Suite (`Button`, `Input`, `Switch`, `Surface`, `Card`, `Badge`, `TerminalTag`, `Modal`, `ScoreRing`, `ScoreBar`, `CodeBlock`, `FilePath`, `Tooltip`) in `client/src/components/ui/`. Implemented Apple-inspired tactile responsiveness (<100ms response, `active:scale-[0.98]`, spring curves, tabular figures, high-contrast focus rings, WCAG AA compliance). Integrated interactive UI Primitives inspection suite with live controls in `DesignReviewPage.tsx`. Verified 100% clean build and zero functional regressions in test suite.
-- **2026-11-17**: Completed Phase 5 by executing full screen & dashboard redesigns across 16 files: redesigned global Navbar & Result Navbar with caliper `LogoLockup` and tactile `Button`; redesigned Footer with monospace telemetry and legal links; overhauled Home Hero, `UrlInput`, and `HomePage` quiet feature list; upgraded `CustomModeModal` with accessible toggle switch and secure input states (resolving ESLint `setState-in-effect` errors); upgraded `LoadingScreen` with calm respiration logo animation and server-reported pipeline progress; redesigned `ResultPage`, `ScoreCard` (tabular numerals & editorial commentary), `ScoreChart` (sorted `ScoreBar` telemetry), `CategorySection` (collapsible cards with `TerminalTag`), `IssueCard` (`Badge`, `FilePath`, `CodeBlock`), and `StaticAnalysisPanel` (strongly typed AST metrics and hubs); upgraded `NotFoundPage` (replacing Lucide Flame with `LogoMark`), `PrivacyPage`, `TermsPage`, and `ErrorBoundary`; eliminated all avoid-list patterns (colored top stripes, gradient text, glowing blobs); verified 100% test pass (9/9) in Playwright E2E suite and clean TypeScript build.
-
-- **2026-11-17**: Created branch `redesign/v3` from `main` (`de5199b`).
-- **2026-11-17**: Verified baseline client build (`npm run build`) succeeds cleanly with zero errors.
-- **2026-11-17**: Verified baseline test suite (`npm run test:e2e`) passes 100% across all 9 tests.
-- **2026-11-17**: Initialized `client/REDESIGN_PROGRESS.md` as single source of truth for resumable execution across all 8 phases.
-- **2026-11-17**: Standardized baseline screenshot viewports to 375px (mobile, 375x812), 768px (tablet, 768x1024), and 1440px (desktop, 1440x900) across all 9 critical UI states.
-- **2026-11-17**: Created automated baseline capture suite in `client/tests/capture-baseline.spec.ts` capturing 60 screenshot artifacts in `client/design/before/` with both pixel-suffix and bare-width aliases.
-- **2026-11-17**: Verified full e2e test suite with baseline capture: 36 passed cleanly (38.2s).
-- **2026-11-17**: Isolated baseline screenshot capture behind environment guard (`CAPTURE_BASELINE`) and added dedicated `npm run test:baseline` script with `cross-env`. Standard test suite (`npm run test:e2e`) now executes exclusively functional regression tests (9/9 passed, 27 baseline capture specs skipped) without side-effects, preserving committed baseline screenshots in `client/design/before/` across all future redesign phases.
-- **2026-11-17**: Completed Phase 1 by authoring canonical design specification `client/DESIGN.md`: defined "The Thermal Observatory / Precision Caliper" dual-metaphor concept uniting Tree-Sitter AST telemetry with searing code roast; documented 3 directions and 1-line rejection rationales for the losing 2; codified 60-30-10 palette tokens with empirical WCAG AA contrast evaluations; established tabular numerals mandate; defined modular type scale (Plus Jakarta Sans + JetBrains Mono); formulated 6 Apple working design rules; codified strict anti-pattern avoid list; specified motion choreography (1.4s assembly and 2.4s calm respiration) with reduced-motion fallbacks; and formulated mathematical 32x32 master grid vectors, integer-snapped 16px favicon coordinates, and clear space rules.
-- **2026-11-17**: Completed Phase 3 by implementing foundations, tokens, typography, global CSS, and inline HTML loader: authored `client/src/utils/cn.ts` with `clsx` and `tailwind-merge`; configured `client/tailwind.config.js` with 60-30-10 palette tokens (`background`/`dominant` #0C0E12, `surface` #161920/#1F242E, `border` #222733/#3A4356, `text` #F0F3F6/#949CA6/#646E7E, `primary`/`accent` #FF5426/#E84518/#0C0E12/#D83B01, semantic `data` palette #10B981/#F59E0B/#E67E22/#EF4444, `Plus Jakarta Sans` and `JetBrains Mono` fonts, and physical spring/settle motion tokens); updated `client/src/index.css` with `:root` CSS custom properties, `.tabular-nums`, `.border-hairline`, and modernized `.glass-panel`/`.content-panel`; updated `client/index.html` with Google Fonts preloading, authoritative metadata with zero emoji, and pre-React inline SVG loader matching `LogoMark.tsx` on #0C0E12 canvas with calm breathing pulse; updated `client/src/utils/scoreHelpers.ts` to return semantic data palette colors; tokenized `react-hot-toast` in `client/src/App.tsx`; retired `Lightfall.tsx`, `Lightfall.css`, removed `ogl` dependency from `client/package.json`, and purged references from `HomePage.tsx` and `Footer.tsx` (eliminating 6 ESLint baseline errors from 20 to 14, and saving ~50kB JS bundle size); verified 100% pass across build (`tsc -b && vite build`) and Playwright E2E regression suite (9/9 passed).
-
----
-
-## 6. Next Step
-
-**Next step:** Begin Phase 4: UI Primitives Library. Scaffold `client/src/components/ui/` and implement all accessible primitives (`Button`, `Input`, `Switch`, `Surface`/`Card`, `Badge`/`TerminalTag`, `Modal`, `ScoreRing`, `ScoreBar`, `CodeBlock`, `FilePath`, `Tooltip`, `index.ts`) with strict WCAG AA contrast (6.02:1 dark text on vermilion), tabular numerals, and interactive showcase in `client/src/pages/DesignReviewPage.tsx`.
+- **2026-11-17**: Completed Phase 8 hand-off documentation: synthesized executive concept summary, verification matrices, local preview instructions, and test observations at the top of `client/REDESIGN_PROGRESS.md`.
+- **2026-11-17**: Completed Phase 7 visual audit & screenshot capture: authored `client/tests/capture-after.spec.ts` and captured 66 after-screenshots across 3 viewports (375px, 768px, 1440px) into `client/design/after/`. Verified 60-30-10 color balance, WCAG AA compliance (6.02:1 on primary button, 17.34:1 on body), zero avoid-list patterns, and full keyboard operability.
+- **2026-11-17**: Completed Phase 6 motion pass: created tokenized spring physics and page transition helpers in `client/src/utils/motion.ts` (`springEasing = [0.16, 1, 0.3, 1]`); integrated quiet page transitions and full `prefers-reduced-motion` compliance across `HomePage`, `ResultPage`, `NotFoundPage`, `PrivacyPage`, and `TermsPage`.
+- **2026-11-17**: Completed Phase 5 screen overhaul: redesigned Navbar, Footer, Home, Custom Mode Modal, Loading Screen, Result Page (`ReviewDashboard`, `ScoreCard`, `ScoreChart`, `CategorySection`, `IssueCard`, `StaticAnalysisPanel`), 404, Privacy, Terms, and ErrorBoundary.
+- **2026-11-17**: Completed Phase 4 UI primitives: authored 14 accessible components in `client/src/components/ui/` and integrated them into `/design`.
+- **2026-11-17**: Completed Phase 3 design foundations, tokens, typography, CSS, and inline HTML loader.
+- **2026-11-17**: Completed Phase 2 original SVG logo system, animations, and companion review tools.
+- **2026-11-17**: Completed Phase 1 design specification in `client/DESIGN.md`.
+- **2026-11-17**: Completed Phase 0 baseline setup, progress tracker, and before-screenshots in `client/design/before/`.
