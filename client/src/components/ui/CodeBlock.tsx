@@ -84,8 +84,10 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       )}
 
       <pre
+        tabIndex={0}
+        aria-label={fileName ? `${fileName} contents` : 'Code'}
         className={cn(
-          'p-4 overflow-x-auto whitespace-pre-wrap break-words text-xs sm:text-sm font-mono leading-relaxed text-textPrimary selection:bg-primary/25',
+          'p-4 overflow-x-auto whitespace-pre-wrap break-words text-xs sm:text-sm font-mono leading-relaxed text-textPrimary selection:bg-primary/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
           maxHeight
         )}
       >
