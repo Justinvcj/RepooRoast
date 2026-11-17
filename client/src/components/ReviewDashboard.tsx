@@ -1,126 +1,100 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { ReviewResult } from '../types';
 import { ScoreCard } from './ScoreCard';
 import { ScoreChart } from './ScoreChart';
 import { CategorySection } from './CategorySection';
-import { Target, ThumbsUp, Terminal, Copy, Check } from 'lucide-react';
+import { CodeBlock } from './ui';
 
 interface ReviewDashboardProps {
   review: ReviewResult;
 }
 
 export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    if (review.fixPrompt) {
-      navigator.clipboard.writeText(review.fixPrompt);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-  // Staggered container animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } }
-  };
+  const reduce = useReducedMotion();
 
   return (
-    <motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-10"
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-14"
     >
-      <motion.div variants={itemVariants}>
-        <ScoreCard 
-          score={review.overallScore} 
-          verdict={review.overallVerdict} 
-          quote={review.seniorDevQuote} 
-          hiringVerdict={review.hiringVerdict} 
-        />
-      </motion.div>
+      {/* Verdict leads: the reader came for this. */}
+      <ScoreCard
+        score={review.overallScore}
+        verdict={review.overallVerdict}
+        quote={review.seniorDevQuote}
+        hiringVerdict={review.hiringVerdict}
+      />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <motion.div variants={itemVariants} className="flex flex-col h-full">
-          <ScoreChart categories={review.categories} />
-        </motion.div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-16">
+        <ScoreChart categories={review.categories} />
 
-        <motion.div variants={itemVariants} className="flex flex-col gap-8">
-          <div className="bg-surface/90 rounded-3xl border border-[#f85149]/30 p-5 md:p-6 flex-1 border-t-4 hover:border-[#f85149]/50 transition-colors">
-            <h3 className="text-xl font-serif font-semibold flex items-center gap-3 mb-6 text-textPrimary">
-              <Target className="w-6 h-6 text-[#f85149]" />
-              Top Priorities
+        <div className="flex flex-col gap-10">
+          <section aria-labelledby="priorities-title">
+            <h3 id="priorities-title" className="font-display text-xl font-semibold tracking-tight text-textPrimary mb-4">
+              Fix these first
             </h3>
-            <ul className="space-y-4">
+            <ol className="space-y-3">
               {review.topPriorities.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-4">
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#f85149]/20 text-[#f85149] font-semibold text-sm shrink-0 mt-0.5">
+                <li key={idx} className="flex items-start gap-3.5 text-[15px] text-textPrimary leading-relaxed">
+                  <span className="shrink-0 mt-[3px] inline-flex items-center justify-center w-5 h-5 rounded-full border-[1.5px] border-primary text-primary text-[11px] font-semibold tabular-nums">
                     {idx + 1}
                   </span>
-                  <span className="text-textSecondary text-base leading-relaxed">{item}</span>
+                  <span>{item}</span>
                 </li>
               ))}
-            </ul>
-          </div>
+            </ol>
+          </section>
 
-          <div className="bg-surface/90 rounded-3xl border border-[#3fb950]/30 p-5 md:p-6 flex-1 border-t-4 hover:border-[#3fb950]/50 transition-colors">
-            <h3 className="text-xl font-serif font-semibold flex items-center gap-3 mb-6 text-textPrimary">
-              <ThumbsUp className="w-6 h-6 text-[#3fb950]" />
-              What You Did Well
+          <section aria-labelledby="well-title" className="pt-8 border-t border-border-hairline">
+            <h3 id="well-title" className="font-display text-xl font-semibold tracking-tight text-textPrimary mb-4">
+              What you did well
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-2.5">
               {review.whatYouDidWell.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-4 text-textSecondary leading-relaxed">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3fb950] shrink-0 mt-2" />
-                  {item}
+                <li key={idx} className="flex items-start gap-3 text-[15px] text-textSecondary leading-relaxed">
+                  <span className="w-1.5 h-1.5 rounded-full bg-data-success shrink-0 mt-[9px]" />
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>
-          </div>
-        </motion.div>
+          </section>
+        </div>
       </div>
 
-      <motion.div variants={itemVariants} className="mt-8">
-        <h2 className="text-2xl font-semibold text-textPrimary mb-6 pb-4 border-b border-border/50">Detailed Breakdown</h2>
-        <div className="flex flex-col gap-6">
+      <section aria-labelledby="breakdown-title">
+        <div className="flex items-baseline justify-between mb-5 pb-3 border-b border-ink">
+          <h2 id="breakdown-title" className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-textPrimary">
+            Detailed breakdown
+          </h2>
+          <span className="text-sm text-textMuted tabular-nums">{review.categories.length} categories</span>
+        </div>
+
+        <div className="flex flex-col gap-3">
           {review.categories.map((category, idx) => (
             <CategorySection key={idx} category={category} />
           ))}
         </div>
-      </motion.div>
+      </section>
 
       {review.fixPrompt && (
-        <motion.div variants={itemVariants} className="mt-8 print:break-inside-avoid">
-          <h2 className="text-2xl font-semibold text-textPrimary mb-6 pb-4 border-b border-border/50 flex items-center gap-3">
-            <Terminal className="w-6 h-6 text-primary" />
-            Auto-Fix AI Prompt
+        <section aria-labelledby="fix-title" className="print:break-inside-avoid">
+          <h2 id="fix-title" className="font-display text-2xl font-semibold tracking-tight text-textPrimary">
+            Auto-fix AI prompt
           </h2>
-          <div className="bg-[#0d1117] rounded-2xl border border-border/50 p-5 md:p-6 relative group shadow-lg">
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="absolute top-4 right-4 p-2.5 bg-surface border border-border rounded-xl text-textSecondary hover:text-textPrimary hover:border-primary/50 transition-[color,border-color,opacity] opacity-0 group-hover:opacity-100 print:hidden shadow-sm cursor-pointer"
-              title="Copy to clipboard"
-            >
-              {copied ? <Check className="w-5 h-5 text-[#3fb950]" /> : <Copy className="w-5 h-5" />}
-            </button>
-            <pre className="text-sm md:text-base text-textSecondary font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto selection:bg-primary/30">
-              {review.fixPrompt}
-            </pre>
-          </div>
-        </motion.div>
+          <p className="text-sm text-textSecondary mt-1 mb-4 max-w-[60ch]">
+            Paste this into Claude or Copilot to work through the fixes above.
+          </p>
+          <CodeBlock
+            code={review.fixPrompt}
+            language="markdown"
+            fileName="CLAUDE_OR_COPILOT_PROMPT.md"
+            copyable={true}
+          />
+        </section>
       )}
-
     </motion.div>
   );
 };

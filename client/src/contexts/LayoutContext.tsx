@@ -1,13 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
-
-type LayoutContextType = {
-  isNavbarVisible: boolean;
-  setIsNavbarVisible: (v: boolean) => void;
-  isFooterVisible: boolean;
-  setIsFooterVisible: (v: boolean) => void;
-};
-
-const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
+import React, { useState } from 'react';
+import { LayoutContext } from './layoutState';
 
 export const LayoutProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -18,12 +10,4 @@ export const LayoutProvider: React.FC<{children: React.ReactNode}> = ({ children
       {children}
     </LayoutContext.Provider>
   );
-};
-
-export const useLayout = () => {
-  const context = useContext(LayoutContext);
-  if (!context) {
-    throw new Error('useLayout must be used within a LayoutProvider');
-  }
-  return context;
 };

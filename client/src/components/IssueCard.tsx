@@ -1,59 +1,48 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import type { Issue } from '../types';
-import { AlertCircle, FileCode, Lightbulb } from 'lucide-react';
+import { Badge, FilePath, CodeBlock } from './ui';
 
 interface IssueCardProps {
   issue: Issue;
 }
 
 export const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
-  const severityColors = {
-    critical: 'text-danger border-danger/40',
-    high: 'text-warning border-warning/40',
-    medium: 'text-primary border-primary/40',
-    low: 'text-textSecondary border-border'
+  const getBadgeVariant = (severity: string): 'critical' | 'warning' | 'flawed' | 'default' => {
+    switch (severity.toLowerCase()) {
+      case 'critical':
+        return 'critical';
+      case 'high':
+        return 'flawed';
+      case 'medium':
+        return 'warning';
+      default:
+        return 'default';
+    }
   };
 
+  const severity = issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1).toLowerCase();
+
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="w-full bg-[#0d1117]/50 rounded-3xl border border-border/70 overflow-hidden group hover:border-primary/30 transition-colors shadow-sm"
-    >
-      <div className="p-6 flex flex-col gap-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className={`font-mono text-xs font-semibold px-2 py-1 rounded border ${severityColors[issue.severity]}`}>
-            [{issue.severity.toUpperCase()}]
-          </span>
-          {issue.file && (
-            <div className="flex items-center gap-1.5 text-xs text-textSecondary font-mono bg-surface px-3 py-1.5 rounded-md border border-border">
-              <FileCode className="w-4 h-4" />
-              <span className="truncate max-w-[200px]" title={issue.file}>{issue.file}</span>
-            </div>
-          )}
+    <article className="w-full min-w-0 rounded-lg border border-border-hairline bg-background/60">
+      <div className="p-5 flex flex-col gap-2.5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <Badge variant={getBadgeVariant(issue.severity)}>{severity}</Badge>
+          {issue.file && <FilePath path={issue.file} />}
         </div>
-        
-        <h4 className="text-lg font-serif font-semibold text-textPrimary flex items-start gap-3 mt-2">
-          <AlertCircle className="w-6 h-6 text-textSecondary shrink-0 mt-0.5" />
+
+        <h4 className="font-display text-lg font-semibold tracking-tight text-textPrimary mt-1">
           {issue.title}
         </h4>
-        
-        <p className="text-textSecondary text-sm leading-relaxed pl-9">
-          {issue.description}
-        </p>
+
+        <p className="text-[15px] text-textSecondary leading-relaxed max-w-[65ch]">{issue.description}</p>
       </div>
-      
-      <div className="bg-surface border-t border-border p-5">
-        <h5 className="text-xs font-semibold text-textSecondary flex items-center gap-2 mb-3">
-          <Lightbulb className="w-4 h-4 text-primary" />
-          Suggested fix
-        </h5>
-        <div className="font-mono text-sm text-textPrimary bg-[#0d1117] p-4 rounded-lg border border-border/50 overflow-x-auto">
-          {issue.suggestion}
+
+      {issue.suggestion && (
+        <div className="px-5 pb-5">
+          <p className="text-sm font-semibold text-textPrimary mb-2">Suggested fix</p>
+          <CodeBlock code={issue.suggestion} />
         </div>
-      </div>
-    </motion.div>
+      )}
+    </article>
   );
 };

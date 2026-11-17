@@ -1,35 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { getPageTransition } from '../utils/motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
 import { StaticAnalysisPanel } from '../components/StaticAnalysisPanel';
 import type { ApiResponse } from '../types';
-import { useLayout } from '../contexts/LayoutContext';
-import { Github, ExternalLink, ArrowLeft, Star, GitFork, Code } from 'lucide-react';
+import { useLayout } from '../contexts/layoutState';
+import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
+import { LogoLockup } from '../components/brand';
 
 export const ResultPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  let responseData = location.state?.reviewData as ApiResponse | undefined;
-
-  if (!responseData) {
+  // Lazy state initializer for cached data to ensure pure render without Date.now() in body
+  const [responseData] = useState<ApiResponse | undefined>(() => {
+    if (location.state?.reviewData) {
+      return location.state.reviewData as ApiResponse;
+    }
     try {
       const cached = localStorage.getItem('reporoast_last_review');
       if (cached) {
         const parsed = JSON.parse(cached);
-        // TTL: 24 hours
-        if (Date.now() - parsed.timestamp < 86400000) {
-          responseData = parsed.data;
+        if (typeof parsed?.timestamp === 'number' && Date.now() - parsed.timestamp < 86400000) {
+          return parsed.data;
         }
       }
-    } catch { /* ignore parse errors */ }
-  }
+    } catch {
+      // Ignore cache parse errors
+    }
+    return undefined;
+  });
 
   const { setIsNavbarVisible, setIsFooterVisible } = useLayout();
+  const prefersReduced = useReducedMotion();
+  const pageTransition = getPageTransition(prefersReduced);
 
   useEffect(() => {
-    // We only want the custom ResultPage navbar
     setIsNavbarVisible(false);
     setIsFooterVisible(false);
     return () => {
@@ -39,7 +46,6 @@ export const ResultPage: React.FC = () => {
   }, [setIsNavbarVisible, setIsFooterVisible]);
 
   useEffect(() => {
-    // Redirect to home if no data is found in state
     if (!responseData || !responseData.success) {
       navigate('/', { replace: true });
     }
@@ -50,94 +56,77 @@ export const ResultPage: React.FC = () => {
   const { repo, review, analysis } = responseData;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background text-textPrimary selection:bg-primary/30 pb-20 relative"
+    <motion.div
+      {...pageTransition}
+      className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background text-textPrimary pb-24 relative"
     >
-
-      {/* Floating Navbar */}
-      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <nav className="pointer-events-auto glass-panel bg-[#0d1117]/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-colors duration-300 w-full max-w-7xl">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl font-serif font-semibold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <span className="text-textPrimary">Repo<span className="text-primary">Roast</span></span>
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link 
-              to="/" 
-              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface/50 border border-border/50 px-4 py-2 rounded-lg hover:border-[#8b949e]"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Roast Another
-            </Link>
-          </div>
-        </nav>
-      </div>
-
-      <main className="relative z-10 pt-28">
-        {/* Repo Header Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border/50"
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border-hairline">
+        <nav
+          aria-label="Result Actions"
+          className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
+        >
+          <Link
+            to="/"
+            className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="RepoRoast Home"
           >
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3 text-textSecondary mb-2">
-                <Github className="w-6 h-6" />
-                <span className="text-lg font-medium">{repo.owner}</span>
-              </div>
-              <h1 className="text-2xl md:text-3xl font-serif font-semibold text-textPrimary tracking-tight leading-tight">
+            <LogoLockup size={26} />
+          </Link>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-textPrimary hover:text-primary transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Roast another
+          </Link>
+        </nav>
+      </header>
+
+      <main className="relative z-10 pt-24">
+        <section aria-labelledby="repo-header-title" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="min-w-0">
+              <p className="font-mono text-sm text-textSecondary mb-2">{repo.owner} /</p>
+              <h1 id="repo-header-title" className="font-display text-4xl sm:text-5xl font-medium tracking-[-0.03em] leading-none text-textPrimary break-words">
                 {repo.repo}
               </h1>
               {repo.description && (
-                <p className="text-base text-textSecondary font-medium max-w-3xl mt-2 leading-relaxed">
+                <p className="text-base text-textSecondary max-w-[60ch] mt-3 leading-relaxed">
                   {repo.description}
                 </p>
               )}
-              
-              <div className="flex items-center gap-6 mt-6">
-                <div className="flex items-center gap-2 text-sm font-medium text-textSecondary">
-                  <Star className="w-4 h-4" />
-                  {repo.stars.toLocaleString()} Stars
-                </div>
-                <div className="flex items-center gap-2 text-sm font-medium text-textSecondary">
-                  <GitFork className="w-4 h-4" />
-                  {repo.forks.toLocaleString()} Forks
-                </div>
+              <p className="mt-4 text-sm text-textSecondary tabular-nums">
+                {repo.stars.toLocaleString()} stars
+                <span className="mx-2 text-border-focused" aria-hidden="true">/</span>
+                {repo.forks.toLocaleString()} forks
                 {repo.language && (
-                  <div className="flex items-center gap-2 text-sm font-medium text-textSecondary">
-                    <Code className="w-4 h-4" />
+                  <>
+                    <span className="mx-2 text-border-focused" aria-hidden="true">/</span>
                     {repo.language}
-                  </div>
+                  </>
                 )}
-              </div>
+              </p>
             </div>
 
-            <a 
+            <a
               href={`https://github.com/${repo.owner}/${repo.repo}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-sm font-semibold text-primary hover:text-orange-400 transition-colors bg-primary/10 px-5 py-3 rounded-xl border border-primary/20 hover:bg-primary/15 whitespace-nowrap"
+              aria-label={`View on GitHub: ${repo.owner}/${repo.repo}`}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-textPrimary border border-border-focused hover:border-ink bg-surface px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              View on GitHub
-              <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <Github className="w-4 h-4" />
+              <span>View on GitHub</span>
+              <ExternalLink className="w-3.5 h-3.5 text-textMuted" />
             </a>
-          </motion.div>
+          </div>
         </section>
 
         {/* Static Analysis Dashboard */}
-        {analysis && (
-          <StaticAnalysisPanel analysis={analysis} />
-        )}
+        {analysis && <StaticAnalysisPanel analysis={analysis} />}
 
-        {/* Dashboard Content */}
+        {/* Detailed Review Dashboard */}
         <ReviewDashboard review={review} />
-        
       </main>
     </motion.div>
   );

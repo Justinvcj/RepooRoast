@@ -1,81 +1,72 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Category } from '../types';
 import { IssueCard } from './IssueCard';
-import { ChevronDown, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, Check } from 'lucide-react';
 import { getScoreColor } from '../utils/scoreHelpers';
 
 interface CategorySectionProps {
   category: Category;
 }
 
-// Signature detail: categories read as terminal-style tags instead of a
-// large emoji -- quieter, and it's the one thing that's unmistakably this
-// product's own voice rather than a generic AI-generated icon choice.
-const toTag = (name: string) => name.toUpperCase().replace(/\s+/g, '_');
-
 export const CategorySection: React.FC<CategorySectionProps> = ({ category }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const scoreColor = getScoreColor(category.score);
+  const issueCount = category.issues.length;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full bg-surface/95 rounded-2xl border border-border/50 overflow-hidden shadow-lg hover:border-border transition-colors"
-    >
+    <div className="w-full bg-surface border border-border-hairline rounded-lg overflow-hidden">
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors focus:outline-none"
+        className="w-full px-5 py-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-surface-elevated transition-colors duration-fast cursor-pointer select-none text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+        aria-expanded={isExpanded}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-baseline gap-4 min-w-0">
           <span
-            className="font-mono text-xs font-semibold px-2 py-1 rounded border shrink-0"
-            style={{ color: getScoreColor(category.score), borderColor: `${getScoreColor(category.score)}40` }}
+            className="font-display font-semibold text-2xl tabular-nums w-12 shrink-0"
+            style={{ color: scoreColor }}
           >
-            [{toTag(category.name)}]
+            {category.score}
           </span>
-          <div className="flex flex-col items-start">
-            <h3 className="text-xl font-serif font-semibold text-textPrimary tracking-tight">{category.name}</h3>
-            <span
-              className="font-mono font-semibold mt-1"
-              style={{ color: getScoreColor(category.score) }}
-            >
-              {category.score} / 100
+          <div className="min-w-0">
+            <h3 className="font-display text-lg font-semibold tracking-tight text-textPrimary">
+              {category.name}
+            </h3>
+            <span className="text-sm text-textMuted">
+              {issueCount === 0 ? 'No issues found' : `${issueCount} ${issueCount === 1 ? 'issue' : 'issues'}`}
             </span>
           </div>
         </div>
-        <motion.div
+
+        <motion.span
           animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+          className="text-textMuted shrink-0"
         >
-          <ChevronDown className="w-6 h-6 text-textSecondary" />
-        </motion.div>
+          <ChevronDown className="w-5 h-5" />
+        </motion.span>
       </button>
 
-      <motion.div
-        initial={false}
-        animate={{ 
-          height: isExpanded ? 'auto' : 0, 
-          opacity: isExpanded ? 1 : 0 
-        }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="overflow-hidden"
-      >
-            <div className="p-6 pt-0 border-t border-border/50">
-              <p className="text-lg text-textSecondary italic mb-6 mt-4">
-                "{category.summary}"
-              </p>
+      <AnimatePresence initial={false}>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-border-hairline"
+          >
+            <div className="px-5 py-6 sm:px-6 space-y-7">
+              <p className="text-base text-textSecondary leading-relaxed max-w-[65ch]">{category.summary}</p>
 
               {category.positives.length > 0 && (
-                <div className="mb-8">
-                  <h4 className="text-sm font-semibold text-textPrimary pl-2 mb-4 border-l-2 border-[#3fb950]">What's good</h4>
-                  <ul className="space-y-3">
+                <div>
+                  <h4 className="text-sm font-semibold text-data-success mb-2.5">Working well</h4>
+                  <ul className="space-y-2">
                     {category.positives.map((positive, i) => (
-                      <li key={i} className="flex items-start gap-3 text-textSecondary">
-                        <CheckCircle2 className="w-5 h-5 text-[#3fb950] shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-2.5 text-[15px] text-textSecondary leading-relaxed">
+                        <Check className="w-4 h-4 text-data-success shrink-0 mt-1" />
                         <span>{positive}</span>
                       </li>
                     ))}
@@ -83,9 +74,11 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
                 </div>
               )}
 
-              {category.issues.length > 0 && (
+              {issueCount > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-textPrimary pl-2 mb-4 border-l-2 border-[#f85149]">Areas to improve</h4>
+                  <h4 className="text-sm font-semibold text-primary mb-3">
+                    To fix ({issueCount})
+                  </h4>
                   <div className="flex flex-col gap-4">
                     {category.issues.map((issue, i) => (
                       <IssueCard key={i} issue={issue} />
@@ -94,7 +87,9 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
                 </div>
               )}
             </div>
-      </motion.div>
-    </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };

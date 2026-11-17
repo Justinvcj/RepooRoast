@@ -1,37 +1,89 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RepoRoast v4 "Night Review": a late-night code review.
+   60% ink canvas, 30% surfaces and text, 10% ember accent. */
+:root {
+  --bg-dominant: #0B0D14;
+  --surface-secondary: #11141C;
+  --surface-elevated: #1A1E28;
+  --border-hairline: #1E222D;
+  --border-focused: #343A4A;
+  --text-primary: #EEF0F5;
+  --text-secondary: #A3A9B8;
+  --text-muted: #838BA0;
+
+  --accent-brand: #FF6B3D;
+  --accent-brand-hover: #FF8157;
+  --accent-text-dark: #0B0D14;
+  --accent-ember-deep: #FF8157;
+
+  --data-success: #4CC38A;
+  --data-warning: #E5B93C;
+  --data-flawed: #E88A4A;
+  --data-critical: #F0595E;
+
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-instant: 80ms;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-assembly: 1400ms;
+  --duration-respiration: 2400ms;
+}
 
 @layer components {
-  /* Chrome material: floating nav bars and modals, which sit *over* page
-     content and need the blur to read as a distinct layer above it.
-     Override bg-color/shadow per-instance with a trailing utility class
-     (utilities layer wins over components layer in Tailwind). */
-  .glass-panel {
-    background-color: rgb(13 17 23 / 0.5);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgb(255 255 255 / 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  }
-
-  /* Content material: panels that sit *in* the page flow (loading screen,
-     static text pages). Flat and opaque -- no blur, since there's nothing
-     moving behind them for it to reveal, just a hairline border for edge
-     definition. */
+  .glass-panel,
   .content-panel {
-    background-color: rgb(22 27 34 / 0.95);
-    border: 1px solid rgb(255 255 255 / 0.08);
+    background-color: var(--surface-secondary);
+    border: 1px solid var(--border-hairline);
+  }
+  /* Faint ruled-paper texture for hero areas */
+  .ruled {
+    background-image: linear-gradient(to bottom, transparent 31px, rgba(238,240,245,0.04) 32px);
+    background-size: 100% 32px;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer utilities {
+  .border-hairline { border-width: 1px; border-color: var(--border-hairline); }
+  .border-focused { border-color: var(--border-focused); }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
 }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: #0d1117;
-  color: #e6edf3;
+  background-color: var(--bg-dominant);
+  color: var(--text-primary);
+  font-family: 'Geist', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.font-mono, code, pre, kbd, samp { font-variant-numeric: tabular-nums; }
+
+::selection { background: rgba(255, 107, 61, 0.28); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* The one orchestrated moment: pen rings draw in once on load. */
+@media (prefers-reduced-motion: no-preference) {
+  .pen-ring {
+    animation: pen-in 500ms var(--ease-spring) 700ms both;
+  }
+  @keyframes pen-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
 }

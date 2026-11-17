@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>RepoRoast unslop story</title>
+<meta name="unslop-steps" content="Spacing, Color and icons, Type and copy, Details" />
+<meta name="unslop-frame" content="96 24 1248" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html { background: #0C0E12; }
+  body {
+    width: 1440px; min-height: 1300px; position: relative; overflow: hidden;
+    background: #0C0E12; color: #F0F3F6;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  /* ---- STEP 0: v3 as shipped ---- */
+  .glow { position: absolute; left: 700px; top: 120px; width: 760px; height: 600px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255,84,38,0.22), rgba(255,84,38,0)); opacity: 1; pointer-events: none; }
+
+  .nav { position: absolute; left: 50%; top: 18px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 30px; padding: 11px 22px; border-radius: 25px;
+    background: rgba(31,36,46,0.7); border: 1px solid #222733; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
+  .brand .name b { color: #FF5426; font-weight: 700; }
+  .mark { position: relative; width: 28px; height: 28px; }
+  .mark svg { position: absolute; inset: 0; }
+  .mark .new { opacity: 0; }
+  .nav-btn { background: #FF5426; color: #0C0E12; font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 6px; }
+
+  .hero { position: absolute; left: 144px; top: 210px; width: 1152px; display: grid; grid-template-columns: 1.55fr 1fr; column-gap: 54px; align-items: center; }
+  .stack { display: flex; flex-direction: column; align-items: flex-start; }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 4px; background: #161920; border: 1px solid #222733;
+    font: 400 12px/1 'JetBrains Mono', monospace; color: #646E7E; margin-bottom: 22px; max-height: 40px; overflow: hidden; }
+  .eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: #FF5426; }
+
+  h1 { font-size: 72px; line-height: 1.08; font-weight: 800; letter-spacing: -0.045em; margin-bottom: 18px; max-width: 700px; }
+  .sub { font-size: 18px; line-height: 1.6; color: #949CA6; max-width: 540px; margin-bottom: 30px; }
+
+  .input { width: 100%; max-width: 560px; display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 18px;
+    background: rgba(22,25,32,0.9); border: 1px solid #222733; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.4); margin-bottom: 15px; }
+  .input span { font: 500 15px/1 'JetBrains Mono', monospace; color: #646E7E; letter-spacing: -0.02em; }
+  .go { width: 48px; height: 38px; display: grid; place-items: center; background: #FF5426; color: #0C0E12; border-radius: 8px; font-weight: 700; box-shadow: 0 0 18px rgba(255,84,38,0.45); }
+
+  .try { font: 400 12px/1 'JetBrains Mono', monospace; color: #646E7E; display: flex; gap: 11px; margin-bottom: 27px; }
+  .try u { text-decoration: none; color: #949CA6; }
+  .own { font: 400 12px/1 'JetBrains Mono', monospace; color: #949CA6; }
+
+  .card { background: #1F242E; border: 1px solid #3A4356; border-radius: 16px; padding: 26px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6); }
+  .card .top { display: flex; justify-content: space-between; font: 400 12px/1 'JetBrains Mono', monospace; color: #949CA6; padding-bottom: 14px; border-bottom: 1px solid #222733; margin-bottom: 19px; }
+  .card .top em { font-style: normal; font-size: 10px; font-weight: 700; color: #F59E0B; }
+  .verdict { display: flex; align-items: center; gap: 15px; margin-bottom: 22px; }
+  .ring { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; font: 700 22px/1 'JetBrains Mono', monospace;
+    border: 5px solid #F59E0B; border-right-color: #222733; }
+  .verdict p { font-size: 12px; line-height: 1.6; color: #949CA6; font-style: italic; max-width: 200px; }
+  .rows { display: flex; flex-direction: column; gap: 13px; }
+  .row { display: grid; grid-template-columns: 104px 1fr 28px; align-items: center; gap: 11px; font-size: 13px; position: relative; }
+  .row .lab { font-weight: 600; letter-spacing: 0.04em; }
+  .bar { height: 8px; border-radius: 4px; background: #161920; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 4px; }
+  .row b { text-align: right; font-weight: 700; }
+  .tick { position: absolute; left: -14px; top: 1px; bottom: 1px; width: 3px; border-radius: 2px; background: #FF6B3D; }
+
+  .swap { position: relative; display: inline-block; }
+
+  /* ---- STEP 1: spacing on the 4px grid ---- */
+  .s1 .eyebrow { margin-bottom: 24px; }
+  .s1 h1 { margin-bottom: 16px; }
+  .s1 .sub { margin-bottom: 32px; }
+  .s1 .input { margin-bottom: 16px; padding: 8px 8px 8px 20px; }
+  .s1 .try { margin-bottom: 24px; gap: 12px; }
+  .s1 .card { padding: 24px; }
+  .s1 .card .top { padding-bottom: 16px; margin-bottom: 20px; }
+  .s1 .verdict { gap: 16px; margin-bottom: 24px; }
+  .s1 .rows { gap: 12px; }
+  .s1 .row { grid-template-columns: 104px 1fr 28px; gap: 12px; }
+  .s1 .nav { gap: 32px; padding: 12px 24px; }
+  .s1 .brand { gap: 8px; }
+  .s1 .hero { column-gap: 56px; }
+
+  /* ---- STEP 2: ink ramp, one ember accent, no glow, new mark ---- */
+  .s2 html, .s2 body { background: #0B0D14; }
+  .s2 .glow { opacity: 0; }
+  .s2 .nav { background: #0B0D14; border-color: #1E222D; box-shadow: none; border-radius: 0; }
+  .s2 .nav { left: 0; top: 0; transform: none; width: 1440px; border-width: 0 0 1px 0; padding: 12px 144px; justify-content: space-between; }
+  .s2 .brand .name b { color: #EEF0F5; }
+  .s2 .mark .old { opacity: 0; }
+  .s2 .mark .new { opacity: 1; }
+  .s2 .nav-btn { background: transparent; color: #EEF0F5; padding: 8px 0; }
+  .s2 .eyebrow { background: #11141C; border-color: #1E222D; color: #7A8296; }
+  .s2 .eyebrow i { background: #FF6B3D; }
+  .s2 .sub { color: #A3A9B8; }
+  .s2 .input { background: #11141C; border-color: #343A4A; box-shadow: none; }
+  .s2 .input span { color: #7A8296; }
+  .s2 .go { background: #FF6B3D; box-shadow: none; }
+  .s2 .try, .s2 .try u { color: #7A8296; }
+  .s2 .own { color: #A3A9B8; }
+  .s2 .card { background: #11141C; border-color: #1E222D; box-shadow: none; }
+  .s2 .card .top { color: #A3A9B8; border-color: #1E222D; }
+  .s2 .card .top em { color: #E5B93C; }
+  .s2 .ring { border-color: #E5B93C; border-right-color: #1E222D; }
+  .s2 .verdict p { color: #A3A9B8; }
+  .s2 .bar { background: #1A1E28; }
+  .s2 .row b.g { color: #4CC38A; } .s2 .row b.o { color: #E88A4A; } .s2 .row b.y { color: #E5B93C; }
+  .s2 .bar i.g { background: #4CC38A !important; } .s2 .bar i.o { background: #E88A4A !important; } .s2 .bar i.y { background: #E5B93C !important; }
+
+  /* ---- STEP 3: type and copy ---- */
+  .s3 body { font-family: 'Geist', system-ui, sans-serif; }
+  .s3 h1 { font-weight: 500; letter-spacing: -0.03em; line-height: 1.04; font-size: 72px; }
+  .s3 .sub { font-size: 18px; }
+  .s3 .brand .name { font-weight: 400; letter-spacing: -0.02em; }
+  .s3 .eyebrow, .s3 .try, .s3 .own, .s3 .card .top, .s3 .input span { font-family: 'Geist Mono', monospace; }
+  .s3 .own { font-family: 'Geist', sans-serif; font-size: 14px; }
+  .s3 .try { font-family: 'Geist', sans-serif; font-size: 14px; }
+  .s3 .try u { font-family: 'Geist Mono', monospace; text-decoration: underline; text-decoration-color: #343A4A; text-underline-offset: 4px; }
+  .s3 .ring { font-family: 'Geist', sans-serif; font-weight: 500; }
+  .s3 .row .lab { font-weight: 400; letter-spacing: 0; font-size: 14px; }
+  .s3 .row b { font-weight: 500; }
+  .s3 .verdict p { font-style: normal; font-size: 14px; color: #A3A9B8; }
+  .s3 .card .top em { font-size: 12px; font-weight: 500; }
+  .s3 .card .top { font-size: 13px; }
+
+  /* ---- STEP 4: details, nested radius and the gutter tick ---- */
+  .s4 .input { border-radius: 10px; }
+  .s4 .go { border-radius: 6px; }
+  .s4 .card { border-radius: 12px; }
+  .s4 .bar, .s4 .bar i { border-radius: 2px; }
+  .s4 .tick { opacity: 1; }
+  .tick { opacity: 0; }
+</style>
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <div class="nav">
+    <div class="brand">
+      <div class="mark">
+        <svg class="old" viewBox="0 0 32 32" fill="none">
+          <path d="M12 5L5 12V20L12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 5L27 12V20L20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 4L20 11L19 18L16 25L13 18L12 11Z" fill="#FF5426"/>
+        </svg>
+        <svg class="new" viewBox="0 0 32 32" fill="none">
+          <rect x="8" y="6" width="16" height="4" rx="2" fill="#EEF0F5"/>
+          <rect x="13" y="14" width="14" height="4" rx="2" fill="#FF6B3D"/>
+          <rect x="8" y="22" width="10" height="4" rx="2" fill="#EEF0F5"/>
+          <rect x="2" y="11" width="3" height="10" rx="1.5" fill="#FF6B3D"/>
+        </svg>
+      </div>
+      <span class="name">Repo<b>Roast</b></span>
+    </div>
+    <div class="nav-btn">New roast</div>
+  </div>
+
+  <div class="hero">
+    <div class="stack">
+      <div class="eyebrow" data-gap="main" data-slop="Mono label pill" data-out="3"><i></i>AST Telemetry &amp; Code Roast</div>
+      <h1 data-gap="main">Roast your codebase.</h1>
+      <p class="sub" data-gap="main">Paste a public GitHub repo. Get a score built on real static analysis, not just an AI's opinion.</p>
+      <div class="input" data-gap="main" data-radius><span>github.com/owner/repo</span><div class="go" data-radius>&rarr;</div></div>
+      <div class="try" data-gap="main"><span>Examples:</span><u>facebook/react</u><u>vuejs/core</u><u>vercel/next.js</u></div>
+      <div class="own" data-gap="main">Use your own API key (Custom Mode)</div>
+    </div>
+
+    <div class="card" data-radius>
+      <div class="top"><span>vercel/next.js</span><em data-slop="Bracket tag"><span class="swap" data-at="3"><span class="from">[VERDICT: FLAGGED]</span><span class="to" style="position:absolute;right:0;top:0;white-space:nowrap">Flagged</span></span></em></div>
+      <div class="verdict">
+        <div class="ring">67</div>
+        <p><span class="swap" data-at="3"><span class="from">"Compiles cleanly. Scales like it's still 2019."</span><span class="to" style="position:absolute;left:0;top:0">Compiles cleanly. Scales like it's still 2019.</span></span></p>
+      </div>
+      <div class="rows">
+        <div class="row"><span class="tick"></span><span class="lab"><span class="swap" data-at="3"><span class="from">SECURITY</span><span class="to" style="position:absolute;left:0;top:0">Security</span></span></span><div class="bar"><i class="g" style="width:88%;background:#10B981"></i></div><b class="g" style="color:#10B981">88</b></div>
+        <div class="row"><span class="tick"></span><span class="lab"><span class="swap" data-at="3"><span class="from">TEST_COVERAGE</span><span class="to" style="position:absolute;left:0;top:0;white-space:nowrap">Test coverage</span></span></span><div class="bar"><i class="o" style="width:54%;background:#E67E22"></i></div><b class="o" style="color:#E67E22">54</b></div>
+        <div class="row"><span class="tick"></span><span class="lab"><span class="swap" data-at="3"><span class="from">SCALABILITY</span><span class="to" style="position:absolute;left:0;top:0">Scalability</span></span></span><div class="bar"><i class="y" style="width:61%;background:#F59E0B"></i></div><b class="y" style="color:#F59E0B">61</b></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

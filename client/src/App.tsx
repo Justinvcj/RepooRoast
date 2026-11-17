@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
 
@@ -10,9 +10,11 @@ import { ResultPage } from './pages/ResultPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { TermsPage } from './pages/TermsPage';
+import { DesignReviewPage } from './pages/DesignReviewPage';
 import { SplashScreen } from './components/SplashScreen';
 
-import { LayoutProvider, useLayout } from './contexts/LayoutContext';
+import { LayoutProvider } from './contexts/LayoutContext';
+import { useLayout } from './contexts/layoutState';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 
@@ -26,6 +28,8 @@ const AnimatedRoutes = () => {
           <Route path="/result" element={<ResultPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/design" element={<DesignReviewPage />} />
+          <Route path="/design/logo" element={<Navigate to="/design" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AnimatePresence>
@@ -38,10 +42,10 @@ function AppContent() {
   const { isNavbarVisible, isFooterVisible } = useLayout();
 
   useEffect(() => {
-    // Hide splash screen after 2.2 seconds
+    // Synchronize splash screen with 1.4s logo assembly animation + 200ms settled view
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 2200);
+    }, 1600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -51,22 +55,23 @@ function AppContent() {
         position="bottom-right" 
         toastOptions={{
           style: {
-            background: '#161b22', // surface color from Tailwind spec
-            color: '#e6edf3',      // textPrimary
-            border: '1px solid #30363d', // border
-            borderRadius: '2.5rem',
-            padding: '16px 24px'
+            background: 'var(--surface-elevated, #1A1E28)',
+            color: 'var(--text-primary, #EEF0F5)',
+            border: '1px solid var(--border-hairline, #1E222D)',
+            borderRadius: '8px',
+            padding: '16px 24px',
+            fontFamily: 'inherit',
           },
           success: {
             iconTheme: {
-              primary: '#3fb950', // success
-              secondary: '#e6edf3', // textPrimary
+              primary: 'var(--data-success, #4CC38A)',
+              secondary: 'var(--surface-elevated, #1A1E28)',
             },
           },
           error: {
             iconTheme: {
-              primary: '#f85149', // danger
-              secondary: '#e6edf3', // textPrimary
+              primary: 'var(--data-critical, #F0595E)',
+              secondary: 'var(--surface-elevated, #1A1E28)',
             },
           },
         }}
@@ -78,8 +83,8 @@ function AppContent() {
 
       <div className="flex flex-col min-h-screen supports-[height:100dvh]:min-h-[100dvh]">
         {isNavbarVisible && <Navbar />}
-        {/* pt-24 ensures the content sits beneath the new floating pill Navbar */}
-        <div className={`flex-grow ${isNavbarVisible ? 'pt-24' : ''}`}>
+        {/* pt-14 clears the fixed 56px navbar */}
+        <div className={`flex-grow ${isNavbarVisible ? 'pt-14' : ''}`}>
           <AnimatedRoutes />
         </div>
         {isFooterVisible && <Footer />}

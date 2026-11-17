@@ -1,151 +1,151 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { StaticAnalysis } from '../types';
-import { Code2, GitMerge, FileCode, AlertTriangle, Info, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { Badge, FilePath } from './ui';
 
 interface StaticAnalysisPanelProps {
   analysis: StaticAnalysis;
 }
+
+const Stat: React.FC<{ label: string; value: string | number }> = ({ label, value }) => (
+  <div className="flex items-baseline justify-between gap-4 py-2 border-b border-border-hairline last:border-b-0">
+    <dt className="text-sm text-textSecondary">{label}</dt>
+    <dd className="font-mono text-sm text-textPrimary tabular-nums">{value}</dd>
+  </div>
+);
 
 export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analysis }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { repoMetrics, dependencyGraph, fileAnalyses } = analysis;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10"
-    >
-      <div className="bg-surface/95 rounded-2xl border border-border/50 overflow-hidden shadow-lg">
+    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">
+      <div className="bg-surface border border-border-hairline rounded-lg overflow-hidden">
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors focus:outline-none"
+          className="w-full px-5 py-4 sm:px-6 flex items-center justify-between gap-4 hover:bg-surface-elevated transition-colors duration-fast cursor-pointer select-none text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+          aria-expanded={isExpanded}
         >
-          <div className="flex items-center gap-4 border-l-2 border-primary pl-4">
-            <Code2 className="w-7 h-7 text-primary shrink-0" />
-            <div className="flex flex-col items-start">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-serif font-semibold text-textPrimary tracking-tight">Static Code Analysis</h3>
-                <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-primary/80 border border-primary/30 rounded px-1.5 py-0.5">
-                  Measured, not judged
-                </span>
-              </div>
-              <span className="text-sm text-textSecondary font-medium mt-1">
-                Parsed {repoMetrics.totalFiles} files • {repoMetrics.totalLOC} LOC
-              </span>
-            </div>
+          <div>
+            <h2 className="font-display text-lg font-semibold tracking-tight text-textPrimary">
+              Measured before the review
+            </h2>
+            <p className="text-sm text-textSecondary mt-0.5 tabular-nums">
+              {repoMetrics.totalFiles.toLocaleString()} files parsed, {repoMetrics.totalLOC.toLocaleString()} lines of code. These numbers come from the parser, not the AI.
+            </p>
           </div>
-          <motion.div
+          <motion.span
             animate={{ rotate: isExpanded ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
+            className="text-textMuted shrink-0"
           >
-            <ChevronDown className="w-6 h-6 text-textSecondary" />
-          </motion.div>
+            <ChevronDown className="w-5 h-5" />
+          </motion.span>
         </button>
 
-        <motion.div
-          initial={false}
-          animate={{
-            height: isExpanded ? 'auto' : 0,
-            opacity: isExpanded ? 1 : 0
-          }}
-          transition={{ duration: 0.4 }}
-          className="overflow-hidden"
-        >
-          <div className="p-6 pt-0 border-t border-border/50 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            
-            {/* Repo Metrics */}
-            <div className="bg-background rounded-xl p-5 border border-border/50">
-              <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-2 mb-4">
-                <FileCode className="w-4 h-4 text-primary" />
-                Repository metrics
-              </h4>
-              <ul className="space-y-3 text-sm text-textSecondary">
-                <li className="flex justify-between"><span>Total LOC:</span> <span className="font-mono text-textPrimary">{repoMetrics.totalLOC}</span></li>
-                <li className="flex justify-between"><span>Comment LOC:</span> <span className="font-mono text-textPrimary">{repoMetrics.commentLOC}</span></li>
-                <li className="flex justify-between"><span>Comment/Code Ratio:</span> <span className="font-mono text-textPrimary">{Number(repoMetrics.commentToCodeRatio).toFixed(2)}</span></li>
-                <li className="flex justify-between"><span>Functions/Methods:</span> <span className="font-mono text-textPrimary">{repoMetrics.totalFunctions}</span></li>
-                <li className="flex justify-between"><span>TODOs Found:</span> <span className="font-mono text-textPrimary">{repoMetrics.todoCount}</span></li>
-              </ul>
-            </div>
+        <AnimatePresence initial={false}>
+          {isExpanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden border-t border-border-hairline"
+            >
+              <div className="px-5 py-6 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                <section>
+                  <h3 className="font-display text-base font-semibold text-textPrimary mb-2">Size and comments</h3>
+                  <dl>
+                    <Stat label="Total lines" value={repoMetrics.totalLOC.toLocaleString()} />
+                    <Stat label="Comment lines" value={repoMetrics.commentLOC.toLocaleString()} />
+                    <Stat label="Comment to code" value={Number(repoMetrics.commentToCodeRatio).toFixed(2)} />
+                    <Stat label="Functions" value={repoMetrics.totalFunctions.toLocaleString()} />
+                    <Stat label="TODOs" value={repoMetrics.todoCount} />
+                  </dl>
+                </section>
 
-            {/* Dependency Graph */}
-            <div className="bg-background rounded-xl p-5 border border-border/50">
-              <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-2 mb-4">
-                <GitMerge className="w-4 h-4 text-[#8b949e]" />
-                Dependency graph
-              </h4>
-              <div className="space-y-4">
-                {dependencyGraph?.metrics?.hubs?.length > 0 ? (
-                  <div>
-                    <span className="text-xs text-textSecondary block mb-1">Architecture Hubs:</span>
-                    <div className="flex flex-wrap gap-2">
-                      {dependencyGraph.metrics.hubs.slice(0, 5).map(hub => (
-                        <span key={hub} className="px-2 py-1 bg-[#1f2428] rounded font-mono text-[11px] text-[#8b949e] border border-border break-all">{hub}</span>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <span className="text-sm text-textSecondary">No distinct hubs found.</span>
-                )}
-                
-                {dependencyGraph?.metrics?.orphans?.length > 0 && (
-                  <div>
-                    <span className="text-xs text-[#f85149] block mb-1">Potential Orphans (Unused):</span>
-                    <div className="flex flex-wrap gap-2">
-                      {dependencyGraph.metrics.orphans.slice(0, 3).map(orphan => (
-                        <span key={orphan} className="px-2 py-1 bg-[#f85149]/10 rounded font-mono text-[11px] text-[#f85149] border border-[#f85149]/30 break-all">{orphan}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Notable Files Insights */}
-            <div className="bg-background rounded-xl p-5 border border-border/50 lg:col-span-1 md:col-span-2">
-              <h4 className="text-sm font-semibold text-textPrimary flex items-center gap-2 mb-4">
-                <AlertTriangle className="w-4 h-4 text-[#d29922]" />
-                File insights
-              </h4>
-              <div className="space-y-3">
-                {fileAnalyses && fileAnalyses.length > 0 ? (
-                  fileAnalyses.slice(0, 4).map((file, idx) => {
-                    // Large/unrecognized-language files fall back to a regex
-                    // analyzer whose `functions` are plain name strings, not
-                    // {flags} objects -- guard against that shape here.
-                    const flags = file.functions.flatMap((f: any) => (f && typeof f === 'object' ? f.flags || [] : []));
-                    const uniqueFlags = Array.from(new Set(flags));
-                    if (uniqueFlags.length === 0 && file.magicNumbers.length === 0) return null;
-                    return (
-                      <div key={idx} className="text-sm">
-                        <span className="font-mono text-textPrimary text-xs break-all block mb-1">{file.path}</span>
-                        <div className="flex flex-wrap gap-1">
-                          {uniqueFlags.map((flag: any, i: number) => (
-                            <span key={i} className="px-1.5 py-0.5 bg-[#d29922]/10 rounded text-[10px] uppercase text-[#d29922] font-semibold tracking-wider">{flag}</span>
+                <section>
+                  <h3 className="font-display text-base font-semibold text-textPrimary mb-3">Dependencies</h3>
+                  <div className="space-y-4">
+                    {dependencyGraph?.metrics?.hubs && dependencyGraph.metrics.hubs.length > 0 ? (
+                      <div>
+                        <p className="text-sm text-textSecondary mb-2">Files everything depends on</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {dependencyGraph.metrics.hubs.slice(0, 5).map((hub) => (
+                            <span
+                              key={hub}
+                              className="px-2 py-0.5 bg-surface-elevated rounded font-mono text-[11px] text-textSecondary border border-border-hairline break-all"
+                            >
+                              {hub}
+                            </span>
                           ))}
-                          {file.magicNumbers.length > 0 && (
-                            <span className="px-1.5 py-0.5 bg-[#8b949e]/10 rounded text-[10px] uppercase text-[#8b949e] font-semibold tracking-wider">{file.magicNumbers.length} Magic Numbers</span>
-                          )}
                         </div>
                       </div>
-                    );
-                  })
-                ) : (
-                  <div className="flex items-center gap-2 text-sm text-textSecondary">
-                    <Info className="w-4 h-4" />
-                    No major anomalies detected.
-                  </div>
-                )}
-              </div>
-            </div>
+                    ) : (
+                      <p className="text-sm text-textMuted">No central files found.</p>
+                    )}
 
-          </div>
-        </motion.div>
+                    {dependencyGraph?.metrics?.orphans && dependencyGraph.metrics.orphans.length > 0 && (
+                      <div>
+                        <p className="text-sm text-data-critical font-medium mb-2">Possibly unused</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {dependencyGraph.metrics.orphans.slice(0, 3).map((orphan) => (
+                            <span
+                              key={orphan}
+                              className="px-2 py-0.5 bg-data-critical/10 rounded font-mono text-[11px] text-data-critical border border-data-critical/25 break-all"
+                            >
+                              {orphan}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                <section>
+                  <h3 className="font-display text-base font-semibold text-textPrimary mb-3">Flagged files</h3>
+                  <div className="space-y-3">
+                    {fileAnalyses && fileAnalyses.length > 0 ? (
+                      fileAnalyses.slice(0, 4).map((file, idx) => {
+                        const flags: string[] = file.functions.flatMap((f: unknown) =>
+                          f && typeof f === 'object' && 'flags' in f && Array.isArray((f as { flags: string[] }).flags)
+                            ? (f as { flags: string[] }).flags
+                            : []
+                        );
+                        const uniqueFlags: string[] = Array.from(new Set(flags));
+                        if (uniqueFlags.length === 0 && file.magicNumbers.length === 0) return null;
+
+                        return (
+                          <div key={idx} className="space-y-1.5">
+                            <FilePath path={file.path} className="text-[11px]" />
+                            <div className="flex flex-wrap gap-1">
+                              {uniqueFlags.map((flag: string, i: number) => (
+                                <Badge key={i} variant="warning" size="sm">
+                                  {flag}
+                                </Badge>
+                              ))}
+                              {file.magicNumbers.length > 0 && (
+                                <Badge variant="default" size="sm">
+                                  {file.magicNumbers.length} magic numbers
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-sm text-textMuted">Nothing flagged in the parsed files.</p>
+                    )}
+                  </div>
+                </section>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </motion.div>
+    </div>
   );
 };

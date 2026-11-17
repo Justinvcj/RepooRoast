@@ -3,7 +3,7 @@ import type { ApiResponse, ReviewStatus } from '../types';
 import type { ReviewStage } from './useRepoReview';
 import { extractRepoInfo } from '../utils/githubParser';
 import { generateWithFallbacks } from '../utils/geminiDirectClient';
-import { mergeReviewParts } from '../utils/reviewMerge';
+import { mergeReviewParts, type ReviewPart } from '../utils/reviewMerge';
 import { buildActionPlanPrompt } from '../utils/actionPlanPrompt';
 
 interface PreparedReview {
@@ -66,7 +66,7 @@ export const useCustomReview = () => {
       setStage('reviewing');
       const [part1, part2, part3] = await Promise.all(
         prepared.promptParts.map((prompt, i) =>
-          generateWithFallbacks(apiKey, prepared.systemInstruction, prompt, prepared.partNames[i])
+          generateWithFallbacks<ReviewPart>(apiKey, prepared.systemInstruction, prompt, prepared.partNames[i])
         )
       );
 
@@ -78,7 +78,7 @@ export const useCustomReview = () => {
       let actionPlan: { topPriorities?: string[]; whatYouDidWell?: string[]; fixPrompt?: string } = {};
       try {
         const actionPlanPrompt = buildActionPlanPrompt(categories, prepared.repoLabel);
-        actionPlan = await generateWithFallbacks(apiKey, prepared.systemInstruction, actionPlanPrompt, 'Action Plan Synthesis');
+        actionPlan = await generateWithFallbacks<typeof actionPlan>(apiKey, prepared.systemInstruction, actionPlanPrompt, 'Action Plan Synthesis');
       } catch {
         // Non-fatal: fall back to an empty action plan rather than failing the whole review.
       }

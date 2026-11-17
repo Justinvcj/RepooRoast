@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Plus } from 'lucide-react';
+import { Github } from 'lucide-react';
+import { LogoLockup } from './brand';
 
 export const Navbar: React.FC = () => {
   const handleScrollToTop = (e: React.MouseEvent) => {
     if (window.location.pathname === '/') {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Give smooth scroll a moment before focusing to prevent jumping
       setTimeout(() => {
         const input = document.getElementById('repo-url-input') as HTMLInputElement;
         if (input) input.focus({ preventScroll: true });
@@ -17,33 +16,40 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-      <nav className="pointer-events-auto glass-panel bg-[#0d1117]/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-colors duration-300">
-        <div className="flex-shrink-0 flex items-center">
-          <Link to="/" onClick={handleScrollToTop} className="text-xl font-serif font-semibold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <span className="text-textPrimary">Repo<span className="text-primary">Roast</span></span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link 
-            to="/" 
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border-hairline">
+      <nav
+        aria-label="Global"
+        className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between"
+      >
+        <Link
+          to="/"
+          onClick={handleScrollToTop}
+          className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          aria-label="RepoRoast Home"
+        >
+          <LogoLockup size={26} />
+        </Link>
+
+        <div className="flex items-center gap-5 text-sm">
+          <Link
+            to="/"
             onClick={handleScrollToTop}
-            className="flex items-center gap-2 text-sm font-semibold text-white bg-primary hover:bg-primary-hover px-4 py-2 rounded-lg transition-colors shadow-sm"
+            className="font-semibold text-textPrimary hover:text-primary transition-colors duration-fast rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">New Roast</span>
+            New roast
           </Link>
-          <a 
-            href="https://github.com/Justinvcj/RepooRoast" 
-            target="_blank" 
+          <a
+            href="https://github.com/Justinvcj/RepooRoast"
+            target="_blank"
             rel="noopener noreferrer"
-            className="p-2 text-textSecondary hover:text-textPrimary bg-surface/50 border border-border/50 rounded-lg hover:border-[#8b949e] transition-colors"
+            aria-label="View Source on GitHub"
+            className="text-textSecondary hover:text-textPrimary transition-colors duration-fast rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             title="View Source on GitHub"
           >
-            <Github className="w-5 h-5" />
+            <Github className="w-[18px] h-[18px]" />
           </a>
         </div>
       </nav>
-    </div>
+    </header>
   );
 };

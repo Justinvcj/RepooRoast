@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { getScoreColor } from '../utils/scoreHelpers';
+import { motion, useReducedMotion } from 'framer-motion';
+import { getScoreColor, getScoreLabel } from '../utils/scoreHelpers';
 
 interface ScoreCardProps {
   score: number;
@@ -9,97 +9,71 @@ interface ScoreCardProps {
   hiringVerdict: string;
 }
 
-export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hiringVerdict }) => {
-  // Determine color based on score
-  const ringColor = getScoreColor(score);
+/** The grade, circled the way a reviewer circles it: one loose, slightly open ellipse. */
+const PenCircle: React.FC<{ color: string }> = ({ color }) => {
+  const reduce = useReducedMotion();
+  return (
+    <svg
+      viewBox="0 0 200 150"
+      aria-hidden="true"
+      className="absolute -inset-x-3 -inset-y-2 w-[calc(100%+1.5rem)] h-[calc(100%+1rem)] overflow-visible"
+      fill="none"
+    >
+      <motion.path
+        d="M 38 78 C 30 40, 90 14, 146 26 C 188 36, 196 90, 150 122 C 104 150, 36 136, 22 96 C 16 76, 34 52, 70 40"
+        stroke={color}
+        strokeWidth="3"
+        strokeLinecap="round"
+        initial={reduce ? false : { pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      />
+    </svg>
+  );
+};
 
-  // Circle properties
-  const radius = 90;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
+export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hiringVerdict }) => {
+  const color = getScoreColor(score);
+  const rounded = Math.round(score);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1] // Apple-like custom cubic-bezier
-      }}
-      className="w-full relative overflow-hidden rounded-3xl bg-surface/90 border border-border/50 p-5 md:p-6 flex flex-col md:flex-row items-center gap-12"
+    <section
+      aria-label="Overall verdict"
+      className="w-full grid md:grid-cols-[auto_1fr] gap-8 md:gap-14 items-center bg-surface border border-border-hairline rounded-lg p-6 sm:p-10"
     >
-
-      <div className="relative flex-shrink-0 flex items-center justify-center">
-        <svg className="transform -rotate-90 w-64 h-64" aria-hidden="true">
-          {/* Background Ring */}
-          <circle
-            cx="128"
-            cy="128"
-            r={radius}
-            stroke="currentColor"
-            strokeWidth="14"
-            fill="transparent"
-            className="text-border/50"
-          />
-          {/* Animated Foreground Ring */}
-          <motion.circle
-            cx="128"
-            cy="128"
-            r={radius}
-            stroke={ringColor}
-            strokeWidth="14"
-            fill="transparent"
-            strokeLinecap="round"
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            style={{ strokeDasharray: circumference }}
-          />
-        </svg>
-        <div className="absolute flex flex-col items-center justify-center">
-          <motion.span 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="text-4xl font-serif font-semibold tracking-tighter"
-            style={{ color: ringColor }}
+      <div
+        role="img"
+        aria-label={`Score: ${rounded} out of 100, ${getScoreLabel(score)}`}
+        className="relative mx-auto w-[200px] h-[150px] flex items-center justify-center select-none"
+      >
+        <PenCircle color={color} />
+        <div className="relative text-center leading-none">
+          <span
+            className="font-display font-medium text-[4.5rem] tracking-[-0.05em] tabular-nums"
+            style={{ color }}
           >
-            {score}
-          </motion.span>
-          <span className="text-sm font-semibold text-textSecondary mt-2">/ 100</span>
+            {rounded}
+          </span>
+          <span className="block mt-1 text-sm text-textMuted font-medium">out of 100</span>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center text-center md:text-left z-10">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          className="text-2xl md:text-3xl font-serif font-semibold text-textPrimary tracking-tight mb-6"
-        >
+      <div className="min-w-0">
+        <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-semibold tracking-[-0.03em] leading-[1.08] text-textPrimary max-w-[28ch]">
           {verdict}
-        </motion.h2>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-base md:text-lg text-textSecondary italic font-serif leading-relaxed mb-6"
-        >
-          "{quote}"
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="inline-flex items-center justify-center md:justify-start gap-2 text-sm font-semibold"
-          style={{ color: ringColor }}
-        >
-          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: ringColor }} />
-          Hiring verdict: {hiringVerdict}
-        </motion.div>
+        </h2>
+
+        <blockquote className="mt-5 max-w-[60ch] text-lg text-textSecondary leading-relaxed border-l-2 border-primary pl-4">
+          {quote}
+        </blockquote>
+
+        <p className="mt-6 text-sm text-textSecondary">
+          Hiring verdict:{' '}
+          <span className="font-semibold" style={{ color }}>
+            {hiringVerdict}
+          </span>
+        </p>
       </div>
-    </motion.div>
+    </section>
   );
 };

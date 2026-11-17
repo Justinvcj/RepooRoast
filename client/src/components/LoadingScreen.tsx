@@ -1,34 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Flame, Database, FileCode, BrainCircuit, ListChecks, KeyRound } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Database, FileCode, BrainCircuit, ListChecks, KeyRound, Check } from 'lucide-react';
+import { LogoAnimation } from './brand';
+import { Card } from './ui';
 import type { ReviewStage } from '../hooks/useRepoReview';
 
 const roastingQuotes = [
-  "Warming up the review oven...",
-  "Teaching the AI to be mean...",
-  "Summoning the ghost of clean code...",
-  "Preparing the brutal truth...",
-  "Judging your variable names...",
-  "Questioning your architectural choices..."
+  'Reading the file tree',
+  'Parsing syntax trees',
+  'Measuring complexity and nesting depth',
+  'Tracing the dependency graph',
+  'Drafting the review',
+  'Checking each finding against the evidence',
 ];
 
-// The real pipeline stages the server reports, in the order they occur.
-// `cache_hit` always jumps straight to the end since no AI call is needed.
 const DEFAULT_STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating', 'synthesizing'];
-
-// Custom/BYOK mode has a different, shorter pipeline: the server only
-// prepares the prompts (one combined step), then this browser makes the AI
-// calls directly with the user's own key -- see useCustomReview.ts.
 const CUSTOM_STEP_ORDER: ReviewStage[] = ['preparing', 'reviewing', 'synthesizing'];
 
-const STEP_CONFIG: Record<string, { text: string; icon: React.ReactNode }> = {
-  fetching: { text: "Fetching repository metadata & structure...", icon: <Database className="w-5 h-5" /> },
-  analyzing: { text: "Running local static analysis...", icon: <FileCode className="w-5 h-5" /> },
-  classifying: { text: "Classifying project & consulting the AI Senior Dev...", icon: <BrainCircuit className="w-5 h-5" /> },
-  generating: { text: "Generating your brutal review...", icon: <Flame className="w-5 h-5" /> },
-  synthesizing: { text: "Synthesizing your action plan...", icon: <ListChecks className="w-5 h-5" /> },
-  preparing: { text: "Preparing repository context...", icon: <Database className="w-5 h-5" /> },
-  reviewing: { text: "Reviewing with your API key...", icon: <KeyRound className="w-5 h-5" /> },
+const STEP_CONFIG: Record<string, { text: string; icon: React.ComponentType<{ className?: string }> }> = {
+  fetching: { text: "Fetching repository metadata & structure...", icon: Database },
+  analyzing: { text: "Running local static analysis...", icon: FileCode },
+  classifying: { text: "Classifying project & inspecting AST...", icon: BrainCircuit },
+  generating: { text: "Generating evidence-grounded review...", icon: BrainCircuit },
+  synthesizing: { text: "Synthesizing prioritized action plan...", icon: ListChecks },
+  preparing: { text: "Preparing repository context...", icon: Database },
+  reviewing: { text: "Reviewing with your API key...", icon: KeyRound },
 };
 
 interface LoadingScreenProps {
@@ -43,98 +39,119 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
   useEffect(() => {
     const quoteInterval = setInterval(() => {
       setQuoteIndex((prev) => (prev + 1) % roastingQuotes.length);
-    }, 3000);
+    }, 3200);
 
     return () => clearInterval(quoteInterval);
   }, []);
 
-  // Real progress derived from the server's actual pipeline stage - no fake
-  // timer pretending to know how long an AI call will take.
   const currentIndex = stage === 'cache_hit'
     ? STEP_ORDER.length - 1
     : Math.max(0, STEP_ORDER.indexOf(stage));
   const progress = Math.round(((currentIndex + 1) / STEP_ORDER.length) * 100);
 
   return (
-    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background">
+    <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center p-4 bg-background select-none">
+      {/* Calm Looping Brand Respiration */}
+      <div className="mb-10 flex flex-col items-center">
+        <LogoAnimation
+          size={52}
+          looping={true}
+          showWordmark={false}
+          className="text-primary"
+        />
+      </div>
 
-      {/* Pulsing Flame Icon */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.8, 1, 0.8]
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="relative z-10 mb-16 p-6 rounded-full content-panel"
-      >
-        <Flame className="w-14 h-14 text-primary" />
-      </motion.div>
-
-      {/* Progress Steps container */}
-      <div className="relative z-10 w-full max-w-md content-panel p-8 rounded-[2.5rem] mb-8">
-        <h3 className="text-xl font-semibold text-textPrimary mb-6 flex items-center justify-center gap-2">
-          <span>Analyzing Codebase</span>
-          <span className="flex space-x-1">
-            <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0 }}>.</motion.span>
-            <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}>.</motion.span>
-            <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.6 }}>.</motion.span>
+      {/* Progress Card */}
+      <Card level={1} className="w-full max-w-md p-6 sm:p-8 rounded-lg border-border-hairline mb-6">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-hairline">
+          <h3 className="text-base sm:text-lg font-semibold text-textPrimary font-display flex items-center gap-2">
+            <span>Analyzing Codebase</span>
+            <span className="inline-flex space-x-0.5 text-primary">
+              <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.4, repeat: Infinity, delay: 0 }}>.</motion.span>
+              <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.4, repeat: Infinity, delay: 0.25 }}>.</motion.span>
+              <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.4, repeat: Infinity, delay: 0.5 }}>.</motion.span>
+            </span>
+          </h3>
+          <span className="text-sm font-semibold text-textSecondary tabular-nums">
+            Step {currentIndex + 1} of {STEP_ORDER.length}
           </span>
-        </h3>
+        </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {STEP_ORDER.map((key, index) => {
             const config = STEP_CONFIG[key];
+            if (!config) return null;
+            const Icon = config.icon;
             const isActive = index === currentIndex;
             const isComplete = index < currentIndex;
+
             return (
               <motion.div
                 key={key}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: isComplete || isActive ? 1 : 0.35, x: 0 }}
-                transition={{ duration: 0.4 }}
-                className={`flex items-center gap-3 ${isActive ? 'text-primary' : isComplete ? 'text-textPrimary' : 'text-textSecondary'}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: isComplete || isActive ? 1 : 0.4, x: 0 }}
+                transition={{ duration: 0.25 }}
+                className={`flex items-center gap-3 text-sm transition-colors ${
+                  isActive
+                    ? 'text-primary font-medium'
+                    : isComplete
+                    ? 'text-textPrimary'
+                    : 'text-textMuted'
+                }`}
               >
-                {config.icon}
-                <span className={isActive ? "font-medium" : ""}>
-                  {config.text}
-                </span>
+                <div
+                  className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 border ${
+                    isComplete
+                      ? 'bg-data-success/15 border-data-success/40 text-data-success'
+                      : isActive
+                      ? 'bg-primary/15 border-primary/40 text-primary'
+                      : 'bg-surface-secondary border-border-hairline text-textMuted'
+                  }`}
+                >
+                  {isComplete ? (
+                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                  ) : (
+                    <Icon className="w-3.5 h-3.5" />
+                  )}
+                </div>
+                <span className="truncate">{config.text}</span>
               </motion.div>
             );
           })}
         </div>
 
-        {/* Loading Bar - width is driven by the real server-reported stage */}
-        <div className="mt-8">
-          <div className="flex justify-between items-center mb-2 text-sm font-medium text-textSecondary">
+        {/* Real Progress Bar */}
+        <div className="mt-8 pt-4 border-t border-border-hairline">
+          <div className="flex justify-between items-center mb-2 text-sm text-textSecondary">
             <span>Progress</span>
-            <span className="text-primary font-semibold">{progress}%</span>
+            <span className="text-primary font-semibold tabular-nums">{progress}%</span>
           </div>
-          <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-surface-secondary rounded-full overflow-hidden border border-border-hairline">
             <motion.div
               className="h-full bg-primary"
-              initial={{ width: "0%" }}
+              initial={{ width: '0%' }}
               animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Dynamic Roasting Quotes */}
-      <motion.div
-        key={quoteIndex}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.5 }}
-        className="relative z-10 text-lg font-medium text-warning text-center max-w-md italic"
-      >
-        "{roastingQuotes[quoteIndex]}"
-      </motion.div>
+      <div className="h-8 flex items-center justify-center max-w-md px-4 text-center">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={quoteIndex}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.3 }}
+            className="text-sm font-sans text-textSecondary"
+          >
+            {roastingQuotes[quoteIndex]}
+          </motion.p>
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

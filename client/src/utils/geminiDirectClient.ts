@@ -19,7 +19,7 @@ export class GeminiDirectError extends Error {}
  * JSON extraction port of server/src/utils/responseParser.js -- handles the
  * model wrapping its JSON in markdown fences or surrounding prose.
  */
-const parseGeminiJson = (responseText: string): any => {
+const parseGeminiJson = (responseText: string): unknown => {
   if (!responseText || typeof responseText !== 'string') {
     throw new GeminiDirectError('Empty or invalid response received from the AI.');
   }
@@ -73,13 +73,13 @@ const callModel = async (apiKey: string, model: string, systemInstruction: strin
     }
 
     const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') || '';
+    const text = data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text ?? '').join('') || '';
     if (!text) {
       throw new GeminiDirectError('Gemini returned no content (the response may have been blocked by safety filters).');
     }
     return text;
-  } catch (err: any) {
-    if (err?.name === 'AbortError') {
+  } catch (err) {
+    if ((err as { name?: string })?.name === 'AbortError') {
       throw new GeminiDirectError(`Model ${model} timed out after ${MODEL_ATTEMPT_TIMEOUT_MS / 1000}s`);
     }
     throw err;
@@ -92,23 +92,23 @@ const callModel = async (apiKey: string, model: string, systemInstruction: strin
  * Runs a single prompt through the model fallback chain, exactly mirroring
  * the server's executePromptWithFallbacks, and returns the parsed JSON.
  */
-export const generateWithFallbacks = async (
+export const generateWithFallbacks = async <T = Record<string, unknown>>(
   apiKey: string,
   systemInstruction: string,
   prompt: string,
   partName: string,
   onModelAttempt?: (model: string) => void
-): Promise<any> => {
+): Promise<T> => {
   let lastError: Error | null = null;
 
   for (const model of FALLBACK_MODELS) {
     try {
       onModelAttempt?.(model);
       const text = await callModel(apiKey, model, systemInstruction, prompt);
-      return parseGeminiJson(text);
-    } catch (err: any) {
-      lastError = err;
-      const msg = err?.message || '';
+      return parseGeminiJson(text) as T;
+    } catch (err) {
+      lastError = err as Error;
+      const msg = (err as { message?: string })?.message || '';
       // A bad API key should fail loudly and immediately, not burn through
       // every fallback model with the same auth error.
       if (/^40[13]/.test(msg) || /API key not valid/i.test(msg)) {
