@@ -16,7 +16,7 @@ export const LogoWordmark: React.FC<LogoWordmarkProps> = ({
   const lineHeight = Math.round(fontSize * 1.2);
 
   const repoColor = monochrome ? 'currentColor' : '#F0F3F6';
-  const roastColor = monochrome ? 'currentColor' : '#F97316';
+  const roastColor = monochrome ? 'currentColor' : '#FF5426';
 
   return (
     <span
