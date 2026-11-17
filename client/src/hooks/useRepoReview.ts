@@ -98,7 +98,7 @@ export const useRepoReview = () => {
         throw new Error(serverErrorMessage);
       }
       if (!finalResult) {
-        throw new Error('Analysis failed unexpectedly.');
+        throw new Error('The server stopped before the review finished. Wait a minute and try again.');
       }
 
       localStorage.setItem('reporoast_last_review', JSON.stringify({
