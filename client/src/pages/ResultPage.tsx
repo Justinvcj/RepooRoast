@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { getPageTransition } from '../utils/motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
 import { StaticAnalysisPanel } from '../components/StaticAnalysisPanel';
 import type { ApiResponse } from '../types';
@@ -52,12 +53,12 @@ export const ResultPage: React.FC = () => {
   if (!responseData) return null;
 
   const { repo, review, analysis } = responseData;
+  const prefersReduced = useReducedMotion();
+  const pageTransition = getPageTransition(prefersReduced);
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
+      {...pageTransition}
       className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background text-textPrimary selection:bg-primary/30 pb-24 relative"
     >
       {/* Floating Action Navbar */}

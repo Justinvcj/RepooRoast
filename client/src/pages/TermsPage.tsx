@@ -1,16 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Card } from '../components/ui';
+import { getPageTransition } from '../utils/motion';
 
 export const TermsPage: React.FC = () => {
+  const prefersReduced = useReducedMotion();
+  const pageTransition = getPageTransition(prefersReduced);
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        {...pageTransition}
       >
         <Card level={1} className="p-8 sm:p-12 border-border-hairline shadow-xl">
           <Link

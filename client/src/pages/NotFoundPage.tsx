@@ -1,17 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Home } from 'lucide-react';
 import { LogoMark } from '../components/brand';
 import { Card, Button } from '../components/ui';
+import { getPageTransition } from '../utils/motion';
 
 export const NotFoundPage: React.FC = () => {
+  const prefersReduced = useReducedMotion();
+  const pageTransition = getPageTransition(prefersReduced);
+
   return (
     <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 text-center relative z-10 select-none">
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        {...pageTransition}
         className="w-full max-w-lg"
       >
         <Card level={1} className="p-8 sm:p-12 border-border-hairline shadow-2xl backdrop-blur-xl flex flex-col items-center">

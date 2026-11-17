@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Code2, GitMerge, FileText, Shield, TestTube, Zap, TrendingUp } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { getPageTransition } from '../utils/motion';
 
 import { useRepoReview } from '../hooks/useRepoReview';
 import { useCustomReview } from '../hooks/useCustomReview';
@@ -124,16 +125,16 @@ export const HomePage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const prefersReduced = useReducedMotion();
+  const pageTransition = getPageTransition(prefersReduced);
+
   if (status === 'loading') {
     return <LoadingScreen stage={stage} mode={customModeEnabled ? 'custom' : 'default'} />;
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.25 } }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+      {...pageTransition}
       className="min-h-full bg-background text-textPrimary selection:bg-primary/30 pb-32 flex flex-col relative z-10"
     >
       <main className="relative z-10">
