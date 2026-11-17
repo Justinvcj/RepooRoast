@@ -8,9 +8,6 @@ export const Footer: React.FC = () => {
         <p className="text-center text-sm text-textSecondary">
           Real static analysis, no sugarcoating. Built by Justin Varghese.
         </p>
-        <p className="text-center text-xs text-textSecondary/50">
-          Animated Background by <a href="https://reactbits.dev" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:underline">ReactBits (Lightfall)</a>
-        </p>
         <div className="flex flex-wrap justify-center gap-6 text-sm text-textSecondary/70">
           <Link to="/privacy" className="hover:text-primary transition-colors hover:underline">Privacy Policy</Link>
           <Link to="/terms" className="hover:text-primary transition-colors hover:underline">Terms of Service</Link>

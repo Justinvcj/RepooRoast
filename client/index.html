@@ -3,19 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="RepoRoast V2: The AI-powered brutally honest code reviewer. Deep AST analysis and incremental PR roasts." />
-    <meta name="theme-color" content="#0a0a0a" />
-    <meta property="og:title" content="RepoRoast 🔥" />
-    <meta property="og:description" content="The AI-powered brutally honest code reviewer." />
+    <meta name="description" content="RepoRoast: Authoritative code review grounded in AST static analysis, Tree-Sitter syntax inspection, and senior engineering critique." />
+    <meta name="theme-color" content="#0C0E12" />
+    <meta property="og:title" content="RepoRoast" />
+    <meta property="og:description" content="Authoritative code review grounded in AST static analysis and senior engineering critique." />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RepoRoast" />
+    <meta name="twitter:description" content="Authoritative code review grounded in AST static analysis and senior engineering critique." />
+    <meta name="twitter:image" content="/og-image.svg" />
     
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
     
     <!-- Optimize Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     
-    <title>RepoRoast 🔥</title>
+    <title>RepoRoast</title>
   </head>
   <body>
     <div id="root">
@@ -26,21 +33,36 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: #0a0a0a;
+          background-color: #0C0E12;
         }
         .initial-loader svg {
           width: 48px;
           height: 48px;
-          color: #f97316;
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          animation: breathe 2.4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
         }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: .5; transform: scale(1.1); }
+        @keyframes breathe {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.92;
+          }
+          50% {
+            transform: scale(1.06);
+            opacity: 1;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .initial-loader svg {
+            animation: none;
+          }
         }
       </style>
       <div class="initial-loader">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+        <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="RepoRoast">
+          <path d="M 12 5 L 5 12 L 5 20 L 12 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 20 5 L 27 12 L 27 20 L 20 27" stroke="#F0F3F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z" fill="#FF5426"/>
+          <path d="M 16 10 L 18 14 L 16 18 L 14 14 Z" fill="#FEF08A"/>
+        </svg>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>

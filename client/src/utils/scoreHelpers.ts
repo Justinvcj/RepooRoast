@@ -1,8 +1,8 @@
 export const getScoreColor = (score: number): string => {
-  if (score >= 80) return '#3fb950'; // success
-  if (score >= 60) return '#d29922'; // warning
-  if (score >= 40) return '#f97316'; // primary/orange
-  return '#f85149'; // danger
+  if (score >= 80) return '#10B981'; // data-success
+  if (score >= 60) return '#F59E0B'; // data-warning
+  if (score >= 40) return '#E67E22'; // data-flawed
+  return '#EF4444'; // data-critical
 };
 
 export const getScoreLabel = (score: number): string => {

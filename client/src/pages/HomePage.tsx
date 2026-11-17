@@ -10,7 +10,6 @@ import { useLayout } from '../contexts/LayoutContext';
 import { Hero } from '../components/Hero';
 import { LoadingScreen } from '../components/LoadingScreen';
 import { CustomModeModal } from '../components/CustomModeModal';
-import Lightfall from '../components/Lightfall';
 
 const CUSTOM_MODE_SESSION_KEY = 'reporoast_custom_api_key';
 
@@ -136,23 +135,6 @@ export const HomePage: React.FC = () => {
 
   return (
     <>
-      <div className="fixed inset-0 z-0 opacity-80 pointer-events-none mix-blend-screen">
-         <Lightfall 
-            colors={['#f97316', '#f85149', '#d29922']}
-            backgroundColor="#0d1117"
-            speed={0.5}
-            streakCount={3}
-            streakWidth={1.2}
-            streakLength={1.5}
-            glow={0.7}
-            density={0.8}
-            twinkle={0.8}
-            zoom={2.5}
-            backgroundGlow={0.2}
-            mouseInteraction={false}
-            dpr={1}
-         />
-      </div>
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}

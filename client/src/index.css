@@ -2,26 +2,69 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+:root {
+  /* 60% Dominant Canvas */
+  --bg-dominant: #0C0E12;
+
+  /* 30% Structural Surfaces & Typography */
+  --surface-secondary: #161920;
+  --surface-elevated: #1F242E;
+  --border-hairline: #222733;
+  --border-focused: #3A4356;
+  --text-primary: #F0F3F6;
+  --text-secondary: #949CA6;
+  --text-muted: #646E7E;
+
+  /* 10% Brand Accent */
+  --accent-brand: #FF5426;
+  --accent-brand-hover: #E84518;
+  --accent-text-dark: #0C0E12;
+  --accent-ember-deep: #D83B01;
+
+  /* Semantic Data Palette (Outside Accent Budget) */
+  --data-success: #10B981;
+  --data-warning: #F59E0B;
+  --data-flawed: #E67E22;
+  --data-critical: #EF4444;
+
+  /* Motion Tokens */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-instant: 80ms;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-assembly: 1400ms;
+  --duration-respiration: 2400ms;
+}
+
 @layer components {
-  /* Chrome material: floating nav bars and modals, which sit *over* page
-     content and need the blur to read as a distinct layer above it.
-     Override bg-color/shadow per-instance with a trailing utility class
-     (utilities layer wins over components layer in Tailwind). */
+  /* Chrome material: floating nav bars and modals */
   .glass-panel {
-    background-color: rgb(13 17 23 / 0.5);
+    background-color: rgba(31, 36, 46, 0.7);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgb(255 255 255 / 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-hairline);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  /* Content material: panels that sit *in* the page flow (loading screen,
-     static text pages). Flat and opaque -- no blur, since there's nothing
-     moving behind them for it to reveal, just a hairline border for edge
-     definition. */
+  /* Content material: flat opaque structural panels */
   .content-panel {
-    background-color: rgb(22 27 34 / 0.95);
-    border: 1px solid rgb(255 255 255 / 0.08);
+    background-color: var(--surface-secondary);
+    border: 1px solid var(--border-hairline);
+  }
+}
+
+@layer utilities {
+  .border-hairline {
+    border-width: 1px;
+    border-color: var(--border-hairline);
+  }
+  .border-focused {
+    border-color: var(--border-focused);
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -30,8 +73,18 @@ html {
 }
 
 body {
-  background-color: #0d1117;
-  color: #e6edf3;
+  background-color: var(--bg-dominant);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure code and mono metrics default to tabular numbers */
+.font-mono,
+code,
+pre,
+kbd,
+samp {
+  font-variant-numeric: tabular-nums;
 }

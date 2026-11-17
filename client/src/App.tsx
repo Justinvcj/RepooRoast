@@ -54,22 +54,23 @@ function AppContent() {
         position="bottom-right" 
         toastOptions={{
           style: {
-            background: '#161b22', // surface color from Tailwind spec
-            color: '#e6edf3',      // textPrimary
-            border: '1px solid #30363d', // border
-            borderRadius: '2.5rem',
-            padding: '16px 24px'
+            background: 'var(--surface-elevated, #1F242E)',
+            color: 'var(--text-primary, #F0F3F6)',
+            border: '1px solid var(--border-hairline, #222733)',
+            borderRadius: '8px',
+            padding: '16px 24px',
+            fontFamily: 'inherit',
           },
           success: {
             iconTheme: {
-              primary: '#3fb950', // success
-              secondary: '#e6edf3', // textPrimary
+              primary: 'var(--data-success, #10B981)',
+              secondary: 'var(--surface-elevated, #1F242E)',
             },
           },
           error: {
             iconTheme: {
-              primary: '#f85149', // danger
-              secondary: '#e6edf3', // textPrimary
+              primary: 'var(--data-critical, #EF4444)',
+              secondary: 'var(--surface-elevated, #1F242E)',
             },
           },
         }}
