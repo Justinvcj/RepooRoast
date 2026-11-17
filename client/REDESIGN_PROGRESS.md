@@ -2,8 +2,8 @@
 
 **Branch:** `redesign/v3`  
 **Base Commit:** `de5199b` (`main`)  
-**Status:** Phase 4 Complete — Ready for Phase 5  
-**Current Next Step:** Begin Phase 5: Screens & Dashboard Redesign (Navbar, Footer, Splash, Home Hero, URL Input, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary).
+**Status:** Phase 5 Complete — Ready for Phase 6  
+**Current Next Step:** Begin Phase 6: Motion System Polish (Tokenized easings, spring physics, route transitions, and strict prefers-reduced-motion validation across all redesigned components).
 
 ---
 
@@ -31,7 +31,7 @@ npm run dev
 | **Phase 2** | **Logo System & Animation** | Original geometric SVG mark, wordmark, lockup, favicon, 1.2–1.6s path animation, calm loop, standalone review page under `client/design/` | **COMPLETE** |
 | **Phase 3** | **Foundations & Tokens** | Design tokens in `tailwind.config.js`, `index.css`, fonts, inline pre-React loader in `index.html`, retire `Lightfall` & `ogl` | **COMPLETE** |
 | **Phase 4** | **UI Primitives Library** | Button, Input, Switch, Surface/Card, Terminal Tag/Badge, Modal, Score Ring, Score Bar, Code display | **COMPLETE** |
-| **Phase 5** | **Screens & Dashboard Redesign** | Navbar, Footer, Splash, Home, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary | PLANNED |
+| **Phase 5** | **Screens & Dashboard Redesign** | Navbar, Footer, Splash, Home, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary | **COMPLETE** |
 | **Phase 6** | **Motion System Polish** | Cohesive transitions, tokenized easing, reduced-motion fallbacks | PLANNED |
 | **Phase 7** | **Review, Audits & Final Screenshots** | 60-30-10 audit, avoid list check, keyboard a11y, after screenshots in `client/design/after/`, verify build/lint/e2e | PLANNED |
 | **Phase 8** | **Hand-off & Review Documentation** | Executive summary, local preview guide, test observation report | PLANNED |
@@ -43,26 +43,26 @@ npm run dev
 | Component / Screen | File Path | Baseline Status | Redesign Status | Verification Notes |
 |---|---|---|---|---|
 | **Splash Screen** | `client/src/components/SplashScreen.tsx` | Stock Lucide Flame, pulse scale | Phase 2 Complete (LogoLockup + 1.4s LogoAnimation) | 1600ms sync timer verified |
-| **Global Navbar** | `client/src/components/Navbar.tsx` | Glass pill nav, stock typography | Pending Phase 5 | Baseline screenshot captured |
-| **Result Navbar** | `client/src/pages/ResultPage.tsx` | Glass pill with "Roast Another" | Pending Phase 5 | Baseline screenshot captured |
-| **Global Footer** | `client/src/components/Footer.tsx` | Basic footer with Lightfall credit | Lightfall credit retired; pending Phase 5 overhaul | Baseline screenshot captured |
-| **Home Hero** | `client/src/components/Hero.tsx` | Hero text + ReviewPreviewCard | Lightfall background removed; pending Phase 5 overhaul | Baseline screenshot captured |
-| **URL Input & Validation** | `client/src/components/UrlInput.tsx` | Glow input with example repo chips | Pending Phase 5 | Baseline screenshot captured |
-| **What We Roast (Features)** | `client/src/pages/HomePage.tsx` | 7-category icon grid | Pending Phase 5 | Baseline screenshot captured |
-| **Custom Mode Modal** | `client/src/components/CustomModeModal.tsx` | BYOK modal with switch & API key input | Pending Phase 5 | Baseline screenshot captured |
-| **Pipeline Loading Screen** | `client/src/components/LoadingScreen.tsx` | Pipeline stages & rotating quotes | Phase 2 Complete (Logo 2.4s calm respiration) | Replaced Lucide flame |
-| **Review Dashboard** | `client/src/components/ReviewDashboard.tsx` | Staggered container for report | Pending Phase 5 | Baseline screenshot captured |
-| **ScoreCard** | `client/src/components/ScoreCard.tsx` | Overall score ring & senior quote | Pending Phase 5 | Baseline screenshot captured |
-| **ScoreChart** | `client/src/components/ScoreChart.tsx` | Recharts bar chart | Pending Phase 5 | Baseline screenshot captured |
-| **CategorySection** | `client/src/components/CategorySection.tsx` | Collapsible cards with terminal tag | Pending Phase 5 | Baseline screenshot captured |
-| **IssueCard** | `client/src/components/IssueCard.tsx` | Severity badges, code suggestions | Pending Phase 5 | Baseline screenshot captured |
-| **StaticAnalysisPanel** | `client/src/components/StaticAnalysisPanel.tsx` | LOC, dependency hubs & orphans | Pending Phase 5 | Baseline screenshot captured |
-| **Auto-Fix AI Prompt Block** | `client/src/components/ReviewDashboard.tsx` | Copyable CRED prompt | Pending Phase 5 | Baseline screenshot captured |
-| **Privacy Policy Page** | `client/src/pages/PrivacyPage.tsx` | Content panel with back link | Pending Phase 5 | Baseline screenshot captured |
-| **Terms of Service Page** | `client/src/pages/TermsPage.tsx` | Content panel with back link | Pending Phase 5 | Baseline screenshot captured |
-| **404 Page** | `client/src/pages/NotFoundPage.tsx` | "Back to safety" link with Flame | Pending Phase 5 | Baseline screenshot captured |
-| **Error Boundary** | `client/src/components/ErrorBoundary.tsx` | Fallback error card | Pending Phase 5 | Covered by tests |
-| **Toasts** | `client/src/App.tsx` | react-hot-toast container | Pending Phase 5 | Baseline screenshot captured |
+| **Global Navbar** | `client/src/components/Navbar.tsx` | Glass pill nav, stock typography | **COMPLETE** (Caliper Lockup, tactile Button, hairline border) | E2E verified |
+| **Result Navbar** | `client/src/pages/ResultPage.tsx` | Glass pill with "Roast Another" | **COMPLETE** (Integrated LogoLockup & Button trigger) | E2E verified |
+| **Global Footer** | `client/src/components/Footer.tsx` | Basic footer with Lightfall credit | **COMPLETE** (Clean mono metadata & navigation links) | E2E verified |
+| **Home Hero** | `client/src/components/Hero.tsx` | Hero text + ReviewPreviewCard | **COMPLETE** (Display typography, AST telemetry badge, Card) | E2E verified |
+| **URL Input & Validation** | `client/src/components/UrlInput.tsx` | Glow input with example repo chips | **COMPLETE** (Monospace input, focus ring, tactile Button) | E2E verified |
+| **What We Roast (Features)** | `client/src/pages/HomePage.tsx` | 7-category icon grid | **COMPLETE** (Quiet editorial list, tokenized icons) | E2E verified |
+| **Custom Mode Modal** | `client/src/components/CustomModeModal.tsx` | BYOK modal with switch & API key input | **COMPLETE** (Card dialog, accessible switch, tokenized inputs) | E2E verified |
+| **Pipeline Loading Screen** | `client/src/components/LoadingScreen.tsx` | Pipeline stages & rotating quotes | **COMPLETE** (Logo 2.4s calm respiration, step cards, real progress) | E2E verified |
+| **Review Dashboard** | `client/src/components/ReviewDashboard.tsx` | Staggered container for report | **COMPLETE** (Removed top stripes; unified with Card & CodeBlock) | E2E verified |
+| **ScoreCard** | `client/src/components/ScoreCard.tsx` | Overall score ring & senior quote | **COMPLETE** (ScoreRing primitive, tabular numerals, editorial quote) | E2E verified |
+| **ScoreChart** | `client/src/components/ScoreChart.tsx` | Recharts bar chart | **COMPLETE** (ScoreBar breakdown with tabular nums & spring anim) | E2E verified |
+| **CategorySection** | `client/src/components/CategorySection.tsx` | Collapsible cards with terminal tag | **COMPLETE** (TerminalTag primitive, tabular score, AnimatePresence) | E2E verified |
+| **IssueCard** | `client/src/components/IssueCard.tsx` | Severity badges, code suggestions | **COMPLETE** (Badge, FilePath, CodeBlock primitives with copy) | E2E verified |
+| **StaticAnalysisPanel** | `client/src/components/StaticAnalysisPanel.tsx` | LOC, dependency hubs & orphans | **COMPLETE** (Card, Badge, FilePath, tabular metrics, typed AST) | E2E verified |
+| **Auto-Fix AI Prompt Block** | `client/src/components/ReviewDashboard.tsx` | Copyable CRED prompt | **COMPLETE** (CodeBlock primitive with syntax styling & copy action) | E2E verified |
+| **Privacy Policy Page** | `client/src/pages/PrivacyPage.tsx` | Content panel with back link | **COMPLETE** (Card container, clean typography, back link) | E2E verified |
+| **Terms of Service Page** | `client/src/pages/TermsPage.tsx` | Content panel with back link | **COMPLETE** (Card container, clean typography, back link) | E2E verified |
+| **404 Page** | `client/src/pages/NotFoundPage.tsx` | "Back to safety" link with Flame | **COMPLETE** (Replaced Lucide flame with LogoMark & Card) | E2E verified |
+| **Error Boundary** | `client/src/components/ErrorBoundary.tsx` | Fallback error card | **COMPLETE** (Card container, data-critical styling, Button) | E2E verified |
+| **Toasts** | `client/src/App.tsx` | react-hot-toast container | **COMPLETE** (CSS variable tokens for surface, border, text & data) | E2E verified |
 | **HTML Pre-React Loader** | `client/index.html` | Stock inline SVG flame pulse | Phase 3 Complete (Geometric caliper & ember SVG mark + calm breathing animation) | Inspected |
 | **Favicon & App Icon** | `client/public/favicon.svg` | Stock flame SVG | Phase 2 Complete (Integer 16px SVG & 512px icon) | Zero Lucide flame |
 | **Design Review Page** | `client/design/` | Does not exist | Phase 2 Complete (/design route & logo-preview.html) | Interactive suite |
@@ -90,6 +90,7 @@ npm run dev
 ## 5. Decisions Log
 
 - **2026-11-17**: Completed Phase 4 by authoring complete accessible UI Primitives Suite (`Button`, `Input`, `Switch`, `Surface`, `Card`, `Badge`, `TerminalTag`, `Modal`, `ScoreRing`, `ScoreBar`, `CodeBlock`, `FilePath`, `Tooltip`) in `client/src/components/ui/`. Implemented Apple-inspired tactile responsiveness (<100ms response, `active:scale-[0.98]`, spring curves, tabular figures, high-contrast focus rings, WCAG AA compliance). Integrated interactive UI Primitives inspection suite with live controls in `DesignReviewPage.tsx`. Verified 100% clean build and zero functional regressions in test suite.
+- **2026-11-17**: Completed Phase 5 by executing full screen & dashboard redesigns across 16 files: redesigned global Navbar & Result Navbar with caliper `LogoLockup` and tactile `Button`; redesigned Footer with monospace telemetry and legal links; overhauled Home Hero, `UrlInput`, and `HomePage` quiet feature list; upgraded `CustomModeModal` with accessible toggle switch and secure input states (resolving ESLint `setState-in-effect` errors); upgraded `LoadingScreen` with calm respiration logo animation and server-reported pipeline progress; redesigned `ResultPage`, `ScoreCard` (tabular numerals & editorial commentary), `ScoreChart` (sorted `ScoreBar` telemetry), `CategorySection` (collapsible cards with `TerminalTag`), `IssueCard` (`Badge`, `FilePath`, `CodeBlock`), and `StaticAnalysisPanel` (strongly typed AST metrics and hubs); upgraded `NotFoundPage` (replacing Lucide Flame with `LogoMark`), `PrivacyPage`, `TermsPage`, and `ErrorBoundary`; eliminated all avoid-list patterns (colored top stripes, gradient text, glowing blobs); verified 100% test pass (9/9) in Playwright E2E suite and clean TypeScript build.
 
 - **2026-11-17**: Created branch `redesign/v3` from `main` (`de5199b`).
 - **2026-11-17**: Verified baseline client build (`npm run build`) succeeds cleanly with zero errors.
