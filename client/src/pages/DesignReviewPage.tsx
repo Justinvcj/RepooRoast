@@ -465,7 +465,7 @@ export const DesignReviewPage: React.FC = () => {
 
                 <div className="bg-[#11141C] border border-[#E2E8F0] rounded-xl p-8 flex flex-col items-center justify-center gap-4 text-center text-[#0B0D14]">
                   <LogoLockup size={32} monochrome={isMonochrome} looping={isLooping} />
-                  <div className="text-xs font-mono text-[#7A8296]">
+                  <div className="text-xs font-mono text-[#838BA0]">
                     Pure Light Surface (#11141C)
                     <div className="text-[10px] text-[#10B981]">Monochrome Inversion</div>
                   </div>

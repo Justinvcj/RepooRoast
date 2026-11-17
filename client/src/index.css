@@ -1,6 +1,6 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* RepoRoast v4 "Night Review": a late-night code review.
    60% ink canvas, 30% surfaces and text, 10% ember accent. */
@@ -12,7 +12,7 @@
   --border-focused: #343A4A;
   --text-primary: #EEF0F5;
   --text-secondary: #A3A9B8;
-  --text-muted: #7A8296;
+  --text-muted: #838BA0;
 
   --accent-brand: #FF6B3D;
   --accent-brand-hover: #FF8157;
@@ -22,7 +22,7 @@
   --data-success: #4CC38A;
   --data-warning: #E5B93C;
   --data-flawed: #E88A4A;
-  --data-critical: #E5484D;
+  --data-critical: #F0595E;
 
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-settle: cubic-bezier(0.25, 1, 0.5, 1);

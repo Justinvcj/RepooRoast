@@ -60,6 +60,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
         height={dimension}
         viewBox={`0 0 ${dimension} ${dimension}`}
         className="rotate-[-90deg]"
+        aria-hidden="true"
       >
         {/* Track circle */}
         <circle

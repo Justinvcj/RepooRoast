@@ -19,11 +19,11 @@ export default {
         },
         textPrimary: '#EEF0F5',
         textSecondary: '#A3A9B8',
-        textMuted: '#7A8296',
+        textMuted: '#838BA0',
         text: {
           primary: '#EEF0F5',
           secondary: '#A3A9B8',
-          muted: '#7A8296',
+          muted: '#838BA0',
         },
         ink: '#EEF0F5',
         primary: {
@@ -38,12 +38,12 @@ export default {
         },
         success: '#4CC38A',
         warning: '#E5B93C',
-        danger: '#E5484D',
+        danger: '#F0595E',
         data: {
           success: '#4CC38A',
           warning: '#E5B93C',
           flawed: '#E88A4A',
-          critical: '#E5484D',
+          critical: '#F0595E',
         },
       },
       fontFamily: {

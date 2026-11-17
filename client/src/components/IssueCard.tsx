@@ -23,7 +23,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   const severity = issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1).toLowerCase();
 
   return (
-    <article className="w-full rounded-lg border border-border-hairline bg-background/60">
+    <article className="w-full min-w-0 rounded-lg border border-border-hairline bg-background/60">
       <div className="p-5 flex flex-col gap-2.5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <Badge variant={getBadgeVariant(issue.severity)}>{severity}</Badge>

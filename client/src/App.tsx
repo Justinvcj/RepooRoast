@@ -69,7 +69,7 @@ function AppContent() {
           },
           error: {
             iconTheme: {
-              primary: 'var(--data-critical, #E5484D)',
+              primary: 'var(--data-critical, #F0595E)',
               secondary: 'var(--surface-elevated, #1A1E28)',
             },
           },

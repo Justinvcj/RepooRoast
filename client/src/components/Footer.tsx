@@ -20,14 +20,12 @@ export const Footer: React.FC = () => {
           >
             Privacy Policy
           </Link>
-          <span className="text-border-hairline select-none">•</span>
           <Link
             to="/terms"
             className="hover:text-textPrimary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded"
           >
             Terms of Service
           </Link>
-          <span className="text-border-hairline select-none">•</span>
           <Link
             to="/design"
             className="hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded"

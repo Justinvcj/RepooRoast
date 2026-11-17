@@ -16,9 +16,9 @@
 |---|---|---|
 | 60% | Canvas | `#0B0D14` |
 | 30% | Card, raised, hairline | `#11141C`, `#1A1E28`, `#1E222D` (focus `#343A4A`) |
-| 30% | Text primary, secondary, muted | `#EEF0F5`, `#A3A9B8`, `#7A8296` |
+| 30% | Text primary, secondary, muted | `#EEF0F5`, `#A3A9B8`, `#838BA0` |
 | 10% | Accent (ember), hover | `#FF6B3D`, `#FF8157`; dark text `#0B0D14` on it (7.6:1) |
-| data | Good, caution, high, critical | `#4CC38A`, `#E5B93C`, `#E88A4A`, `#E5484D` |
+| data | Good, caution, high, critical | `#4CC38A`, `#E5B93C`, `#E88A4A`, `#F0595E` |
 
 The accent marks the primary action, flagged lines, focus and the number that matters. Data colors carry meaning only, never decoration.
 

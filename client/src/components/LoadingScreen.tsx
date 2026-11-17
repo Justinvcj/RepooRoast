@@ -6,12 +6,12 @@ import { Card } from './ui';
 import type { ReviewStage } from '../hooks/useRepoReview';
 
 const roastingQuotes = [
-  "Warming up the review oven...",
-  "Calibrating tree-sitter AST parser...",
-  "Summoning the ghost of clean code...",
-  "Preparing the unvarnished findings...",
-  "Evaluating your cyclomatic complexity...",
-  "Questioning your architectural boundaries...",
+  'Reading the file tree',
+  'Parsing syntax trees',
+  'Measuring complexity and nesting depth',
+  'Tracing the dependency graph',
+  'Drafting the review',
+  'Checking each finding against the evidence',
 ];
 
 const DEFAULT_STEP_ORDER: ReviewStage[] = ['fetching', 'analyzing', 'classifying', 'generating', 'synthesizing'];
@@ -146,9 +146,9 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.3 }}
-            className="text-xs sm:text-sm font-sans text-textSecondary italic"
+            className="text-sm font-sans text-textSecondary"
           >
-            "{roastingQuotes[quoteIndex]}"
+            {roastingQuotes[quoteIndex]}
           </motion.p>
         </AnimatePresence>
       </div>

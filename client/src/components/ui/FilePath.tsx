@@ -11,7 +11,7 @@ export interface FilePathProps extends React.HTMLAttributes<HTMLSpanElement> {
 export const FilePath: React.FC<FilePathProps> = ({
   path,
   lineNumber,
-  maxWidth = 'max-w-[280px] sm:max-w-[420px]',
+  maxWidth = 'max-w-full',
   className,
   ...props
 }) => {
@@ -21,13 +21,13 @@ export const FilePath: React.FC<FilePathProps> = ({
     <span
       title={display}
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-elevated border border-border-hairline font-mono text-xs text-textSecondary hover:text-textPrimary transition-colors select-all',
+        'inline-flex max-w-full min-w-0 items-start gap-1.5 px-2.5 py-1 rounded bg-surface-elevated border border-border-hairline font-mono text-xs text-textSecondary hover:text-textPrimary transition-colors select-all',
         className
       )}
       {...props}
     >
-      <FileCode className="w-3.5 h-3.5 text-textMuted shrink-0" />
-      <span className={cn('truncate', maxWidth)}>{display}</span>
+      <FileCode className="w-3.5 h-3.5 text-textMuted shrink-0 mt-0.5" />
+      <span className={cn('min-w-0 break-all text-left', maxWidth)}>{display}</span>
     </span>
   );
 };

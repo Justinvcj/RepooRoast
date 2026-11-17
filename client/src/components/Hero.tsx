@@ -62,7 +62,7 @@ const ReviewPrintout: React.FC = () => {
       initial={reduce ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-      className="w-full max-w-[440px] mx-auto lg:mx-0 lg:ml-auto bg-surface border border-border-hairline rounded-lg overflow-hidden"
+      className="w-full max-w-[440px] lg:ml-auto bg-surface border border-border-hairline rounded-lg overflow-hidden"
       aria-label="Sample review: two problems marked in red pen"
     >
       <figcaption className="px-4 py-2.5 border-b border-border-hairline bg-surface-elevated flex items-center justify-between text-xs text-textMuted">
@@ -115,7 +115,7 @@ export const Hero: React.FC<HeroProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="font-display text-[2.75rem] sm:text-6xl lg:text-7xl font-medium tracking-[-0.03em] leading-[0.98] text-textPrimary">
+          <h1 className="font-display text-[2.75rem] sm:text-6xl lg:text-7xl font-medium tracking-[-0.03em] leading-[1.04] text-textPrimary">
             Roast your codebase.
           </h1>
 

@@ -85,7 +85,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
 
       <pre
         className={cn(
-          'p-4 overflow-x-auto text-xs sm:text-sm font-mono leading-relaxed text-textPrimary selection:bg-primary/25',
+          'p-4 overflow-x-auto whitespace-pre-wrap break-words text-xs sm:text-sm font-mono leading-relaxed text-textPrimary selection:bg-primary/25',
           maxHeight
         )}
       >
