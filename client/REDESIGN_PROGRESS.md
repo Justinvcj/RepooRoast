@@ -2,8 +2,8 @@
 
 **Branch:** `redesign/v3`  
 **Base Commit:** `de5199b` (`main`)  
-**Status:** Phase 0 Complete — Ready for Phase 1  
-**Current Next Step:** Begin Phase 1: Author brand identity concept, rejected directions, 60-30-10 palette roles, typography scale, and motion rules in `client/DESIGN.md`.
+**Status:** Phase 1 Complete — Ready for Phase 2  
+**Current Next Step:** Begin Phase 2: Build original geometric SVG logo system (`LogoMark`, `LogoWordmark`, `LogoLockup`, `LogoAnimation`, `Logo`), replace favicon, author app icon and OG image, author `logo-preview.html`, author `DesignReviewPage.tsx`, update splash and loading screens.
 
 ---
 
@@ -27,8 +27,8 @@ npm run dev
 | Phase | Description | Deliverables | Status |
 |---|---|---|---|
 | **Phase 0** | **Orient & Baseline Setup** | Inspect codebase, tests, create `client/REDESIGN_PROGRESS.md`, capture baseline screenshots in `client/design/before/` | **COMPLETE** |
-| **Phase 1** | **Brand Direction & Specification** | Write `client/DESIGN.md` (concept, rejected directions, 60-30-10 palette, type system, motion rules) | PLANNED |
-| **Phase 2** | **Logo System & Animation** | Original geometric SVG mark, wordmark, lockup, favicon, 1.2–1.6s path animation, calm loop, standalone review page under `client/design/` | PLANNED |
+| **Phase 1** | **Brand Direction & Specification** | Write `client/DESIGN.md` (concept, rejected directions, 60-30-10 palette, type system, motion rules) | **COMPLETE** |
+| **Phase 2** | **Logo System & Animation** | Original geometric SVG mark, wordmark, lockup, favicon, 1.2–1.6s path animation, calm loop, standalone review page under `client/design/` | IN_PROGRESS |
 | **Phase 3** | **Foundations & Tokens** | Design tokens in `tailwind.config.js`, `index.css`, fonts, inline pre-React loader in `index.html`, retire `Lightfall` & `ogl` | PLANNED |
 | **Phase 4** | **UI Primitives Library** | Button, Input, Switch, Surface/Card, Terminal Tag/Badge, Modal, Score Ring, Score Bar, Code display | PLANNED |
 | **Phase 5** | **Screens & Dashboard Redesign** | Navbar, Footer, Splash, Home, Custom Mode Modal, Loading Screen, ResultPage, ScoreCard, ScoreChart, CategorySection, IssueCard, StaticAnalysisPanel, 404, Legal, Toasts, ErrorBoundary | PLANNED |
@@ -95,6 +95,7 @@ npm run dev
 - **2026-11-17**: Created automated baseline capture suite in `client/tests/capture-baseline.spec.ts` capturing 60 screenshot artifacts in `client/design/before/` with both pixel-suffix and bare-width aliases.
 - **2026-11-17**: Verified full e2e test suite with baseline capture: 36 passed cleanly (38.2s).
 - **2026-11-17**: Isolated baseline screenshot capture behind environment guard (`CAPTURE_BASELINE`) and added dedicated `npm run test:baseline` script with `cross-env`. Standard test suite (`npm run test:e2e`) now executes exclusively functional regression tests (9/9 passed, 27 baseline capture specs skipped) without side-effects, preserving committed baseline screenshots in `client/design/before/` across all future redesign phases.
+- **2026-11-17**: Completed Phase 1 by authoring canonical design specification `client/DESIGN.md`: defined "The Thermal Observatory / Precision Caliper" dual-metaphor concept uniting Tree-Sitter AST telemetry with searing code roast; documented 3 directions and 1-line rejection rationales for the losing 2; codified 60-30-10 palette tokens with empirical WCAG AA contrast evaluations; established tabular numerals mandate; defined modular type scale (Plus Jakarta Sans + JetBrains Mono); formulated 6 Apple working design rules; codified strict anti-pattern avoid list; specified motion choreography (1.4s assembly and 2.4s calm respiration) with reduced-motion fallbacks; and formulated mathematical 32x32 master grid vectors, integer-snapped 16px favicon coordinates, and clear space rules.
 
 ---
 
