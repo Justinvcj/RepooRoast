@@ -3,7 +3,7 @@
   <path
     d="M 5 2 L 2 5 L 2 11 L 5 14"
     stroke="#F97316"
-    stroke-width="1.5"
+    stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
   />
@@ -11,18 +11,14 @@
   <path
     d="M 11 2 L 14 5 L 14 11 L 11 14"
     stroke="#F97316"
-    stroke-width="1.5"
+    stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
   />
-  <!-- Faceted Ember Core (Integer Snapped) -->
+  <!-- Faceted Ember Core with Transparent Aperture Kernel (Compound EvenOdd Cutout) -->
   <path
-    d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z"
+    d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z M 8 5 L 7 7 L 8 10 L 9 7 Z"
     fill="#F97316"
-  />
-  <!-- Luminous Inner Kernel -->
-  <path
-    d="M 8 5 L 9 7.5 L 8 10 L 7 7.5 Z"
-    fill="#FEF08A"
+    fill-rule="evenodd"
   />
 </svg>

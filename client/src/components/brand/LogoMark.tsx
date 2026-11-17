@@ -31,7 +31,6 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
 
   const caliperStroke = monochrome ? 'currentColor' : '#F0F3F6';
   const emberFill = monochrome ? 'currentColor' : '#FF5426';
-  const kernelFill = monochrome ? '#0C0E12' : '#FEF08A';
 
   // Crisp 16x16 integer-snapped vector path for sizes <= 18px (prevents subpixel antialiasing blur)
   if (size <= 18) {
@@ -48,34 +47,22 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
         <path
           d="M 5 2 L 2 5 L 2 11 L 5 14"
           stroke={caliperStroke}
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
           d="M 11 2 L 14 5 L 14 11 L 11 14"
           stroke={caliperStroke}
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {monochrome ? (
-          <path
-            d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z"
-            fill={emberFill}
-          />
-        ) : (
-          <>
-            <path
-              d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z"
-              fill={emberFill}
-            />
-            <path
-              d="M 8 5 L 9 7.5 L 8 10 L 7 7.5 Z"
-              fill={kernelFill}
-            />
-          </>
-        )}
+        <path
+          d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z M 8 5 L 7 7 L 8 10 L 9 7 Z"
+          fill={emberFill}
+          fillRule="evenodd"
+        />
       </svg>
     );
   }
@@ -124,7 +111,7 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
           />
           <path
             d="M 16 10 L 18 14 L 16 18 L 14 14 Z"
-            fill={kernelFill}
+            fill="#FEF08A"
           />
         </>
       )}
