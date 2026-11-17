@@ -8,6 +8,7 @@ import { runStaticAnalysis } from '../analyzers/staticAnalyzer.js';
 import { classifyRepoContext } from './classifierService.js';
 import { allocateBudget } from '../budget/budgetAllocator.js';
 import { mergeReviewParts } from '../utils/reviewMerge.js';
+import { MODEL_CHAIN, availableModels, markUnavailable, describeUnavailable } from './modelHealth.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -88,13 +89,15 @@ const prepareReviewContext = async (repoData, onProgress) => {
 const MODEL_ATTEMPT_TIMEOUT_MS = 45000;
 
 /**
- * Executes a single prompt using fallback models.
+ * Executes a single prompt using fallback models. Models that recently
+ * reported a daily quota or overload are skipped (see modelHealth.js), so one
+ * exhausted model does not slow down every part of every review.
  */
 const executePromptWithFallbacks = async (genAI, prompt, partName) => {
-  const fallbackModels = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
+  const candidates = availableModels(MODEL_CHAIN);
   let result = null;
 
-  for (const modelName of fallbackModels) {
+  for (const modelName of candidates) {
     try {
       console.log(`[Gemini] Attempting to generate ${partName} using ${modelName}...`);
 
@@ -113,30 +116,37 @@ const executePromptWithFallbacks = async (genAI, prompt, partName) => {
       // just hang on the connection. Without a timeout, that stalls this
       // entire fallback chain (and the whole review) on one bad attempt
       // instead of moving on to the next model.
-      result = await Promise.race([
-        model.generateContent(prompt),
-        new Promise((_, reject) => setTimeout(() => reject(new Error(`Model ${modelName} timed out after ${MODEL_ATTEMPT_TIMEOUT_MS / 1000}s`)), MODEL_ATTEMPT_TIMEOUT_MS))
-      ]);
+      let timer;
+      try {
+        result = await Promise.race([
+          model.generateContent(prompt),
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(`Model ${modelName} timed out after ${MODEL_ATTEMPT_TIMEOUT_MS / 1000}s`)), MODEL_ATTEMPT_TIMEOUT_MS);
+          })
+        ]);
+      } finally {
+        clearTimeout(timer);
+      }
       console.log(`[Gemini] Success! Generated ${partName} using ${modelName}`);
       break;
 
     } catch (apiError) {
       const errorMsg = apiError.message || '';
-      console.warn(`[Gemini] Model ${modelName} failed on ${partName}: ${errorMsg}`);
+      console.warn(`[Gemini] Model ${modelName} failed on ${partName}: ${errorMsg.slice(0, 200)}`);
 
-      if (errorMsg.includes('503') || errorMsg.includes('429') || errorMsg.includes('404') || errorMsg.includes('fetch failed') || errorMsg.includes('timed out')) {
-        console.warn(`[Gemini] Switching to fallback model for ${partName}...`);
+      const kind = markUnavailable(modelName, errorMsg);
+      if (kind !== 'other') {
+        console.warn(`[Gemini] ${modelName} marked ${kind}; switching to the next model for ${partName}...`);
         continue;
-      } else {
-        throw apiError;
       }
+      throw apiError;
     }
   }
 
   if (!result) {
-    throw new Error(`All Google Gemini models are currently overwhelmed. Failed on ${partName}.`);
+    throw new Error(`${describeUnavailable(MODEL_CHAIN)} Failed on ${partName}.`);
   }
-  
+
   return parseGeminiResponse(result.response.text());
 };
 

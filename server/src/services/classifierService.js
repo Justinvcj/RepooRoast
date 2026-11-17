@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { CLASSIFIER_CHAIN, availableModels, markUnavailable } from './modelHealth.js';
 
 const CLASSIFIER_PROMPT = `
 [SYSTEM]
@@ -90,27 +91,46 @@ export const classifyRepoContext = async (repoData) => {
     if (!apiKey) return { type: 'unknown', confidence: 1.0, signals: ['No API Key'] };
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-flash-latest',
-      generationConfig: {
-        temperature: 0.1,
-        responseMimeType: "application/json"
-      }
-    });
-
     const prompt = extractClassifierContext(repoData);
     console.log('[Classifier] Running repo classification...');
 
-    // Unlike the 3 main review calls, this has no model fallback. Without a
-    // timeout, a slow/overloaded classifier model blocks the ENTIRE review
-    // pipeline indefinitely -- it's awaited alongside static analysis before
-    // any of the real review calls can fire, even though static analysis
-    // itself finishes in milliseconds. Cap it and fall back to 'unknown'
-    // rather than let one slow call stall everything downstream.
-    const result = await Promise.race([
-      model.generateContent(prompt),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Classifier timed out')), CLASSIFIER_TIMEOUT_MS))
-    ]);
+    // Classification is a light call, so it runs on the lite models and keeps
+    // its own quota separate from the three review calls. It tries at most
+    // two available models, then falls back to 'unknown' rather than stall
+    // the whole review pipeline.
+    const candidates = availableModels(CLASSIFIER_CHAIN).slice(0, 2);
+    if (candidates.length === 0) throw new Error('No classifier model available');
+
+    let result = null;
+    let lastError = null;
+    for (const modelName of candidates) {
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        generationConfig: {
+          temperature: 0.1,
+          responseMimeType: "application/json"
+        }
+      });
+      let timer;
+      try {
+        result = await Promise.race([
+          model.generateContent(prompt),
+          new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error('Classifier timed out')), CLASSIFIER_TIMEOUT_MS);
+          })
+        ]);
+        break;
+      } catch (err) {
+        lastError = err;
+        markUnavailable(modelName, err.message || '');
+        // A hang means the model is overloaded; do not spend another full
+        // timeout on a second model, just fall back to 'unknown'.
+        if (/timed out/i.test(err.message || '')) break;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    if (!result) throw lastError || new Error('Classifier failed');
 
     let parsed = JSON.parse(result.response.text().trim());
     console.log(`[Classifier] Result: ${parsed.type} (Confidence: ${parsed.confidence})`);

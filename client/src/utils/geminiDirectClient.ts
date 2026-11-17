@@ -9,7 +9,40 @@
  * a per-attempt timeout, since an overloaded model doesn't always fail fast.
  */
 
-const FALLBACK_MODELS = ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-2.5-flash"];
+// Keep in sync with server/src/services/modelHealth.js. Best quality first,
+// lite models last. Each model has its own daily quota on free-tier keys.
+const FALLBACK_MODELS = [
+  'gemini-3.7-flash',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
+  'gemini-2.5-flash',
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+];
+
+/** model -> epoch ms until which it should be skipped (daily quota, overload). */
+const cooldowns = new Map<string, number>();
+
+const parseRetryMs = (message: string): number | null => {
+  const m = /retry in ((?:\d+(?:\.\d+)?[hms])+)/i.exec(message);
+  if (!m) return null;
+  let ms = 0;
+  for (const [, n, unit] of m[1].matchAll(/(\d+(?:\.\d+)?)([hms])/g)) {
+    ms += parseFloat(n) * ({ h: 3600000, m: 60000, s: 1000 } as Record<string, number>)[unit];
+  }
+  return ms || null;
+};
+
+/** Returns how long to skip a model after this error, in ms (0 = do not skip). */
+const cooldownFor = (message: string): number => {
+  if (/^429|RESOURCE_EXHAUSTED|quota/i.test(message)) {
+    const retry = parseRetryMs(message);
+    return /per ?day/i.test(message) ? Math.min(retry ?? 3600000, 12 * 3600000) : Math.min(retry ?? 60000, 600000);
+  }
+  if (/^404/.test(message)) return 3600000;
+  if (/^503|timed out|high demand|overloaded/i.test(message)) return 45000;
+  return 0;
+};
 const MODEL_ATTEMPT_TIMEOUT_MS = 45000;
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
@@ -101,7 +134,10 @@ export const generateWithFallbacks = async <T = Record<string, unknown>>(
 ): Promise<T> => {
   let lastError: Error | null = null;
 
-  for (const model of FALLBACK_MODELS) {
+  const now = Date.now();
+  const candidates = FALLBACK_MODELS.filter((m) => (cooldowns.get(m) ?? 0) <= now);
+
+  for (const model of candidates) {
     try {
       onModelAttempt?.(model);
       const text = await callModel(apiKey, model, systemInstruction, prompt);
@@ -114,10 +150,18 @@ export const generateWithFallbacks = async <T = Record<string, unknown>>(
       if (/^40[13]/.test(msg) || /API key not valid/i.test(msg)) {
         throw new GeminiDirectError(`Invalid or unauthorized API key: ${msg}`);
       }
-      // Otherwise treat it like the server does: try the next model tier.
+      // Otherwise treat it like the server does: remember a quota or overload
+      // for a while, and try the next model tier.
+      const wait = cooldownFor(msg);
+      if (wait > 0) cooldowns.set(model, Date.now() + wait);
       continue;
     }
   }
 
-  throw new GeminiDirectError(`All Gemini models were unavailable for ${partName}. Last error: ${lastError?.message || 'unknown'}`);
+  const allCoolingDown = candidates.length === 0;
+  throw new GeminiDirectError(
+    allCoolingDown
+      ? `Every Gemini model is out of quota or busy for this key right now. Wait a few minutes, or check your key's daily quota in Google AI Studio.`
+      : `All Gemini models were unavailable for ${partName}. Last error: ${lastError?.message || 'unknown'}`
+  );
 };
