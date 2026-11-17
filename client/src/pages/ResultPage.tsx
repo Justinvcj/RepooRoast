@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
@@ -6,30 +6,35 @@ import { StaticAnalysisPanel } from '../components/StaticAnalysisPanel';
 import type { ApiResponse } from '../types';
 import { useLayout } from '../contexts/LayoutContext';
 import { Github, ExternalLink, ArrowLeft, Star, GitFork, Code } from 'lucide-react';
+import { LogoLockup } from '../components/brand';
+import { Button } from '../components/ui';
 
 export const ResultPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  let responseData = location.state?.reviewData as ApiResponse | undefined;
-
-  if (!responseData) {
+  // Lazy state initializer for cached data to ensure pure render without Date.now() in body
+  const [responseData] = useState<ApiResponse | undefined>(() => {
+    if (location.state?.reviewData) {
+      return location.state.reviewData as ApiResponse;
+    }
     try {
       const cached = localStorage.getItem('reporoast_last_review');
       if (cached) {
         const parsed = JSON.parse(cached);
-        // TTL: 24 hours
-        if (Date.now() - parsed.timestamp < 86400000) {
-          responseData = parsed.data;
+        if (typeof parsed?.timestamp === 'number' && Date.now() - parsed.timestamp < 86400000) {
+          return parsed.data;
         }
       }
-    } catch { /* ignore parse errors */ }
-  }
+    } catch {
+      // Ignore cache parse errors
+    }
+    return undefined;
+  });
 
   const { setIsNavbarVisible, setIsFooterVisible } = useLayout();
 
   useEffect(() => {
-    // We only want the custom ResultPage navbar
     setIsNavbarVisible(false);
     setIsFooterVisible(false);
     return () => {
@@ -39,7 +44,6 @@ export const ResultPage: React.FC = () => {
   }, [setIsNavbarVisible, setIsFooterVisible]);
 
   useEffect(() => {
-    // Redirect to home if no data is found in state
     if (!responseData || !responseData.success) {
       navigate('/', { replace: true });
     }
@@ -50,94 +54,104 @@ export const ResultPage: React.FC = () => {
   const { repo, review, analysis } = responseData;
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background text-textPrimary selection:bg-primary/30 pb-20 relative"
+      transition={{ duration: 0.4 }}
+      className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background text-textPrimary selection:bg-primary/30 pb-24 relative"
     >
-
-      {/* Floating Navbar */}
-      <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <nav className="pointer-events-auto glass-panel bg-[#0d1117]/60 shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-full px-6 py-3 flex items-center justify-between gap-8 md:gap-16 transition-colors duration-300 w-full max-w-7xl">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl font-serif font-semibold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <span className="text-textPrimary">Repo<span className="text-primary">Roast</span></span>
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link 
-              to="/" 
-              className="flex items-center gap-2 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors bg-surface/50 border border-border/50 px-4 py-2 rounded-lg hover:border-[#8b949e]"
+      {/* Floating Action Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2 flex justify-center">
+          <nav
+            aria-label="Result Actions"
+            className="pointer-events-auto bg-surface-secondary/85 backdrop-blur-md border border-border-hairline shadow-lg shadow-black/40 rounded-full px-5 py-2.5 flex items-center justify-between gap-6 sm:gap-12 w-full max-w-7xl transition-all"
+          >
+            <Link
+              to="/"
+              className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md transition-opacity hover:opacity-90"
+              aria-label="RepoRoast Home"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Roast Another
+              <LogoLockup size={26} />
             </Link>
-          </div>
-        </nav>
+
+            <div className="flex items-center gap-3">
+              <Link to="/" tabIndex={-1} className="inline-flex">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<ArrowLeft className="w-3.5 h-3.5" />}
+                >
+                  Roast Another
+                </Button>
+              </Link>
+            </div>
+          </nav>
+        </div>
       </div>
 
       <main className="relative z-10 pt-28">
         {/* Repo Header Section */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
+        <section aria-labelledby="repo-header-title" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border/50"
+            transition={{ delay: 0.1, duration: 0.4 }}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border-hairline"
           >
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3 text-textSecondary mb-2">
-                <Github className="w-6 h-6" />
-                <span className="text-lg font-medium">{repo.owner}</span>
+              <div className="flex items-center gap-2 text-textMuted font-mono text-xs">
+                <Github className="w-4 h-4 text-textSecondary" />
+                <span className="text-textSecondary font-medium">{repo.owner}</span>
+                <span className="text-border-hairline">/</span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-serif font-semibold text-textPrimary tracking-tight leading-tight">
+              <h1 id="repo-header-title" className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-textPrimary font-sans">
                 {repo.repo}
               </h1>
               {repo.description && (
-                <p className="text-base text-textSecondary font-medium max-w-3xl mt-2 leading-relaxed">
+                <p className="text-sm sm:text-base text-textSecondary font-normal max-w-3xl mt-1 leading-relaxed">
                   {repo.description}
                 </p>
               )}
-              
-              <div className="flex items-center gap-6 mt-6">
-                <div className="flex items-center gap-2 text-sm font-medium text-textSecondary">
-                  <Star className="w-4 h-4" />
-                  {repo.stars.toLocaleString()} Stars
+
+              <div className="flex flex-wrap items-center gap-5 mt-4 text-xs font-mono text-textMuted">
+                <div className="flex items-center gap-1.5">
+                  <Star className="w-3.5 h-3.5 text-data-warning" />
+                  <span className="tabular-nums font-medium text-textSecondary">{repo.stars.toLocaleString()}</span>
+                  <span>stars</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm font-medium text-textSecondary">
-                  <GitFork className="w-4 h-4" />
-                  {repo.forks.toLocaleString()} Forks
+                <div className="flex items-center gap-1.5">
+                  <GitFork className="w-3.5 h-3.5 text-textMuted" />
+                  <span className="tabular-nums font-medium text-textSecondary">{repo.forks.toLocaleString()}</span>
+                  <span>forks</span>
                 </div>
                 {repo.language && (
-                  <div className="flex items-center gap-2 text-sm font-medium text-textSecondary">
-                    <Code className="w-4 h-4" />
-                    {repo.language}
+                  <div className="flex items-center gap-1.5">
+                    <Code className="w-3.5 h-3.5 text-primary" />
+                    <span className="text-textSecondary font-medium">{repo.language}</span>
                   </div>
                 )}
               </div>
             </div>
 
-            <a 
+            <a
               href={`https://github.com/${repo.owner}/${repo.repo}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-2 text-sm font-semibold text-primary hover:text-orange-400 transition-colors bg-primary/10 px-5 py-3 rounded-xl border border-primary/20 hover:bg-primary/15 whitespace-nowrap"
+              aria-label={`View ${repo.owner}/${repo.repo} on GitHub`}
+              className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-primary hover:text-primary-hover bg-primary/10 border border-primary/25 hover:bg-primary/15 px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              View on GitHub
-              <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <span>View on GitHub</span>
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </motion.div>
         </section>
 
         {/* Static Analysis Dashboard */}
-        {analysis && (
-          <StaticAnalysisPanel analysis={analysis} />
-        )}
+        {analysis && <StaticAnalysisPanel analysis={analysis} />}
 
-        {/* Dashboard Content */}
+        {/* Detailed Review Dashboard */}
         <ReviewDashboard review={review} />
-        
       </main>
     </motion.div>
   );
