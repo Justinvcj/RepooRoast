@@ -7,8 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const BEFORE_DIR = path.resolve(__dirname, '../design/before');
 
-// Ensure output directory exists
-if (!fs.existsSync(BEFORE_DIR)) {
+// Ensure output directory exists when capturing baseline
+if (process.env.CAPTURE_BASELINE && !fs.existsSync(BEFORE_DIR)) {
   fs.mkdirSync(BEFORE_DIR, { recursive: true });
 }
 
@@ -162,6 +162,8 @@ async function captureAndSave(
 }
 
 test.describe('Baseline Screenshots Capture (Phase 0)', () => {
+  test.skip(!process.env.CAPTURE_BASELINE, 'Only run during explicit baseline capture');
+
   for (const vp of VIEWPORTS) {
     test(`capture baseline splash (${vp.label})`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });

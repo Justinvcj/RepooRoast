@@ -94,6 +94,7 @@ npm run dev
 - **2026-11-17**: Standardized baseline screenshot viewports to 375px (mobile, 375x812), 768px (tablet, 768x1024), and 1440px (desktop, 1440x900) across all 9 critical UI states.
 - **2026-11-17**: Created automated baseline capture suite in `client/tests/capture-baseline.spec.ts` capturing 60 screenshot artifacts in `client/design/before/` with both pixel-suffix and bare-width aliases.
 - **2026-11-17**: Verified full e2e test suite with baseline capture: 36 passed cleanly (38.2s).
+- **2026-11-17**: Isolated baseline screenshot capture behind environment guard (`CAPTURE_BASELINE`) and added dedicated `npm run test:baseline` script with `cross-env`. Standard test suite (`npm run test:e2e`) now executes exclusively functional regression tests (9/9 passed, 27 baseline capture specs skipped) without side-effects, preserving committed baseline screenshots in `client/design/before/` across all future redesign phases.
 
 ---
 
