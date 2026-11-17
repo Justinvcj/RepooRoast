@@ -59,8 +59,8 @@ export const Switch: React.FC<SwitchProps> = ({
             <p
               id={descriptionId}
               className={cn(
-                'text-xs text-textSecondary mt-0.5',
-                disabled && 'opacity-40'
+                'text-xs mt-0.5',
+                disabled ? 'text-textMuted' : 'text-textSecondary'
               )}
             >
               {description}

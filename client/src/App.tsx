@@ -13,7 +13,8 @@ import { TermsPage } from './pages/TermsPage';
 import { DesignReviewPage } from './pages/DesignReviewPage';
 import { SplashScreen } from './components/SplashScreen';
 
-import { LayoutProvider, useLayout } from './contexts/LayoutContext';
+import { LayoutProvider } from './contexts/LayoutContext';
+import { useLayout } from './contexts/layoutState';
 
 import { ErrorBoundary } from './components/ErrorBoundary';
 
@@ -82,8 +83,8 @@ function AppContent() {
 
       <div className="flex flex-col min-h-screen supports-[height:100dvh]:min-h-[100dvh]">
         {isNavbarVisible && <Navbar />}
-        {/* pt-24 ensures the content sits beneath the new floating pill Navbar */}
-        <div className={`flex-grow ${isNavbarVisible ? 'pt-24' : ''}`}>
+        {/* pt-14 clears the fixed 56px navbar */}
+        <div className={`flex-grow ${isNavbarVisible ? 'pt-14' : ''}`}>
           <AnimatedRoutes />
         </div>
         {isFooterVisible && <Footer />}

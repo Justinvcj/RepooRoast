@@ -10,7 +10,7 @@ export const PrivacyPage: React.FC = () => {
   const pageTransition = getPageTransition(prefersReduced);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+    <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
       <motion.div
         {...pageTransition}
       >
@@ -82,6 +82,6 @@ export const PrivacyPage: React.FC = () => {
           </div>
         </Card>
       </motion.div>
-    </div>
+    </main>
   );
 };

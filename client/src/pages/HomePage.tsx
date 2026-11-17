@@ -6,7 +6,7 @@ import { getPageTransition } from '../utils/motion';
 
 import { useRepoReview } from '../hooks/useRepoReview';
 import { useCustomReview } from '../hooks/useCustomReview';
-import { useLayout } from '../contexts/LayoutContext';
+import { useLayout } from '../contexts/layoutState';
 import { Hero } from '../components/Hero';
 import { LoadingScreen } from '../components/LoadingScreen';
 import { CustomModeModal } from '../components/CustomModeModal';

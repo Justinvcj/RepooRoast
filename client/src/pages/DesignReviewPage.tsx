@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useLayout } from '../contexts/LayoutContext';
+import { useLayout } from '../contexts/layoutState';
 import { LogoMark, LogoWordmark, LogoLockup, LogoAnimation } from '../components/brand';
 import {
   Button,
@@ -52,7 +52,7 @@ export const DesignReviewPage: React.FC = () => {
   const sizes = [16, 24, 32, 48, 64, 128, 256];
 
   return (
-    <div className="min-h-screen bg-[#0B0D14] text-[#EEF0F5] p-6 md:p-12 font-sans selection:bg-[#FF6B3D]/30">
+    <main className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-[#0B0D14] text-[#EEF0F5] p-6 md:p-12 font-sans selection:bg-[#FF6B3D]/30">
       <div className="max-w-6xl mx-auto space-y-10">
         {/* Navigation & Header */}
         <header className="border-b border-[#1E222D] pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -63,8 +63,8 @@ export const DesignReviewPage: React.FC = () => {
             >
               ← Back to App
             </Link>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-              Design System & Visual Review
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+              Design system and visual review
             </h1>
             <p className="text-sm text-[#A3A9B8] mt-1">
               Deterministic verification suite for the RepoRoast Night Review visual system and UI primitives.
@@ -72,9 +72,9 @@ export const DesignReviewPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            <button type="button"
               onClick={() => setActiveTab('primitives')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors ${
                 activeTab === 'primitives'
                   ? 'bg-primary text-dominant font-semibold shadow-sm'
                   : 'bg-surface-secondary text-textSecondary hover:text-textPrimary border border-border-hairline'
@@ -82,9 +82,9 @@ export const DesignReviewPage: React.FC = () => {
             >
               UI primitives
             </button>
-            <button
+            <button type="button"
               onClick={() => setActiveTab('brand')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-colors ${
                 activeTab === 'brand'
                   ? 'bg-primary text-dominant font-semibold shadow-sm'
                   : 'bg-surface-secondary text-textSecondary hover:text-textPrimary border border-border-hairline'
@@ -103,7 +103,7 @@ export const DesignReviewPage: React.FC = () => {
             {/* Buttons Section */}
             <section className="space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E222D] pb-2">
-                <h2 className="text-xl font-bold tracking-tight">1. Buttons & Triggers</h2>
+                <h2 className="text-xl font-semibold tracking-tight">1. Buttons and triggers</h2>
                 <span className="text-xs font-mono text-[#A3A9B8]">&lt;100ms tactile feedback • active:scale-[0.98]</span>
               </div>
 
@@ -165,13 +165,13 @@ export const DesignReviewPage: React.FC = () => {
             {/* Inputs & Form Controls */}
             <section className="space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E222D] pb-2">
-                <h2 className="text-xl font-bold tracking-tight">2. Inputs & Switches</h2>
+                <h2 className="text-xl font-semibold tracking-tight">2. Inputs and switches</h2>
                 <span className="text-xs font-mono text-[#A3A9B8]">Tabular numbers • Explicit focus rings</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card level={1} className="p-6 space-y-4">
-                  <h3 className="text-sm font-semibold text-textPrimary">Input Variants</h3>
+                  <h3 className="text-sm font-semibold text-textPrimary">Input variants</h3>
                   <Input
                     label="GitHub Repository URL"
                     value={inputText}
@@ -193,7 +193,7 @@ export const DesignReviewPage: React.FC = () => {
                 </Card>
 
                 <Card level={1} className="p-6 space-y-5">
-                  <h3 className="text-sm font-semibold text-textPrimary">Accessible Switches</h3>
+                  <h3 className="text-sm font-semibold text-textPrimary">Accessible switches</h3>
                   <Switch
                     label="Bring Your Own Key (Custom Mode)"
                     description="Run static AST analysis with direct Gemini client calls"
@@ -224,7 +224,7 @@ export const DesignReviewPage: React.FC = () => {
             {/* Badges, Terminal Tags & File Paths */}
             <section className="space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E222D] pb-2">
-                <h2 className="text-xl font-bold tracking-tight">3. Badges, Terminal Tags & File Paths</h2>
+                <h2 className="text-xl font-semibold tracking-tight">3. Badges, tags and file paths</h2>
                 <span className="text-xs font-mono text-[#A3A9B8]">Geist Mono • Monospace telemetry</span>
               </div>
 
@@ -256,18 +256,19 @@ export const DesignReviewPage: React.FC = () => {
             {/* Score Telemetry (Ring & Bar) */}
             <section className="space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E222D] pb-2">
-                <h2 className="text-xl font-bold tracking-tight">4. Score Telemetry (SVG Meters)</h2>
+                <h2 className="text-xl font-semibold tracking-tight">4. Score meters</h2>
                 <div className="flex items-center gap-3">
                   <span className="text-xs font-mono text-[#A3A9B8]">Adjust Score:</span>
                   <input
                     type="range"
+                    aria-label="Adjust score"
                     min="0"
                     max="100"
                     value={scoreValue}
                     onChange={(e) => setScoreValue(Number(e.target.value))}
                     className="w-32 accent-[#FF6B3D]"
                   />
-                  <span className="text-xs font-mono font-bold w-8 text-primary">{scoreValue}</span>
+                  <span className="text-xs font-mono font-semibold w-8 text-primary">{scoreValue}</span>
                 </div>
               </div>
 
@@ -295,7 +296,7 @@ export const DesignReviewPage: React.FC = () => {
             {/* Code Display & Tooltips */}
             <section className="space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E222D] pb-2">
-                <h2 className="text-xl font-bold tracking-tight">5. Code Display & Tooltips</h2>
+                <h2 className="text-xl font-semibold tracking-tight">5. Code display and tooltips</h2>
                 <span className="text-xs font-mono text-[#A3A9B8]">One-click copy • Syntax background</span>
               </div>
 
@@ -310,7 +311,7 @@ export const DesignReviewPage: React.FC = () => {
 
                 <Card level={1} className="p-6 flex flex-col justify-between gap-4">
                   <div>
-                    <h3 className="text-sm font-semibold text-textPrimary mb-2">Micro-Tooltip Positions</h3>
+                    <h3 className="text-sm font-semibold text-textPrimary mb-2">Tooltip positions</h3>
                     <p className="text-xs text-textSecondary mb-4">
                       Hover to test fluid spring tooltips with smart offsets.
                     </p>
@@ -339,13 +340,13 @@ export const DesignReviewPage: React.FC = () => {
             {/* Studio Controls Bar */}
             <section className="bg-[#11141C] border border-[#1E222D] rounded-xl p-4 flex flex-wrap items-center gap-4 justify-between">
               <div className="flex flex-wrap items-center gap-3">
-                <button
+                <button type="button"
                   onClick={() => setReplayKey((k) => k + 1)}
                   className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#FF6B3D] text-[#0B0D14] hover:bg-[#E84518] transition-colors shadow-sm"
                 >
                   Replay 1.4s Assembly
                 </button>
-                <button
+                <button type="button"
                   onClick={() => setIsLooping((l) => !l)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
                     isLooping
@@ -355,7 +356,7 @@ export const DesignReviewPage: React.FC = () => {
                 >
                   {isLooping ? 'Looping: Active (2.4s)' : 'Toggle Calm Loop'}
                 </button>
-                <button
+                <button type="button"
                   onClick={() => setIsMonochrome((m) => !m)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
                     isMonochrome
@@ -365,7 +366,7 @@ export const DesignReviewPage: React.FC = () => {
                 >
                   {isMonochrome ? 'Monochrome: ON' : 'Toggle Monochrome'}
                 </button>
-                <button
+                <button type="button"
                   onClick={() => setSimulatedReducedMotion((r) => !r)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
                     simulatedReducedMotion
@@ -375,7 +376,7 @@ export const DesignReviewPage: React.FC = () => {
                 >
                   {simulatedReducedMotion ? 'Reduced Motion: ON' : 'Simulate Reduced Motion'}
                 </button>
-                <button
+                <button type="button"
                   onClick={() => setShowGridOverlay((g) => !g)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
                     showGridOverlay
@@ -394,10 +395,10 @@ export const DesignReviewPage: React.FC = () => {
             {/* Live Animation & Master Lockup */}
             <section className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold tracking-tight">Active Master Lockup & Choreography</h2>
+                <h2 className="text-xl font-semibold tracking-tight">Master lockup and animation</h2>
                 <span className="text-xs font-mono text-[#A3A9B8]">Size: 48px</span>
               </div>
-              <div className="relative bg-[#11141C] border border-[#1E222D] rounded-2xl p-12 flex items-center justify-center min-h-[180px] overflow-hidden">
+              <div className="relative bg-[#11141C] border border-[#1E222D] rounded-lg p-12 flex items-center justify-center min-h-[180px] overflow-hidden">
                 {showGridOverlay && (
                   <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#A3A9B8_1px,transparent_1px)] [background-size:16px_16px]" />
                 )}
@@ -415,7 +416,7 @@ export const DesignReviewPage: React.FC = () => {
 
             {/* Scale & Rendering Matrix */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold tracking-tight">Pixel Scale Matrix (16px to 256px)</h2>
+              <h2 className="text-xl font-semibold tracking-tight">Pixel scale, 16px to 256px</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
                 {sizes.map((s) => (
                   <div
@@ -433,7 +434,7 @@ export const DesignReviewPage: React.FC = () => {
                       />
                     </div>
                     <div className="mt-3 text-center">
-                      <div className="text-xs font-mono font-bold text-[#EEF0F5]">{s}px</div>
+                      <div className="text-xs font-mono font-semibold text-[#EEF0F5]">{s}px</div>
                       <div className="text-[10px] font-mono text-[#A3A9B8]">
                         {s <= 18 ? 'Integer Snapped' : `${s / 32}x Master`}
                       </div>
@@ -445,7 +446,7 @@ export const DesignReviewPage: React.FC = () => {
 
             {/* Surface Contrast Matrix */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold tracking-tight">Surface Contrast Invariance</h2>
+              <h2 className="text-xl font-semibold tracking-tight">Surface contrast</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-[#0B0D14] border border-[#1E222D] rounded-xl p-8 flex flex-col items-center justify-center gap-4 text-center">
                   <LogoLockup size={32} monochrome={isMonochrome} looping={isLooping} />
@@ -483,7 +484,7 @@ export const DesignReviewPage: React.FC = () => {
 
             {/* Wordmark Kerning & Anatomy */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold tracking-tight">Typographic Anatomy & Kerning</h2>
+              <h2 className="text-xl font-semibold tracking-tight">Type anatomy and kerning</h2>
               <div className="bg-[#11141C] border border-[#1E222D] rounded-xl p-8 space-y-6">
                 <div className="flex flex-col md:flex-row md:items-baseline gap-6 border-b border-[#1E222D] pb-6">
                   <LogoWordmark size={64} monochrome={isMonochrome} />
@@ -496,15 +497,15 @@ export const DesignReviewPage: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
                   <div className="p-3 bg-[#0B0D14] rounded border border-[#1E222D]">
-                    <div className="text-[#FF6B3D] font-bold">Lockup Gap</div>
+                    <div className="text-[#FF6B3D] font-semibold">Lockup Gap</div>
                     <div className="text-[#A3A9B8]">0.375x mark size (12px @ 32px)</div>
                   </div>
                   <div className="p-3 bg-[#0B0D14] rounded border border-[#1E222D]">
-                    <div className="text-[#FF6B3D] font-bold">Font Size Ratio</div>
+                    <div className="text-[#FF6B3D] font-semibold">Font Size Ratio</div>
                     <div className="text-[#A3A9B8]">0.625x mark size (20px @ 32px)</div>
                   </div>
                   <div className="p-3 bg-[#0B0D14] rounded border border-[#1E222D]">
-                    <div className="text-[#FF6B3D] font-bold">Clear Space Envelope</div>
+                    <div className="text-[#FF6B3D] font-semibold">Clear Space Envelope</div>
                     <div className="text-[#A3A9B8]">0.5x mark width on all 4 sides</div>
                   </div>
                 </div>
@@ -547,6 +548,6 @@ export const DesignReviewPage: React.FC = () => {
           <code className="text-[#FF6B3D]">client/design/logo-preview.html</code>.
         </footer>
       </div>
-    </div>
+    </main>
   );
 };

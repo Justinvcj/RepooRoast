@@ -2,6 +2,9 @@ import { useState } from 'react';
 import type { ApiResponse, ReviewStatus } from '../types';
 import { extractRepoInfo } from '../utils/githubParser';
 
+/** One newline-delimited JSON message from the streaming review endpoint. */
+type StreamMessage = { type?: string; stage?: string; success?: boolean; [key: string]: unknown };
+
 export type ReviewStage =
   | 'idle' | 'fetching' | 'analyzing' | 'classifying' | 'generating' | 'synthesizing' | 'cache_hit' | 'starting'
   // Custom/BYOK mode stages (see useCustomReview.ts) -- the slow part shifts
@@ -28,7 +31,7 @@ export const useRepoReview = () => {
       const API_BASE = import.meta.env.VITE_API_URL || '';
 
       let endpoint = `${API_BASE}/api/review`;
-      let payload: any = { repoUrl };
+      let payload: object = { repoUrl };
 
       if (parsed && (parsed.type === 'pull' || parsed.type === 'compare')) {
         endpoint = `${API_BASE}/api/review/diff`;
@@ -60,7 +63,7 @@ export const useRepoReview = () => {
         const trimmed = line.trim();
         if (!trimmed) return;
 
-        let parsed: any;
+        let parsed: StreamMessage;
         try {
           parsed = JSON.parse(trimmed);
         } catch {
@@ -70,9 +73,9 @@ export const useRepoReview = () => {
         if (parsed.type === 'progress') {
           setStage(parsed.stage as ReviewStage);
         } else if (parsed.success === true) {
-          finalResult = parsed;
+          finalResult = parsed as unknown as ApiResponse;
         } else if (parsed.success === false) {
-          serverErrorMessage = parsed.error || 'Analysis failed unexpectedly.';
+          serverErrorMessage = (parsed as { error?: string }).error || 'Analysis failed unexpectedly.';
         }
       };
 

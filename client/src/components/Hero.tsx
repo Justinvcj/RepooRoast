@@ -115,7 +115,7 @@ export const Hero: React.FC<HeroProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="font-display text-[2.75rem] sm:text-6xl lg:text-7xl font-medium tracking-[-0.03em] leading-[1.04] text-textPrimary">
+          <h1 className="font-display text-[2.75rem] sm:text-6xl lg:text-7xl font-medium tracking-[-0.03em] leading-[1.1] text-textPrimary">
             Roast your codebase.
           </h1>
 

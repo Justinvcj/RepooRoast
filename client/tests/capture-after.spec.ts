@@ -304,7 +304,7 @@ test.describe('Redesign After-Screenshots Capture (Phase 7)', () => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto('/design');
 
-      await expect(page.getByText('Design System & Visual Review')).toBeVisible();
+      await expect(page.getByText('Design system and visual review')).toBeVisible();
       await page.waitForTimeout(500);
 
       await captureAndSave(page, 'design_system', vp, true);

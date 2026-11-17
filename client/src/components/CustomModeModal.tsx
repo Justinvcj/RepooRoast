@@ -99,10 +99,11 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
               <button
                 type="button"
                 role="switch"
+                aria-label="Enable Custom Mode"
                 aria-checked={localEnabled}
                 onClick={() => setLocalEnabled(!localEnabled)}
                 className={`relative w-11 h-6 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  localEnabled ? 'bg-primary' : 'bg-surface-elevated border border-border-hairline'
+                  localEnabled ? 'bg-primary' : 'bg-border-focused border border-border-focused'
                 }`}
               >
                 <span

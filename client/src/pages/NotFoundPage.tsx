@@ -11,7 +11,7 @@ export const NotFoundPage: React.FC = () => {
   const pageTransition = getPageTransition(prefersReduced);
 
   return (
-    <div className="min-h-[75vh] flex flex-col items-center justify-center px-4 text-center relative z-10 select-none">
+    <main className="min-h-[75vh] flex flex-col items-center justify-center px-4 text-center relative z-10 select-none">
       <motion.div
         {...pageTransition}
         className="w-full max-w-lg"
@@ -44,6 +44,6 @@ export const NotFoundPage: React.FC = () => {
           </Link>
         </Card>
       </motion.div>
-    </div>
+    </main>
   );
 };

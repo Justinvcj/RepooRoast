@@ -5,7 +5,7 @@ import { getPageTransition } from '../utils/motion';
 import { ReviewDashboard } from '../components/ReviewDashboard';
 import { StaticAnalysisPanel } from '../components/StaticAnalysisPanel';
 import type { ApiResponse } from '../types';
-import { useLayout } from '../contexts/LayoutContext';
+import { useLayout } from '../contexts/layoutState';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
 import { LogoLockup } from '../components/brand';
 
@@ -112,7 +112,7 @@ export const ResultPage: React.FC = () => {
               href={`https://github.com/${repo.owner}/${repo.repo}`}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`View ${repo.owner}/${repo.repo} on GitHub`}
+              aria-label={`View on GitHub: ${repo.owner}/${repo.repo}`}
               className="inline-flex items-center gap-2 text-sm font-semibold text-textPrimary border border-border-focused hover:border-ink bg-surface px-4 py-2.5 rounded-lg transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Github className="w-4 h-4" />

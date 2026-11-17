@@ -21,22 +21,18 @@ export class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background flex items-center justify-center p-6 select-none">
+        <main className="min-h-screen supports-[height:100dvh]:min-h-[100dvh] bg-background flex items-center justify-center p-6 select-none">
           <Card level={1} className="max-w-md w-full p-8 sm:p-10 text-center border-border-hairline flex flex-col items-center">
             <div className="p-3.5 rounded-lg bg-data-critical/10 text-data-critical border border-data-critical/20 mb-6">
               <AlertCircle className="w-8 h-8" />
             </div>
 
-            <span className="text-sm font-semibold text-data-critical mb-2">
-              Something broke
-            </span>
-
             <h1 className="text-3xl font-medium text-textPrimary tracking-tight font-sans mb-3">
-              Something broke.
+              This page failed to load
             </h1>
 
             <p className="text-sm text-textSecondary font-normal leading-relaxed mb-8">
-              Something went wrong rendering this page. It's not you, it's us — try heading back home.
+              The page hit an error while rendering. Go back home and run the roast again.
             </p>
 
             {import.meta.env.DEV && this.state.error?.message && (
@@ -59,7 +55,7 @@ export class ErrorBoundary extends React.Component<
               </Button>
             </Link>
           </Card>
-        </div>
+        </main>
       );
     }
     return this.props.children;

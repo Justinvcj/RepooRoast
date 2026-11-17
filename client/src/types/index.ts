@@ -31,7 +31,14 @@ export interface StaticAnalysis {
       circularPaths: string[];
     };
   };
-  fileAnalyses: any[];
+  fileAnalyses: FileAnalysis[];
+}
+
+export interface FileAnalysis {
+  path: string;
+  functions: unknown[];
+  magicNumbers: unknown[];
+  [key: string]: unknown;
 }
 
 export type Severity = 'critical' | 'high' | 'medium' | 'low';

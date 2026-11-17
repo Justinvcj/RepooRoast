@@ -29,9 +29,9 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
           aria-expanded={isExpanded}
         >
           <div>
-            <h3 className="font-display text-lg font-semibold tracking-tight text-textPrimary">
+            <h2 className="font-display text-lg font-semibold tracking-tight text-textPrimary">
               Measured before the review
-            </h3>
+            </h2>
             <p className="text-sm text-textSecondary mt-0.5 tabular-nums">
               {repoMetrics.totalFiles.toLocaleString()} files parsed, {repoMetrics.totalLOC.toLocaleString()} lines of code. These numbers come from the parser, not the AI.
             </p>
@@ -56,7 +56,7 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
             >
               <div className="px-5 py-6 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
                 <section>
-                  <h4 className="font-display text-base font-semibold text-textPrimary mb-2">Size and comments</h4>
+                  <h3 className="font-display text-base font-semibold text-textPrimary mb-2">Size and comments</h3>
                   <dl>
                     <Stat label="Total lines" value={repoMetrics.totalLOC.toLocaleString()} />
                     <Stat label="Comment lines" value={repoMetrics.commentLOC.toLocaleString()} />
@@ -67,7 +67,7 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                 </section>
 
                 <section>
-                  <h4 className="font-display text-base font-semibold text-textPrimary mb-3">Dependencies</h4>
+                  <h3 className="font-display text-base font-semibold text-textPrimary mb-3">Dependencies</h3>
                   <div className="space-y-4">
                     {dependencyGraph?.metrics?.hubs && dependencyGraph.metrics.hubs.length > 0 ? (
                       <div>
@@ -106,7 +106,7 @@ export const StaticAnalysisPanel: React.FC<StaticAnalysisPanelProps> = ({ analys
                 </section>
 
                 <section>
-                  <h4 className="font-display text-base font-semibold text-textPrimary mb-3">Flagged files</h4>
+                  <h3 className="font-display text-base font-semibold text-textPrimary mb-3">Flagged files</h3>
                   <div className="space-y-3">
                     {fileAnalyses && fileAnalyses.length > 0 ? (
                       fileAnalyses.slice(0, 4).map((file, idx) => {
