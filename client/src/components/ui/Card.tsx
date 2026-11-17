@@ -12,7 +12,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-lg border transition-all duration-fast ease-spring',
+          'rounded-lg border transition-colors duration-fast ease-spring',
           level === 1
             ? 'bg-surface-secondary border-border-hairline'
             : 'bg-surface-secondary border-border-focused',

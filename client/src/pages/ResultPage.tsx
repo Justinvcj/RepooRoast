@@ -87,7 +87,7 @@ export const ResultPage: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="min-w-0">
               <p className="font-mono text-sm text-textSecondary mb-2">{repo.owner} /</p>
-              <h1 id="repo-header-title" className="font-display text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] leading-none text-textPrimary break-words">
+              <h1 id="repo-header-title" className="font-display text-4xl sm:text-5xl font-medium tracking-[-0.03em] leading-none text-textPrimary break-words">
                 {repo.repo}
               </h1>
               {repo.description && (

@@ -33,7 +33,7 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
 
         <div className="flex flex-col gap-10">
           <section aria-labelledby="priorities-title">
-            <h3 id="priorities-title" className="font-display text-xl font-bold tracking-tight text-textPrimary mb-4">
+            <h3 id="priorities-title" className="font-display text-xl font-semibold tracking-tight text-textPrimary mb-4">
               Fix these first
             </h3>
             <ol className="space-y-3">
@@ -49,7 +49,7 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
           </section>
 
           <section aria-labelledby="well-title" className="pt-8 border-t border-border-hairline">
-            <h3 id="well-title" className="font-display text-xl font-bold tracking-tight text-textPrimary mb-4">
+            <h3 id="well-title" className="font-display text-xl font-semibold tracking-tight text-textPrimary mb-4">
               What you did well
             </h3>
             <ul className="space-y-2.5">
@@ -66,7 +66,7 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
 
       <section aria-labelledby="breakdown-title">
         <div className="flex items-baseline justify-between mb-5 pb-3 border-b border-ink">
-          <h2 id="breakdown-title" className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-textPrimary">
+          <h2 id="breakdown-title" className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-textPrimary">
             Detailed breakdown
           </h2>
           <span className="text-sm text-textMuted tabular-nums">{review.categories.length} categories</span>
@@ -81,7 +81,7 @@ export const ReviewDashboard: React.FC<ReviewDashboardProps> = ({ review }) => {
 
       {review.fixPrompt && (
         <section aria-labelledby="fix-title" className="print:break-inside-avoid">
-          <h2 id="fix-title" className="font-display text-2xl font-bold tracking-tight text-textPrimary">
+          <h2 id="fix-title" className="font-display text-2xl font-semibold tracking-tight text-textPrimary">
             Auto-fix AI prompt
           </h2>
           <p className="text-sm text-textSecondary mt-1 mb-4 max-w-[60ch]">

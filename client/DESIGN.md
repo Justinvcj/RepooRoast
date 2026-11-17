@@ -1,43 +1,38 @@
-# RepoRoast Design Specification (v4: "Red Pen")
+# RepoRoast Design Specification (v4: "Night Review")
 
-> **v4 supersedes v3 for color, type, layout and tone.** Logo geometry (section 7 onward) is unchanged.
-> Branch: `redesign/v4` (off `redesign/v3`). Not merged, not pushed.
+> v4 supersedes v3 for color, type, layout, tone and the logo. Branch `redesign/v4`. Not merged, not pushed.
 
-## v4 concept
+## Direction
 
-RepoRoast is a senior engineer's markup of your code. The product measures first (static analysis), then a reviewer marks it up in red pen. The interface is the printed review: paper, ink, one pen.
+- **Product:** scores a public GitHub repo with static analysis, then a blunt senior review.
+- **Character:** exact, dry, blunt.
+- **World:** a late-night code review in a diff view. Cool ink surfaces, one hot line.
+- **Moments:** the hero code printout with review marks, and the circled score on the result page.
+- **Signature:** the diff-gutter tick. It appears in the logo and beside flagged lines.
 
-v3 was a dark console with a vermilion accent, uppercase mono labels, bracket tags and nested cards. That is the default "developer tool" look. v4 drops all of it.
+## Palette (60-30-10)
 
-## v4 tokens
-
-| Role | Value | Notes |
+| Share | Role | Value |
 |---|---|---|
-| Paper (canvas) | `#F3F4F1` | cool, not cream |
-| Sheet (surfaces) | `#FFFFFF`, `#FAFAF7` | flat, 1px borders, no shadows or blur |
-| Ink | `#16181D` | text and rules (17:1 on paper) |
-| Ink 2 / muted | `#4A505A` / `#646A73` | 7.9:1 / 4.9:1 on paper |
-| Rule | `#D8DAD3`, focus `#8E948C` | |
-| Pen red (only accent) | `#D1301C`, hover `#B52614` | white text on it: 5.5:1 |
-| Data | `#17794A` ok, `#946000` caution, `#B4480A` high, `#C62A1B` critical | all pass 4.5:1 on paper |
+| 60% | Canvas | `#0B0D14` |
+| 30% | Card, raised, hairline | `#11141C`, `#1A1E28`, `#1E222D` (focus `#343A4A`) |
+| 30% | Text primary, secondary, muted | `#EEF0F5`, `#A3A9B8`, `#7A8296` |
+| 10% | Accent (ember), hover | `#FF6B3D`, `#FF8157`; dark text `#0B0D14` on it (7.6:1) |
+| data | Good, caution, high, critical | `#4CC38A`, `#E5B93C`, `#E88A4A`, `#E5484D` |
 
-## v4 type
+The accent marks the primary action, flagged lines, focus and the number that matters. Data colors carry meaning only, never decoration.
 
-- Display and headings: Bricolage Grotesque (700/800, tight tracking).
-- Body and UI: Instrument Sans.
-- Monospace: IBM Plex Mono, only for real code, file paths and the URL field.
-- Sentence case everywhere. No uppercase labels, no bracket tags, no eyebrow labels.
+## Type
 
-## v4 layout and signature
+Geist for everything, Geist Mono for code, file paths and the URL field. Weights 400, 500 and 600 only. Sentence case, no uppercase labels, no bracket tags. Display tracking -0.03em, small text 0.
 
-- Hero is a real code printout with red-pen marks (circled call, numbered margin notes) and a score slip. The pen ring is the one entrance animation.
-- Result page leads with the verdict: score circled in pen, verdict headline, reviewer quote. Measured stats follow, then scores, priorities, breakdown.
-- Severity is a plain-text pill. Category rows are one flat row each. No cards inside cards.
-- Structural devices (numbers, rules) appear only where the content is a sequence or a reference.
+## Logo
 
-## v4 motion
+A block of code with one line flagged: three rounded lines, the middle one indented and in ember, with a gutter tick beside it. Wordmark is "Repo" (400) and "Roast" (600) in Geist, one color. 32px grid, with an integer-snapped 16px variant. Replaces the v3 caliper and ember mark.
 
-Pen ring draws once on the hero and once on the score. Everything else responds to user action. `prefers-reduced-motion` is honoured.
+## Motion
+
+Logo assembly: the lines write in, then the tick and flagged line light up. Loop: the flagged line slowly re-scans. Pen ring draws once on the hero and once on the score. Reduced motion is respected. One easing curve, `cubic-bezier(0.22, 1, 0.36, 1)`.
 
 ---
 

@@ -31,7 +31,7 @@ export class ErrorBoundary extends React.Component<
               Something broke
             </span>
 
-            <h1 className="text-3xl font-extrabold text-textPrimary tracking-tight font-sans mb-3">
+            <h1 className="text-3xl font-medium text-textPrimary tracking-tight font-sans mb-3">
               Something broke.
             </h1>
 

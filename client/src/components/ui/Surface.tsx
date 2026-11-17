@@ -35,7 +35,7 @@ export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
 
     const hoverStyles =
       hoverable || interactive
-        ? 'transition-all duration-fast ease-spring hover:border-border-focused'
+        ? 'transition-colors duration-fast ease-spring hover:border-border-focused'
         : '';
 
     return (

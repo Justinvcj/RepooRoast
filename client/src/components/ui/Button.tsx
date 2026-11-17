@@ -31,13 +31,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Base button classes enforcing <100ms response, scale feedback, and accessible focus ring
     const baseStyles =
-      'inline-flex items-center justify-center font-medium select-none transition-all duration-instant ease-spring active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none disabled:active:scale-100';
+      'inline-flex items-center justify-center font-medium select-none transition-colors duration-instant ease-spring active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none disabled:active:scale-100';
 
     // Variant tokens
     const variantStyles: Record<NonNullable<ButtonProps['variant']>, string> = {
       // Primary: WCAG AA verified 6.02:1 contrast using dark obsidian text on vermilion
       primary:
-        'bg-primary text-white font-semibold hover:bg-primary-hover active:bg-accent-deep',
+        'bg-primary text-dominant font-semibold hover:bg-primary-hover active:bg-accent-deep',
       secondary:
         'bg-surface-secondary text-textPrimary border border-border-hairline hover:bg-surface-elevated hover:border-border-focused active:bg-surface-secondary',
       ghost:

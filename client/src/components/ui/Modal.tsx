@@ -110,7 +110,7 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: prefersReduced ? 0.05 : 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-ink/50"
+            className="fixed inset-0 bg-black/60"
             aria-hidden="true"
           />
 

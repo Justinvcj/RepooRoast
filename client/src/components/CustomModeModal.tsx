@@ -56,7 +56,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-ink/50"
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/60"
           onClick={onClose}
         >
           <motion.div
@@ -83,7 +83,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
               <div className="p-2 rounded-lg bg-surface-elevated border border-border-hairline text-primary">
                 <KeyRound className="w-5 h-5" />
               </div>
-              <h2 id="custom-mode-title" className="text-xl font-bold tracking-tight text-textPrimary font-sans">
+              <h2 id="custom-mode-title" className="text-xl font-semibold tracking-tight text-textPrimary font-sans">
                 Custom Mode
               </h2>
             </div>
@@ -127,7 +127,7 @@ export const CustomModeModal: React.FC<CustomModeModalProps> = ({
                 value={localKey}
                 onChange={(e) => setLocalKey(e.target.value)}
                 placeholder="AIza..."
-                className="w-full bg-surface border border-border-focused rounded-lg px-4 py-2.5 text-textPrimary placeholder-textMuted font-mono text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all selection:bg-primary/30"
+                className="w-full bg-surface border border-border-focused rounded-lg px-4 py-2.5 text-textPrimary placeholder-textMuted font-mono text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors selection:bg-primary/30"
               />
               <div className="flex justify-between items-center pt-1">
                 <a

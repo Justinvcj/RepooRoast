@@ -64,7 +64,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ stage = 'starting'
       {/* Progress Card */}
       <Card level={1} className="w-full max-w-md p-6 sm:p-8 rounded-lg border-border-hairline mb-6">
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-border-hairline">
-          <h3 className="text-base sm:text-lg font-bold text-textPrimary font-display flex items-center gap-2">
+          <h3 className="text-base sm:text-lg font-semibold text-textPrimary font-display flex items-center gap-2">
             <span>Analyzing Codebase</span>
             <span className="inline-flex space-x-0.5 text-primary">
               <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ duration: 1.4, repeat: Infinity, delay: 0 }}>.</motion.span>

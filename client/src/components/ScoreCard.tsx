@@ -49,7 +49,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
         <PenCircle color={color} />
         <div className="relative text-center leading-none">
           <span
-            className="font-display font-extrabold text-[4.5rem] tracking-[-0.05em] tabular-nums"
+            className="font-display font-medium text-[4.5rem] tracking-[-0.05em] tabular-nums"
             style={{ color }}
           >
             {rounded}
@@ -59,7 +59,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({ score, verdict, quote, hir
       </div>
 
       <div className="min-w-0">
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-bold tracking-[-0.03em] leading-[1.08] text-textPrimary max-w-[28ch]">
+        <h2 className="font-display text-3xl sm:text-4xl lg:text-[2.6rem] font-semibold tracking-[-0.03em] leading-[1.08] text-textPrimary max-w-[28ch]">
           {verdict}
         </h2>
 

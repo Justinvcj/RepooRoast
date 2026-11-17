@@ -1,24 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
-  <!-- Left Diagnostic Caliper (Integer Snapped) -->
-  <path
-    d="M 5 2 L 2 5 L 2 11 L 5 14"
-    stroke="#F97316"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-  <!-- Right Diagnostic Caliper (Integer Snapped) -->
-  <path
-    d="M 11 2 L 14 5 L 14 11 L 11 14"
-    stroke="#F97316"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-  <!-- Faceted Ember Core with Transparent Aperture Kernel (Compound EvenOdd Cutout) -->
-  <path
-    d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z M 8 5 L 7 7 L 8 10 L 9 7 Z"
-    fill="#F97316"
-    fill-rule="evenodd"
-  />
+  <rect width="16" height="16" rx="4" fill="#0B0D14"/>
+  <rect x="5" y="3" width="7" height="2" rx="1" fill="#EEF0F5"/>
+  <rect x="7" y="7" width="6" height="2" rx="1" fill="#FF6B3D"/>
+  <rect x="5" y="11" width="5" height="2" rx="1" fill="#EEF0F5"/>
+  <rect x="2" y="6" width="2" height="4" rx="1" fill="#FF6B3D"/>
 </svg>

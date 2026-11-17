@@ -24,13 +24,13 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ category }) =>
       >
         <div className="flex items-baseline gap-4 min-w-0">
           <span
-            className="font-display font-bold text-2xl tabular-nums w-12 shrink-0"
+            className="font-display font-semibold text-2xl tabular-nums w-12 shrink-0"
             style={{ color: scoreColor }}
           >
             {category.score}
           </span>
           <div className="min-w-0">
-            <h3 className="font-display text-lg font-bold tracking-tight text-textPrimary">
+            <h3 className="font-display text-lg font-semibold tracking-tight text-textPrimary">
               {category.name}
             </h3>
             <span className="text-sm text-textMuted">

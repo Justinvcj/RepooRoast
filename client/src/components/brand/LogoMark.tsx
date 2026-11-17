@@ -3,12 +3,19 @@ import { LogoAnimation } from './LogoAnimation';
 
 export interface LogoMarkProps {
   size?: number; // Target size in pixels (default: 32)
-  monochrome?: boolean; // When true, uses single-color fill & stroke (currentColor)
-  animated?: boolean; // When true, runs 1.4s assembly animation
-  looping?: boolean; // When true, runs 2.4s calm thermal respiration
+  monochrome?: boolean; // When true, uses currentColor for every part
+  animated?: boolean;
+  looping?: boolean;
   className?: string;
 }
 
+export const INK = '#EEF0F5';
+export const EMBER = '#FF6B3D';
+
+/**
+ * The mark: a block of code with one line flagged.
+ * Three lines of code, the short middle one hot, and the diff-gutter tick beside it.
+ */
 export const LogoMark: React.FC<LogoMarkProps> = ({
   size = 32,
   monochrome = false,
@@ -16,7 +23,6 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
   looping = false,
   className = '',
 }) => {
-  // Delegate to LogoAnimation when motion is requested
   if (animated || looping) {
     return (
       <LogoAnimation
@@ -29,10 +35,10 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
     );
   }
 
-  const caliperStroke = monochrome ? 'currentColor' : '#16181D';
-  const emberFill = monochrome ? 'currentColor' : '#D1301C';
+  const line = monochrome ? 'currentColor' : INK;
+  const flag = monochrome ? 'currentColor' : EMBER;
 
-  // Crisp 16x16 integer-snapped vector path for sizes <= 18px (prevents subpixel antialiasing blur)
+  // Integer-snapped 16px variant keeps edges crisp in browser tabs
   if (size <= 18) {
     return (
       <svg
@@ -44,30 +50,14 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
         className={`shrink-0 select-none ${className}`}
         aria-hidden="true"
       >
-        <path
-          d="M 5 2 L 2 5 L 2 11 L 5 14"
-          stroke={caliperStroke}
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M 11 2 L 14 5 L 14 11 L 11 14"
-          stroke={caliperStroke}
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M 8 2 L 10 6 L 10 9 L 8 13 L 6 9 L 6 6 Z M 8 5 L 7 7 L 8 10 L 9 7 Z"
-          fill={emberFill}
-          fillRule="evenodd"
-        />
+        <rect x="4" y="3" width="8" height="2" rx="1" fill={line} />
+        <rect x="6" y="7" width="8" height="2" rx="1" fill={flag} />
+        <rect x="4" y="11" width="5" height="2" rx="1" fill={line} />
+        <rect x="1" y="6" width="2" height="4" rx="1" fill={flag} />
       </svg>
     );
   }
 
-  // Master 32x32 Cartesian Grid Vector Mark
   return (
     <svg
       width={size}
@@ -78,43 +68,10 @@ export const LogoMark: React.FC<LogoMarkProps> = ({
       className={`shrink-0 select-none ${className}`}
       aria-hidden="true"
     >
-      {/* Left Diagnostic Caliper Bracket */}
-      <path
-        d="M 12 5 L 5 12 L 5 20 L 12 27"
-        stroke={caliperStroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-
-      {/* Right Diagnostic Caliper Bracket */}
-      <path
-        d="M 20 5 L 27 12 L 27 20 L 20 27"
-        stroke={caliperStroke}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-
-      {/* Faceted Thermal Ember Core */}
-      {monochrome ? (
-        <path
-          d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z M 16 10 L 14 14 L 16 18 L 18 14 Z"
-          fill={emberFill}
-          fillRule="evenodd"
-        />
-      ) : (
-        <>
-          <path
-            d="M 16 4 L 20 11 L 19 18 L 16 25 L 13 18 L 12 11 Z"
-            fill={emberFill}
-          />
-          <path
-            d="M 16 10 L 18 14 L 16 18 L 14 14 Z"
-            fill="#F3F4F1"
-          />
-        </>
-      )}
+      <rect x="8" y="6" width="16" height="4" rx="2" fill={line} />
+      <rect x="13" y="14" width="14" height="4" rx="2" fill={flag} />
+      <rect x="8" y="22" width="10" height="4" rx="2" fill={line} />
+      <rect x="2" y="11" width="3" height="10" rx="1.5" fill={flag} />
     </svg>
   );
 };

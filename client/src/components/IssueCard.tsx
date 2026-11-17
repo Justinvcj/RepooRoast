@@ -30,7 +30,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
           {issue.file && <FilePath path={issue.file} />}
         </div>
 
-        <h4 className="font-display text-lg font-bold tracking-tight text-textPrimary mt-1">
+        <h4 className="font-display text-lg font-semibold tracking-tight text-textPrimary mt-1">
           {issue.title}
         </h4>
 

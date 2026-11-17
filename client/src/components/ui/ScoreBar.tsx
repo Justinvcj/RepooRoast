@@ -67,7 +67,7 @@ export const ScoreBar: React.FC<ScoreBarProps> = ({
       {/* Tabular Score */}
       {showValue && (
         <span
-          className="font-display tabular-nums text-base font-bold w-10 sm:w-12 text-right shrink-0"
+          className="font-display tabular-nums text-base font-semibold w-10 sm:w-12 text-right shrink-0"
           style={{ color: scoreColor }}
         >
           {clampedScore}

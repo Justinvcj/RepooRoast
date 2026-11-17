@@ -2,27 +2,27 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* RepoRoast v4 "Red Pen": a senior engineer's markup of your code.
-   Cool paper, white sheets, ink text, one pen-red accent. */
+/* RepoRoast v4 "Night Review": a late-night code review.
+   60% ink canvas, 30% surfaces and text, 10% ember accent. */
 :root {
-  --bg-dominant: #F3F4F1;
-  --surface-secondary: #FFFFFF;
-  --surface-elevated: #FAFAF7;
-  --border-hairline: #D8DAD3;
-  --border-focused: #8E948C;
-  --text-primary: #16181D;
-  --text-secondary: #4A505A;
-  --text-muted: #646A73;
+  --bg-dominant: #0B0D14;
+  --surface-secondary: #11141C;
+  --surface-elevated: #1A1E28;
+  --border-hairline: #1E222D;
+  --border-focused: #343A4A;
+  --text-primary: #EEF0F5;
+  --text-secondary: #A3A9B8;
+  --text-muted: #7A8296;
 
-  --accent-brand: #D1301C;
-  --accent-brand-hover: #B52614;
-  --accent-text-dark: #FFFFFF;
-  --accent-ember-deep: #B52614;
+  --accent-brand: #FF6B3D;
+  --accent-brand-hover: #FF8157;
+  --accent-text-dark: #0B0D14;
+  --accent-ember-deep: #FF8157;
 
-  --data-success: #17794A;
-  --data-warning: #946000;
-  --data-flawed: #B4480A;
-  --data-critical: #C62A1B;
+  --data-success: #4CC38A;
+  --data-warning: #E5B93C;
+  --data-flawed: #E88A4A;
+  --data-critical: #E5484D;
 
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
@@ -42,7 +42,7 @@
   }
   /* Faint ruled-paper texture for hero areas */
   .ruled {
-    background-image: linear-gradient(to bottom, transparent 31px, rgba(22,24,29,0.06) 32px);
+    background-image: linear-gradient(to bottom, transparent 31px, rgba(238,240,245,0.04) 32px);
     background-size: 100% 32px;
   }
 }
@@ -58,19 +58,20 @@ html { scroll-behavior: smooth; }
 body {
   background-color: var(--bg-dominant);
   color: var(--text-primary);
-  font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Geist', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3 {
-  font-family: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 500;
   text-wrap: balance;
 }
 
 .font-mono, code, pre, kbd, samp { font-variant-numeric: tabular-nums; }
 
-::selection { background: rgba(209, 48, 28, 0.2); }
+::selection { background: rgba(255, 107, 61, 0.28); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

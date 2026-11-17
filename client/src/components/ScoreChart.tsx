@@ -11,7 +11,7 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({ categories }) => {
 
   return (
     <section aria-labelledby="scores-title" className="w-full">
-      <h3 id="scores-title" className="font-display text-xl font-bold tracking-tight text-textPrimary mb-1">
+      <h3 id="scores-title" className="font-display text-xl font-semibold tracking-tight text-textPrimary mb-1">
         Scores by category
       </h3>
       <p className="text-sm text-textMuted mb-6">Highest first.</p>

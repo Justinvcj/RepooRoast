@@ -149,7 +149,7 @@ export const HomePage: React.FC = () => {
         <section aria-labelledby="what-we-roast-title" className="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-border-hairline">
           <div className="grid lg:grid-cols-[1fr_2fr] gap-8 lg:gap-16">
             <div>
-              <h2 id="what-we-roast-title" className="font-display text-3xl font-bold tracking-tight text-textPrimary">
+              <h2 id="what-we-roast-title" className="font-display text-3xl font-semibold tracking-tight text-textPrimary">
                 What gets marked
               </h2>
               <p className="mt-2 text-base text-textSecondary max-w-[32ch]">
@@ -160,7 +160,7 @@ export const HomePage: React.FC = () => {
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-12">
               {features.map((feature) => (
                 <div key={feature.name} className="py-4 border-t border-border-hairline first:border-t-0 sm:[&:nth-child(2)]:border-t-0">
-                  <dt className="font-display text-lg font-bold tracking-tight text-textPrimary">{feature.name}</dt>
+                  <dt className="font-display text-lg font-semibold tracking-tight text-textPrimary">{feature.name}</dt>
                   <dd className="mt-1 text-[15px] text-textSecondary leading-relaxed">{feature.description}</dd>
                 </div>
               ))}

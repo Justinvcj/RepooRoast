@@ -67,7 +67,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
           cy={dimension / 2}
           r={radius}
           fill="none"
-          stroke="var(--border-hairline, #D8DAD3)"
+          stroke="var(--border-hairline, #1E222D)"
           strokeWidth={stroke}
         />
 
@@ -108,7 +108,7 @@ export const ScoreRing: React.FC<ScoreRingProps> = ({
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span
           className={cn(
-            'font-display font-bold tabular-nums text-textPrimary tracking-tight',
+            'font-display font-semibold tabular-nums text-textPrimary tracking-tight',
             fontSize
           )}
         >

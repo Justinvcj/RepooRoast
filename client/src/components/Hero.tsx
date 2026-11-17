@@ -20,13 +20,14 @@ const Mark: React.FC<{ n: number }> = ({ n }) => (
   </span>
 );
 
-const CODE: { n: number; text: React.ReactNode }[] = [
+const CODE: { n: number; text: React.ReactNode; flag?: boolean }[] = [
   { n: 38, text: 'function saveUser(data) {' },
   { n: 39, text: '	if (data) {' },
   { n: 40, text: '		if (data.user) {' },
   { n: 41, text: '			if (data.user.id) {' },
   {
     n: 42,
+    flag: true,
     text: (
       <>
         {'				if (data.user.id > 0) {'}
@@ -36,6 +37,7 @@ const CODE: { n: number; text: React.ReactNode }[] = [
   },
   {
     n: 43,
+    flag: true,
     text: (
       <>
         {'					save('}
@@ -70,7 +72,8 @@ const ReviewPrintout: React.FC = () => {
 
       <pre className="px-4 py-4 text-[11px] sm:text-[12.5px] leading-6 font-mono [tab-size:1] sm:[tab-size:2] text-textPrimary overflow-x-auto">
         {CODE.map((l) => (
-          <div key={l.n} className="whitespace-pre flex">
+          <div key={l.n} className="whitespace-pre flex relative">
+            {l.flag && <span aria-hidden="true" className="absolute -left-4 top-1 bottom-1 w-[3px] rounded-full bg-primary" />}
             <span className="w-7 sm:w-9 shrink-0 text-textMuted select-none text-right pr-2 sm:pr-4 tabular-nums">{l.n}</span>
             <span>{l.text}</span>
           </div>
@@ -90,7 +93,7 @@ const ReviewPrintout: React.FC = () => {
 
       <div className="px-4 py-3 border-t border-border-hairline flex items-baseline justify-between bg-surface-elevated">
         <span className="text-sm text-textSecondary">Code quality</span>
-        <span className="font-display font-bold text-2xl text-data-flawed tabular-nums">
+        <span className="font-display font-semibold text-2xl text-data-flawed tabular-nums">
           38<span className="text-sm text-textMuted font-medium"> / 100</span>
         </span>
       </div>
@@ -112,7 +115,7 @@ export const Hero: React.FC<HeroProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="font-display text-[2.75rem] sm:text-6xl lg:text-7xl font-extrabold tracking-[-0.04em] leading-[0.98] text-textPrimary">
+          <h1 className="font-display text-[2.75rem] sm:text-6xl lg:text-7xl font-medium tracking-[-0.03em] leading-[0.98] text-textPrimary">
             Roast your codebase.
           </h1>
 

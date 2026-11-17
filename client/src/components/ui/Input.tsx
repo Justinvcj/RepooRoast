@@ -65,7 +65,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               error ? errorId : hint ? hintId : undefined
             }
             className={cn(
-              'w-full bg-surface-secondary text-textPrimary placeholder:text-textMuted border border-border-hairline transition-all duration-fast ease-spring',
+              'w-full bg-surface-secondary text-textPrimary placeholder:text-textMuted border border-border-hairline transition-colors duration-fast ease-spring',
               'focus:outline-none focus:border-border-focused focus:ring-2 focus:ring-primary/25',
               sizeStyles[inputSize],
               mono && 'font-mono text-xs sm:text-sm',
